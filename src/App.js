@@ -6,18 +6,8 @@ import { Header, Sidebar, Player, SongList } from './components';
 import {
   toggle_sidebar,
   hide_sidebar,
-  on_load_start,
-  on_loaded_metadata,
-  on_time_update,
-  on_play,
-  on_pause,
-  play_next,
-  play_prev,
-  play_song,
   load_playlist
 } from './store/actions'
-
-const Fragment = React.Fragment
 
 const Root = styled.div`
   position: relative;
@@ -60,66 +50,26 @@ class App extends Component {
           this.props.hideSidebar()
         }
       }
-    }, 500, {'maxWait': 1000}))
-  }
-
-  onLoadedMetadata = () => {
-    const { onLoadedMetadata } = this.props
-    onLoadedMetadata(Math.floor(this.audioElement.duration))
-  }
-
-  onTimeUpdate = () => {
-    const { onTimeUpdate } = this.props
-    onTimeUpdate(Math.floor(this.audioElement.currentTime))
-  }
-
-  togglePlay = () => {
-    const { audioElement } = this
-    if (audioElement.paused) {
-      audioElement.play()
-    } else {
-      audioElement.pause()
-    }
+    }, 500, {'maxWait': 1000}), false)
   }
 
   render() {
-    const { sidebarVisible, audioUrl } =this.props.state
-    const {
-      playNextSong,
-      onLoadStart,
-      onPause,
-      onPlay
-    } = this.props
+    const {sidebarVisible} =this.props.state
 
     return (
-      <Fragment>
-        <Root>
-          <Sidebar style={ !sidebarVisible ? {transform: "translateX(-100%)"} : {}} />          
-          <Overlay 
-            style={ (window.innerWidth < 600 && sidebarVisible) ? {display: "block"} : {} }
-            onClick={this.props.toggleSidebar} />          
-          <Player togglePlay={this.togglePlay} />    
+      <Root>
+        <Sidebar style={ !sidebarVisible ? {transform: "translateX(-100%)"} : {}} />          
+        <Overlay 
+          style={ (window.innerWidth < 600 && sidebarVisible) ? {display: "block"} : {} }
+          onClick={this.props.toggleSidebar} />          
 
-          <Container 
-            style={ (window.innerWidth >= 600 && sidebarVisible) ? {marginLeft: 250} : {}} >            
-            <Header />
-            <SongList />
-          </Container>
-
-        </Root>
-        <audio 
-          id="player"
-          crossOrigin="anonymous"
-          src={audioUrl}
-          onEnded={playNextSong}
-          onLoadedMetadata={this.onLoadedMetadata}
-          onLoadStart={onLoadStart}
-          onPause={onPause}
-          onPlay={onPlay}
-          onTimeUpdate={this.onTimeUpdate}
-          ref={element => this.audioElement = element}
-          />
-      </Fragment>
+        <Container 
+          style={ (window.innerWidth >= 600 && sidebarVisible) ? {marginLeft: 250} : {}} >            
+          <Header />
+          <SongList/>
+          <Player/>  
+        </Container>
+      </Root>
     );
   }
 }
@@ -135,12 +85,6 @@ const mapDispatchToProps = dispatch => {
     hideSidebar: () => dispatch(hide_sidebar()),
     toggleSidebar: () => dispatch(toggle_sidebar()),
     loadPlaylist: () => dispatch(load_playlist()),
-    onLoadedMetadata: (duration) => dispatch(on_loaded_metadata(duration)),
-    onTimeUpdate: (currentTime) => dispatch(on_time_update(currentTime)),
-    playNextSong: () => dispatch(play_next()),
-    onLoadStart: () => dispatch(on_load_start()),
-    onPause: () => dispatch(on_pause()),
-    onPlay: () => dispatch(on_play())
   }
 }
 

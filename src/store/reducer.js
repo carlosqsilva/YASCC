@@ -8,7 +8,8 @@ import {
   PLAY_SONG,
   ON_LOADED_METADATA,
   PLAYLIST_LOADING,
-  PLAYLIST_LOADED
+  PLAYLIST_LOADED,
+  PLAYLIST_LOADING_NEXT
 } from './constants'
 
 const initialState = {
@@ -21,6 +22,7 @@ const initialState = {
   playlist: [],
   favorites: null,
   userPlaylist: null,
+  currentSong: null,
   audioUrl: null,
   nextUrl: null
 }
@@ -40,7 +42,13 @@ const rootReducer = (state = initialState, action) => {
     case PLAYLIST_LOADING:
       return {
         ...state,
-        loadingPlaylist: true
+        loadingPlaylist: true,
+        playlist: []
+      }
+    case PLAYLIST_LOADING_NEXT:
+      return {
+        ...state,
+        loadingPlaylist: true,
       }
     case PLAYLIST_LOADED:
       return {
@@ -79,7 +87,8 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         songIndex: action.songIndex,
-        audioUrl: action.audioUrl
+        audioUrl: action.audioUrl,
+        currentSong: action.song
       }
     default:
       return state;

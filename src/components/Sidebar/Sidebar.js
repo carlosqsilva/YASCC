@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { toggle_sidebar } from '../../store/actions';
+import { toggle_sidebar, load_playlist } from '../../store/actions';
 import styled from 'styled-components';
 
 import Icon from '../Utils/Icon';
 import Logo from './logo.svg';
-import Favorite from './favorite.svg'
 import Playlist from './playlist.svg'
 
 const Container = styled.div`
@@ -50,7 +49,7 @@ const Option = styled.a`
   flex: 1 0 auto;
   cursor: pointer;
   font-size: .9rem;
-  padding: 2px 0;
+  padding: 4px 0;
   transition: all 250ms ease;
   color: ${ props => props.active === true ? "rgba(255, 255, 255, .9)" : "rgba(255, 255, 255, .5)"};
 
@@ -68,12 +67,15 @@ class Sidebar extends React.Component {
   }
   
   handleClick = (e) => {
+    const { name } = e.target
     this.setState({
-      activeItem: e.target.name 
+      activeItem: name 
     })
+    
+    let genre = name.replace(/[-|&|\s]+/g, "").toLowerCase()
+    this.props.loadPlaylist(genre)
   }
 
-  
   render() {
     const { activeItem } = this.state
 
@@ -85,11 +87,6 @@ class Sidebar extends React.Component {
           <strong title="Yet Another SoundCloud Client" >YASCC</strong>
         </Segment>
 
-        <Segment horizontal>
-          <Icon size={20} src={Favorite} />
-          <strong>Favorites</strong>
-        </Segment>
-        
         <Segment horizontal>
           <Icon size={20} src={Playlist} />
           <strong>Playlist</strong>
@@ -114,7 +111,8 @@ class Sidebar extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleSidebar: () => dispatch(toggle_sidebar()),
+    loadPlaylist: (genre) => dispatch(load_playlist(genre)),
+    toggleSidebar: () => dispatch(toggle_sidebar())
   }
 }
 

@@ -3,15 +3,20 @@ import styled from 'styled-components'
 import { connect } from 'react-redux'
 import Icon from '../Utils/Icon'
 import Play from './play.svg'
+import Add from './add.svg'
 
 import {
-  load_playlist_next
+  load_playlist_next,
+  play_song_from_btn
 } from '../../store/actions'
+
+import { msToTime } from '../Utils/Number'
+import Loading from '../Loading/Loading';
 
 const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr minmax(300px, 1900px) 1fr;
-  padding: 10px;
+  padding: 15px;
   height: 100%;
   overflow-y: scroll;
 `
@@ -19,12 +24,12 @@ const Wrapper = styled.div`
 const Container = styled.div`
   grid-column: 2;
   display: grid;
-  grid-gap: 10px;
+  grid-gap: 15px;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   grid-auto-rows: 100px;
 
   @media screen and (min-width: 500px) {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, 200px);
     grid-auto-rows: 200px;
   }
 `
@@ -34,25 +39,22 @@ const Card = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items; stretch;
-  
+  border-radius: 4px;
+  overflow: hidden;  
 `
 
 const Artwork = styled.div`
-  background-image: url(${props => props.src});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100px;
   height: 100px;
   align-self: center;
-
+  border-radius: 4px;
+  
   > img {
-    opacity: 0;
-    transition: all 150ms ease-in;
+    display: none;
   }
 
   @media screen and (min-width: 500px) {
@@ -60,110 +62,132 @@ const Artwork = styled.div`
     cursor: pointer;
     top: 0px;
     left: 0px;
-    height: 100%;
+    height: 80%;
     width: 100%;
 
+    > img {
+      transition: transform 200ms ease-in;
+      transform: scale(0);
+      margin: 50px auto;
+      display: block;
+      width: 100%;
+      z-index: 1;
+    }
+    
     &:hover {
       > img {
-        opacity: 1;
         transform: scale(1);
       }
-    }
-
-    > img {
-      transform: scale(0);
-      z-index: 1;
     }
   }
 `
 
 const Info = styled.div`
   position: relative;
-  font-size: .9rem;
+  font-size: .8rem;
   color: #444444;
-  padding: 5px;
-  pointer-events: none;
+  padding: 5px 10px;
   flex: 1;
+  overflow: hidden;
 
-  > span {
+  > div {
+    display: flex;
+    justify-content: space-between;
     position: absolute;
-    bottom: 5px;
-    right: 5px;
+    bottom: 0px;
+    left: 0px;
+    padding: 5px 10px;
+    width: 100%;
     color: #dedede;
   }
 
-  > div {
-    position: absolute;
-    display: flex;
-    justify-content: space-between;
-    bottom: 5px;
-    left: 10px;
-    width: 50px;
-  }
-
   @media screen and (min-width: 500px) {
-    color: rgba(255, 255, 255, .9);
-    background-color: rgba(0, 0, 0, .5);
-    font-weight: 700;
-    font-size: 1rem;
+    color: #444;
+    background-color: white;
+    font-weight: 400;
+    font-size: .8rem;
     position: absolute;
     cursor: pointer;
-    top: 0px;
+    bottom: 0px;
     left: 0px;
-    height: 100%;
+    height: 25%;
     width: 100%;
+       
+    > a {
+      display: block;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
   }
 `
 
+class SongCard  extends React.Component {
 
-const SongCard = (props) => {
+  handleClick = () => {
+    const {
+      stream,
+      index
+    } = this.props.song
 
-  const {
-    title,
-    artwork,
-    duration
-  } = props.song
+    this.props.play(index, stream)
+  }
 
-  return (
-    <Card onClick={() => console.log("ahoy")}>
-      
-      <Artwork src={artwork} alt="">
-        <Icon src={Play} size={50} />
-      </Artwork>
-      
-      <Info>
-        <a>{title}</a>
-        <span>{duration}</span>
-        <div>
-          <Icon size={15} alt="Add to Playlist"/>
-          <Icon size={15} />
-        </div>
-      </Info>
+  render () {
     
-    </Card>
-  )  
+    const {
+      title,
+      artwork,
+      duration,
+    } = this.props.song
+    
+    return (
+      <Card onClick={this.handleClick}>
+        
+        <Artwork style={{backgroundImage: `url(${artwork.replace("large", "t300x300")})`}}>
+          <Icon src={Play} size={50} />
+        </Artwork>
+        
+        <Info>
+          <a>{title}</a>
+          <div>
+            <Icon src={Add} size={12} title="Add to Playlist"/>
+            <span>{msToTime(duration)}</span>
+          </div>
+        </Info>
+      
+      </Card>
+    )  
+  }
 }
 
 class SongList extends React.Component {
 
   handleScroll = (e) => {
-    const {scrollTop, scrollHeight, offsetHeight } = e.target
-    if ((scrollTop + offsetHeight) > (scrollHeight - 50)) {
+    const {scrollTop, scrollHeight, clientHeight } = e.target
+    if ((scrollTop + clientHeight) > (scrollHeight - 50)) {
       this.props.loadNextSongs()
     }
   }
 
   render () {
     const {
-      playlist
+      playlist,
+      loadingPlaylist
     } = this.props.state
 
     return (
       <Wrapper onScroll={this.handleScroll}>
         <Container>
           {
-            playlist.map( (song, index) => <SongCard song={song} key={index}/>)
+            playlist.map( (song, index) => 
+              <SongCard 
+                song={{...song, index}} 
+                play={this.props.playSong}
+                key={song.id} />
+            )
           }
+          { loadingPlaylist && <Loading/>}
         </Container>
       </Wrapper>
     )
@@ -175,7 +199,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  loadNextSongs: () => dispatch(load_playlist_next())
+  loadNextSongs: () => dispatch(load_playlist_next()),
+  playSong: (index, url) => dispatch(play_song_from_btn(index, url))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SongList)

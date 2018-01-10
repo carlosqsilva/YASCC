@@ -8,25 +8,29 @@ import {
   PLAY_SONG,
   ON_LOADED_METADATA,
   PLAYLIST_LOADED,
-  PLAYLIST_LOADING
+  PLAYLIST_LOADING,
+  PLAYLIST_LOADING_NEXT
 } from './constants'
 
-import client_id from './api_key'
+import { api_key_dev } from './api_key'
 
-const api_tracks = `https://api.soundcloud.com/tracks?linked_partitioning=1&limit=30&offset=0&${client_id}`
+const api_tracks = `https://api.soundcloud.com/tracks?linked_partitioning=1&limit=50&offset=0&${api_key_dev}`
 
 const filter_data = (data) => {
-  const newData = data.collection.map( track => {
+  let newData = data.collection.filter( track => (track.artwork_url !== null) && (track.duration !== 30000) )
+
+  newData = newData.map( track => {
     return {
       title: track.title,
       duration: track.duration,
       stream: track.stream_url,
       artwork: track.artwork_url,
       user: track.user.username,
-      user_id: track.user.id,
+      id: track.id,
       likes: track.likes_count
     }
   })
+
   return {playlist: newData, nextUrl: data.next_href}
 }
 
@@ -60,45 +64,52 @@ export const on_time_update = (currentTime) => ({
   currentTime
 })
 
-export const play_song = (songIndex, audioUrl) => ({
-  type: PLAY_SONG,
-  songIndex,
-  audioUrl
-})
+export const play_song = (songIndex, song) => dispatch => {
+  const audioUrl = `${song.stream}?${api_key_dev}`
+
+  dispatch({type: PLAY_SONG, songIndex, song, audioUrl})
+}
+
+export const play_song_from_btn = (songIndex, audioUrl) => (dispatch, getState) =>{
+  const { playlist } = getState()
+  const song = playlist[songIndex]
+
+  dispatch(play_song(songIndex, song))
+}
 
 export const play_next = () => (dispatch, getState) => {
   const { playlist, songIndex } = getState()
   const nextSong = (songIndex !== playlist.length - 1) ? songIndex + 1 : 0;
-  const audioUrl = playlist[nextSong].streamUrl
-  dispatch(play_song(nextSong, audioUrl))
+  const song = playlist[nextSong]
+  dispatch(play_song(nextSong, song))
 }
 
 export const play_prev = () => (dispatch, getState) => {
   const { playlist, songIndex } = getState()
   const prevSong = (songIndex !== 0) ? songIndex - 1 : playlist.length - 1;
-  const audioUrl = playlist[prevSong].streamUrl
-  dispatch(play_song(prevSong, audioUrl))
+  const song = playlist[prevSong]
+  dispatch(play_song(prevSong, song))
 }
 
 const fetch_songs = (url) => (dispatch) => {
-  dispatch({type: PLAYLIST_LOADING})
   fetch(url)
-    .then( resp => resp.json())
-    .then( data => filter_data(data))
-    .then( ({playlist, nextUrl}) => dispatch({type: PLAYLIST_LOADED, playlist, nextUrl}))
+  .then( resp => resp.json())
+  .then( data => filter_data(data))
+  .then( ({playlist, nextUrl}) => dispatch({type: PLAYLIST_LOADED, playlist, nextUrl}))
 }
 
 export const load_playlist = (genre = "house") => (dispatch) => {
   const url = `${api_tracks}&genres=${genre}`
-
+  
+  dispatch({type: PLAYLIST_LOADING})
   dispatch(fetch_songs(url))
 }
-
 
 export const load_playlist_next = () => (dispatch, getState) => {
   const { nextUrl, loadingPlaylist } = getState()
 
   if (!loadingPlaylist) {
+    dispatch({type: PLAYLIST_LOADING_NEXT})
     dispatch(fetch_songs(nextUrl))
   }
 }
