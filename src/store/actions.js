@@ -12,17 +12,18 @@ import {
   PLAYLIST_LOADING_NEXT
 } from './constants'
 
-import { api_key_dev } from './api_key'
+import { api_key_dev } from './api_keys'
+import { truncateString, msToTime} from './utils'
 
-const api_tracks = `https://api.soundcloud.com/tracks?linked_partitioning=1&limit=50&offset=0&${api_key_dev}`
+const api_tracks = `https://api.soundcloud.com/tracks?linked_partitioning=1&limit=35&offset=0&${api_key_dev}`
 
 const filter_data = (data) => {
   let newData = data.collection.filter( track => (track.artwork_url !== null) && (track.duration !== 30000) )
 
   newData = newData.map( track => {
     return {
-      title: track.title,
-      duration: track.duration,
+      title: truncateString(track.title),
+      duration: msToTime(track.duration),
       stream: track.stream_url,
       artwork: track.artwork_url,
       user: track.user.username,
@@ -112,4 +113,11 @@ export const load_playlist_next = () => (dispatch, getState) => {
     dispatch({type: PLAYLIST_LOADING_NEXT})
     dispatch(fetch_songs(nextUrl))
   }
+}
+
+export const search_songs = (q) => dispatch => {
+  const query = q.trim().split(" ").filter(str => str.length > 0).join("%20")
+  const url = `${api_tracks}&q=${query}`
+  dispatch({type: PLAYLIST_LOADING})
+  dispatch(fetch_songs(url))
 }

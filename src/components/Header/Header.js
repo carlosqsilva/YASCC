@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { toggle_sidebar } from '../../store/actions'
+import { toggle_sidebar, search_songs } from '../../store/actions'
 import styled from 'styled-components'
 import Icon from '../Utils/Icon'
 import Item from '../Utils/Item'
@@ -47,7 +47,28 @@ const Input = styled.input`
   width: 100%;
 `
 
+const Form = styled.form`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px;
+  flex: 1;
+`
+
 class Header extends Component {
+  state = {
+    value: ""
+  }
+
+  handleChange = (e) => {
+    this.setState({value: e.target.value})
+  }  
+
+  handleSubmit = (e) => {
+    e.preventDefault()
+    this.props.searchSongs(this.state.value)
+  }
+
   render() {
     return (
       <Wrapper>
@@ -55,9 +76,11 @@ class Header extends Component {
           <Item link onClick={this.props.toggleSidebar}>
             <Icon size={20} src={Menu}/>
           </Item>
-          <Item fluid>
-            <Input placeholder="Search..." />
-          </Item>
+
+          <Form onSubmit={this.handleSubmit} >
+            <Input placeholder="Search..." value={this.state.value} onChange={this.handleChange}/>
+          </Form>
+          
           <Item link href="https://github.com/carlosqsilva/yascc">
             <Icon size={22} src={Github}/>
           </Item>
@@ -76,7 +99,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleSidebar: () => dispatch(toggle_sidebar())
+    toggleSidebar: () => dispatch(toggle_sidebar()),
+    searchSongs: (q) => dispatch(search_songs(q))
   }
 }
 

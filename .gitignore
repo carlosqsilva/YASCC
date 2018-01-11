@@ -20,5 +20,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-#keys
-api_key.js
+#keys keys
+api_keys.js

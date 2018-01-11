@@ -15,10 +15,6 @@ const Item = styled.a`
   min-width: 60px;
   padding: 0 10px;
 
-  /* &:not(:last-child){
-    margin-right: 10px;
-  } */
-
   &:hover {
     background-color: rgba(0,0,0,.03);
   }

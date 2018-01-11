@@ -27,3 +27,10 @@ export const msToTime = (duration) => {
 
   return `${hour}:${minute}:${second}`
 }
+
+export const truncateString = (str, size = 50) => {
+  if (str.length > size) {
+    return str.substring(0, size) + "..."
+  }
+  return str
+}
