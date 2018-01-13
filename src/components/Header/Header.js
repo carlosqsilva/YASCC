@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { toggle_sidebar, search_songs } from '../../store/actions'
 import styled from 'styled-components'
 import Icon from '../Utils/Icon'
@@ -14,6 +15,9 @@ const Wrapper = styled.div`
   right: 0px;
   height: 50px;
   background-color: white;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
 
 &::after {
   box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, .06);
@@ -22,16 +26,8 @@ const Wrapper = styled.div`
   width: 100%;
   height: 5px;
   content: "";
+  z-index: 10
 }
-`
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: flex-start;
-  padding: 0 8px;
-
 `
 
 const Input = styled.input`
@@ -67,24 +63,23 @@ class Header extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     this.props.searchSongs(this.state.value)
+    this.props.history.push("/search")
   }
 
   render() {
     return (
       <Wrapper>
-        <Container>
-          <Item link onClick={this.props.toggleSidebar}>
-            <Icon size={20} src={Menu}/>
-          </Item>
+        <Item link onClick={this.props.toggleSidebar}>
+          <Icon size={20} src={Menu}/>
+        </Item>
 
-          <Form onSubmit={this.handleSubmit} >
-            <Input placeholder="Search..." value={this.state.value} onChange={this.handleChange}/>
-          </Form>
-          
-          <Item link href="https://github.com/carlosqsilva/yascc">
-            <Icon size={22} src={Github}/>
-          </Item>
-        </Container>
+        <Form onSubmit={this.handleSubmit} >
+          <Input placeholder="Search..." value={this.state.value} onChange={this.handleChange}/>
+        </Form>
+        
+        <Item link noMobile href="https://github.com/carlosqsilva/yascc">
+          <Icon size={22} src={Github}/>
+        </Item>
       </Wrapper>
     );
   }
@@ -104,4 +99,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));

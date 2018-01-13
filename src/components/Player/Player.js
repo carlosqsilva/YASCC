@@ -22,7 +22,7 @@ const Fragment = React.Fragment
 
 const Wrapper = styled.div`
   background-color: white;
-  height: 64px;
+  height: 40px;
   padding-top: 4px;
   width: 100%;
   position: absolute;
@@ -30,6 +30,8 @@ const Wrapper = styled.div`
   left: 0px;
   display: flex;
   justify-content: flex-start;
+  transform: translateY(100%);
+  transition: transform 200ms ease-in-out;
 `
 
 const Controls = styled.div`
@@ -38,17 +40,10 @@ const Controls = styled.div`
 `
 
 const Song = styled.div`
-  width: 300px;
+  flex: 1;
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
-`
-
-const Artwork = styled.img`
-  align-self: center;
-  padding: 5px;
-  height: 60px;
-  width: 60px;
 `
 
 const Info = styled.div`
@@ -64,10 +59,10 @@ const Info = styled.div`
     text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: .8rem;
+    font-size: .6rem;
 
     &:first-child {
-      font-size: 1rem;
+      font-size: .75rem;
     }
   }
 `
@@ -142,27 +137,28 @@ class Player extends React.Component {
 
     return (
       <Fragment>
-        <Wrapper>
-          { currentSong &&
+
+        <Wrapper style={ currentSong ? {transform: "translateY(0)"} : {}}>
+          
+          <Controls>
+            <Item link noMobile onClick={playPrev} ><Icon src={back} size={20} /></Item>
+            <Item link onClick={this.togglePlay}><Icon src={isPlaying ? pause : play} size={20} /></Item>
+            <Item link noMobile onClick={playNext} ><Icon src={next} size={20} /></Item>
+          </Controls>
+          
             <Song>
-              <Artwork src={currentSong.artwork} />
               <Info>
-                <a>{currentSong.title}</a>
-                <a>{currentSong.user}</a>
+                <a>{currentSong &&currentSong.title}</a>
+                <a>{currentSong && currentSong.user}</a>
               </Info>
             </Song>
-          }
-          <Controls>
-            <Item link onClick={playPrev} ><Icon src={back} size={35} /></Item>
-            <Item link onClick={this.togglePlay}><Icon src={isPlaying ? pause : play} size={35} /></Item>
-            <Item link onClick={playNext} ><Icon src={next} size={35} /></Item>
-          </Controls>
-
-          <SliderDuration>
+            
+            <SliderDuration>
             <SliderFill style={{ width }}/>
           </SliderDuration>
+        
         </Wrapper>
-  
+       
         <audio 
           crossOrigin="anonymous"
           src={audioUrl}
@@ -180,7 +176,7 @@ class Player extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  state
+  state: state.playlist
 })
 
 const mapDispatchToProps = dispatch => ({

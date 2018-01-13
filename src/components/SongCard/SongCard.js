@@ -85,7 +85,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  z-index: 10;
+  /* z-index: 10; */
 `
 
 const Duration = styled.span`
@@ -94,15 +94,27 @@ const Duration = styled.span`
   font-size: .8rem;
 `
 
-class SongCard  extends React.Component {
+export const CardContainer = styled.div`
+  position: relative;
+  padding-bottom: 80px;
+  grid-column: 2;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-auto-rows: 85px;
+
+  @media screen and (min-width: 500px) {
+    grid-template-columns: repeat(auto-fit, 310px);
+    grid-auto-rows: 85px;
+    grid-gap: 15px;
+}
+`
+
+export class SongCard  extends React.Component {
 
   handleClick = () => {
-    const {
-      stream,
-      index
-    } = this.props.song
-
-    this.props.play(index, stream)
+    const { index } = this.props.song
+    this.props.play(index, this.props.from)
   }
 
   render () {
@@ -145,5 +157,3 @@ class SongCard  extends React.Component {
     )  
   }
 }
-
-export default SongCard

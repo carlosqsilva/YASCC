@@ -2,28 +2,26 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import debounce from 'lodash.debounce';
 import { connect } from 'react-redux';
-import { Header, Sidebar, Player, SongList } from './components';
+import { Header, Sidebar, Player, SongList, Search } from './components';
+
+import {
+  HashRouter as Router,
+  Route
+} from 'react-router-dom'
+
 import {
   toggle_sidebar,
   hide_sidebar,
-  load_playlist
+  load_playlist,
 } from './store/actions'
 
-const Root = styled.div`
-  position: relative;
-  height: 100vh;
-  width: 100vw;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-`
+const Fragment = React.Fragment
 
 const Container = styled.div`
   background-color: rgba(250, 250, 250, 1);
   position: relative;
   height: 100%;
   padding-top: 50px;
-  padding-bottom: 60px;
   transition: all 250ms ease;
 `
 
@@ -39,44 +37,54 @@ const Overlay = styled.div`
   transition: all 250ms ease;
 `
 
+
+
 class App extends Component {
 
-  componentDidMount() {
-    this.props.loadPlaylist()
-    
-    window.addEventListener("resize", debounce(() => {
-      if(window.innerWidth < 600) {
-        if(!this.props.sidebarVisible) {
-          this.props.hideSidebar()
-        }
+  handleResize = () => {
+    if(window.innerWidth < 600) {
+      if(!this.props.sidebarVisible) {
+        this.props.hideSidebar()
       }
-    }, 500, {'maxWait': 1000}), false)
+    }
+  }
+
+  componentDidMount() {
+    this.props.loadPlaylist()    
+    window.addEventListener("resize", debounce(this.handleResize, 500, {'maxWait': 1000}), false)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", debounce(this.handleResize, 500, {'maxWait': 1000}), false)
   }
 
   render() {
     const {sidebarVisible} =this.props.state
 
     return (
-      <Root>
-        <Sidebar style={ !sidebarVisible ? {transform: "translateX(-100%)"} : {}} />          
-        <Overlay 
-          style={ (window.innerWidth < 600 && sidebarVisible) ? {display: "block"} : {} }
-          onClick={this.props.toggleSidebar} />          
+      <Router>
+        <Fragment>
+          <Sidebar style={ !sidebarVisible ? {transform: "translateX(-100%)"} : {}} />          
+          <Overlay 
+            style={ (window.innerWidth < 600 && sidebarVisible) ? {display: "block"} : {} }
+            onClick={this.props.toggleSidebar} />          
 
-        <Container 
-          style={ (window.innerWidth >= 600 && sidebarVisible) ? {marginLeft: 250} : {}} >            
-          <Header />
-          <SongList/>
-          <Player/>  
-        </Container>
-      </Root>
+            <Container 
+              style={ (window.innerWidth >= 600 && sidebarVisible) ? {marginLeft: 250} : {}} >      
+                <Header />
+                  <Route exact path="/" component={SongList} /> 
+                  <Route path="/search" component={Search} /> 
+              <Player/>
+            </Container>
+        </Fragment>
+      </Router>
     );
   }
 }
 
 const mapStateToProps = state => {
   return {
-    state: state
+    state: state.root
   }
 }
 

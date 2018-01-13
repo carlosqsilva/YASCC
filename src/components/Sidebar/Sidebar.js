@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom'
 import { toggle_sidebar, load_playlist } from '../../store/actions';
 import styled from 'styled-components';
 
@@ -73,6 +74,7 @@ class Sidebar extends React.Component {
     })
     
     let genre = name.replace(/[-|&|\s]+/g, "").toLowerCase()
+    this.props.history.push("/")
     this.props.loadPlaylist(genre)
   }
 
@@ -116,4 +118,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Sidebar)
+export default connect(null, mapDispatchToProps)(withRouter(Sidebar));

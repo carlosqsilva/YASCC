@@ -8,4 +8,10 @@ export const ON_PLAY = "ON_PLAY";
 export const ON_PAUSE = "ON_PAUSE";
 export const ON_TIME_UPDATE = "ON_TIME_UPDATE";
 export const ON_LOAD_START = "ON_LOAD_START";
-export const ON_LOADED_METADATA = "ON_LOADED_METADATA"
+export const ON_LOADED_METADATA = "ON_LOADED_METADATA";
+
+export const ACTIVE_PLAYLIST = "ACTIVE_PLAYLIST";
+
+export const LOADING_SEARCH = "LOADING_SEARCH";
+export const LOADING_SEARCH_NEXT = "LOADING_SEARCH_NEXT";
+export const LOADED_SEARCH = "LOADED_SEARCH";

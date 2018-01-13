@@ -1,98 +1,131 @@
-import {
-  TOGGLE_SIDEBAR,
-  HIDE_SIDEBAR,
-  ON_LOAD_START,
-  ON_PLAY,
-  ON_PAUSE,
-  ON_TIME_UPDATE,
-  PLAY_SONG,
-  ON_LOADED_METADATA,
-  PLAYLIST_LOADING,
-  PLAYLIST_LOADED,
-  PLAYLIST_LOADING_NEXT
-} from './constants'
+import * as type from './constants'
+import { combineReducers } from 'redux'
 
-const initialState = {
+const rootInitialState = {
   sidebarVisible: true,
   loadingPlaylist: true,
-  currentTime: 0,
   duration: 0,
   isPlaying: false,
   songIndex: null,
   playlist: [],
   favorites: null,
-  userPlaylist: null,
+  userPlaylist: [],
   currentSong: null,
   audioUrl: null,
   nextUrl: null
 }
 
-const rootReducer = (state = initialState, action) => {
+const rootReducer = (state = rootInitialState, action) => {
   switch (action.type) {
-    case TOGGLE_SIDEBAR:
+    case type.TOGGLE_SIDEBAR:
       return {
         ...state,
         sidebarVisible: !state.sidebarVisible
       }
-    case HIDE_SIDEBAR:
+    case type.HIDE_SIDEBAR:
       return {
         ...state,
         sidebarVisible: false
       }
-    case PLAYLIST_LOADING:
+    case type.PLAYLIST_LOADING:
       return {
         ...state,
         loadingPlaylist: true,
         playlist: []
       }
-    case PLAYLIST_LOADING_NEXT:
+    case type.PLAYLIST_LOADING_NEXT:
       return {
         ...state,
         loadingPlaylist: true,
       }
-    case PLAYLIST_LOADED:
+    case type.PLAYLIST_LOADED:
       return {
         ...state,
         loadingPlaylist: false,
         playlist: [...state.playlist, ...action.playlist],
         nextUrl: action.nextUrl
       }
-    case ON_LOAD_START:
+    case type.ON_LOAD_START:
       return {
         ...state,
         currentTime: 0,
         duration: 0
-      }
-    case ON_LOADED_METADATA:
-      return {
-        ...state,
-        duration: action.duration
-      }
-    case ON_PLAY:
-      return {
-        ...state,
-        isPlaying: true
-      }
-    case ON_PAUSE:
-      return {
-        ...state,
-        isPlaying: false
-      }
-    case ON_TIME_UPDATE:
-      return {
-        ...state,
-        currentTime: action.currentTime
-      }
-    case PLAY_SONG:
-      return {
-        ...state,
-        songIndex: action.songIndex,
-        audioUrl: action.audioUrl,
-        currentSong: action.song
       }
     default:
       return state;
   }
 }
 
-export default rootReducer;
+const playlistInitialState = {
+  playlist: [],
+  songIndex: null,
+  audioUrl: null,
+  currentSong: null,
+  isPlaying: false,
+}
+
+const playlistReducer = (state = playlistInitialState, action) => {
+  switch (action.type) {
+    case type.ACTIVE_PLAYLIST:
+      return {
+        ...state,
+        playlist: action.currentPlaylist,
+      }
+    case type.PLAY_SONG:
+      return {
+        ...state,
+        songIndex: action.songIndex,
+        audioUrl: action.audioUrl,
+        currentSong: action.song
+      }
+    case type.ON_PLAY:
+      return {
+        ...state,
+        isPlaying: true
+      }
+    case type.ON_PAUSE:
+      return {
+        ...state,
+        isPlaying: false
+      }
+    default:
+      return state
+  }
+}
+
+const searchInitialState = {
+  loadingSearch: false,
+  results: [],
+  nextUrl: null,
+}
+
+const searchReducer = (state = searchInitialState, action) => {
+  switch (action.type) {
+    case type.LOADING_SEARCH:
+      return {
+        ...state,
+        loadingSearch: true,
+        results: []
+      }
+    case type.LOADING_SEARCH_NEXT:
+      return {
+        ...state,
+        loadingSearch: true,
+      }
+    case type.LOADED_SEARCH:
+      return {
+        ...state,
+        loadingSearch: false,
+        results: [...state.results, ...action.playlist],
+        nextUrl: action.nextUrl
+      }
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({
+  root: rootReducer,
+  search: searchReducer,
+  playlist: playlistReducer
+})
