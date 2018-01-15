@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { Header, Sidebar, Player, SongList, Search } from './components';
+import { Header, Sidebar, Player, SongList, Search, UserPlaylist } from './components';
 
 import {
   HashRouter as Router,
@@ -30,6 +30,16 @@ class App extends Component {
 
   componentDidMount() {
     this.props.loadPlaylist()
+
+    const ele = document.getElementById("loader")
+    if (ele) {
+      setTimeout( () => {
+        ele.classList.add("ready")
+        setTimeout( () => {
+          ele.outerHTML = ''
+        }, 100)
+      }, 2000)
+    }
   }
 
   render() {
@@ -39,7 +49,8 @@ class App extends Component {
           <Sidebar/>          
           <Container>      
             <Route exact path="/" component={SongList} /> 
-            <Route path="/search" component={Search} /> 
+            <Route path="/search" component={Search} />
+            <Route path="/playlist" component={UserPlaylist} />
           </Container>
           <Header/>
           <Player/>

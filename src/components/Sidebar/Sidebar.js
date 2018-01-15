@@ -44,6 +44,7 @@ const Overlay = styled.div`
 `
 
 const Segment = styled.div`
+  cursor: ${ props => props.link ? "pointer" : "default"};
   display: flex;
   align-items: stretch;
   justify-content: flex-start;
@@ -54,26 +55,47 @@ const Segment = styled.div`
   &:not(:last-child) {
     border-bottom: 1px solid rgba(255, 255, 255, .08);
   }
-  
-  > strong {
-    flex: 1;
-    align-self: center;
-    margin-left: 20px;
-  }
+`
+
+const Label = styled.strong`
+  flex: 1;
+  align-self: center;
+  margin-left: 20px;
+  font-size: 1.1rem;
+`
+
+const Link = styled.a`
+  display: inline;
+  text-decoration: none;
+  font-size: .9rem;
+  color: rgba(255, 255, 255, .9);
 `
 
 const Header = styled.div`
   margin: 0 0 .5rem;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.1rem;
 
+`
+
+const Tag = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content; center;
+  background-color: whitesmoke;
+  color: #111;
+  border-radius: 5px;
+  margin-right: 20px;
+  font-size: .8rem;
+  padding: 0 .7rem;
+  align-self: center;
 `
 
 const Option = styled.a`
   flex: 1 0 auto;
   cursor: pointer;
-  font-size: .9rem;
-  padding: 4px 0;
+  font-size: 1rem;
+  padding: 5px 0;
   transition: all 250ms ease;
   color: ${ props => props.active === true ? "rgba(255, 255, 255, .9)" : "rgba(255, 255, 255, .5)"};
 
@@ -90,6 +112,10 @@ class Sidebar extends React.Component {
     activeItem: ""
   }
   
+  goToPlaylist = () => {
+    this.props.history.push("/playlist")
+  }
+
   handleClick = (e) => {
     const { name } = e.target
     this.setState({
@@ -97,7 +123,9 @@ class Sidebar extends React.Component {
     })
     
     let genre = name.replace(/[-|&|\s]+/g, "").toLowerCase()
-    this.props.history.push("/")
+    if (this.props.history.location.pathname !== "/") {
+      this.props.history.push("/")
+    }
     this.props.loadPlaylist(genre)
   }
 
@@ -109,14 +137,16 @@ class Sidebar extends React.Component {
       <Fragment>
 
         <Container style={ sidebarVisible ? {transform: "translateX(0)"}: {}} >        
-          <Segment horizontal>
-            <Icon size={30} src={Logo}/>
+          <Segment>
+            <Icon size={40} src={Logo}/>
             <strong title="Yet Another SoundCloud Client" >YASCC</strong>
+            <Link href="https://carloseng.com" target="_blanck" rel="noopener noreferrer"> - by Carlos Silva</Link>
           </Segment>
 
-          <Segment horizontal>
+          <Segment horizontal link onClick={this.goToPlaylist}>
             <Icon size={20} src={Playlist} />
-            <strong>Playlist</strong>
+            <Label>Playlist</Label>
+            <Tag>{this.props.num}</Tag>
           </Segment>
           
           <Segment>
@@ -144,7 +174,8 @@ class Sidebar extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    state: state.root
+    state: state.root,
+    num: state.userPlaylist.num
   }
 }
 

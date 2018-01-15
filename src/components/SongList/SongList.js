@@ -3,12 +3,13 @@ import { connect } from 'react-redux'
 
 import {
   load_playlist_next,
+  add_to_playlist,
   play_song_from_btn
 } from '../../store/actions'
 
 import Loading from '../Loading/Loading';
 import {SongCard, CardContainer} from '../SongCard/SongCard'
-import InfiniteScroll from '../InfiniteScroll/InfiniteScroll'
+import { InfiniteScroll } from '../InfiniteScroll/InfiniteScroll'
 
 const SongList = (props) => {
 
@@ -26,6 +27,7 @@ const SongList = (props) => {
               song={{...song, index}}
               from="/"
               play={props.playSong}
+              playlistAction={props.addToPlaylist}
               key={song.id} />
           )
         }
@@ -43,7 +45,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loadMore: () => dispatch(load_playlist_next()),
-  playSong: (index, location) => dispatch(play_song_from_btn(index, location))
+  playSong: (index, location) => dispatch(play_song_from_btn(index, location)),
+  addToPlaylist: (song) => dispatch(add_to_playlist(song))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SongList)

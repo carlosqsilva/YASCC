@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
 
-const Container = styled.div`
+export const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr minmax(300px, 1900px) 1fr;
   padding: 10px;
@@ -12,7 +12,7 @@ const Container = styled.div`
   }
 `
 
-class  InfiniteScroll extends React.Component {
+export class InfiniteScroll extends React.Component {
 
   componentDidMount() {
     window.addEventListener("scroll", debounce(this.handleScroll, 200), false)
@@ -36,5 +36,3 @@ class  InfiniteScroll extends React.Component {
     )
   }
 }
-
-export default InfiniteScroll

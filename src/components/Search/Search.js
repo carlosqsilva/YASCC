@@ -2,10 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { SongCard, CardContainer} from '../SongCard/SongCard'
 import Loading from '../Loading/Loading';
-import InfiniteMore from '../InfiniteScroll/InfiniteScroll';
+import { InfiniteScroll } from '../InfiniteScroll/InfiniteScroll';
 
 import {
   load_next_results,
+  add_to_playlist,
   play_song_from_btn
 } from '../../store/actions'
 
@@ -17,7 +18,7 @@ const Search = (props) => {
   } = props.state
 
   return (
-    <InfiniteMore loadMore={props.loadMore}>
+    <InfiniteScroll loadMore={props.loadMore}>
       <CardContainer>
         {
           results.map( (song, index) => (
@@ -25,6 +26,7 @@ const Search = (props) => {
               song={{...song, index}}
               from="/search"
               play={props.playSong}
+              playlistAction={props.addToPlaylist}
               key={song.id}/>
           ))
         }
@@ -32,7 +34,7 @@ const Search = (props) => {
           isLoading={loadingSearch}
           loadMore={props.loadMore}/>
       </CardContainer>
-    </InfiniteMore>
+    </InfiniteScroll>
   )
 }
 
@@ -42,7 +44,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch =>({
   loadMore: () => dispatch(load_next_results()),
-  playSong: (index, location) => dispatch(play_song_from_btn(index, location))
+  playSong: (index, location) => dispatch(play_song_from_btn(index, location)),
+  addToPlaylist: (song) => dispatch(add_to_playlist(song))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search)

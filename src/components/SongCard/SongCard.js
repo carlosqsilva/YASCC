@@ -21,7 +21,6 @@ const Artwork = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-
   width: 65px;
 
   > img {
@@ -64,7 +63,7 @@ const Title = styled.a`
 
   @media screen and (min-width: 500px) {
     font-size: .8rem;
-    /* cursor: pointer; */
+    cursor: pointer;
 
     &:hover {
       text-decoration: underline;
@@ -112,9 +111,15 @@ export const CardContainer = styled.div`
 
 export class SongCard  extends React.Component {
 
-  handleClick = () => {
+  playSong = () => {
     const { index } = this.props.song
     this.props.play(index, this.props.from)
+  }
+
+  addToPlaylist = (e) => {
+    if (!e) e = window.event;
+    if (e.stopPropagation) e.stopPropagation()
+    this.props.playlistAction(this.props.song)
   }
 
   render () {
@@ -127,32 +132,25 @@ export class SongCard  extends React.Component {
     } = this.props.song
     
     return (
-      <Card onClick={this.handleClick}>
-        
-        <Artwork 
-          
+      <Card onClick={this.playSong}>        
+        <Artwork           
           style={{backgroundImage: `url(${artwork})`}}>
-
           <Icon src={Play} size={30} />
         </Artwork>
         
         <Container>
-
           <Title>{title}</Title>
           <User>{user}</User>
-
           <Wrapper>
             
             <img 
-              onClick={() => console.log("Ola Mundo!!!")}
+              onClick={this.addToPlaylist}
               src={Add} width={12} height={12} 
               title="Add to Playlist" alt=""/>
-
             <Duration>{duration}</Duration>
           </Wrapper>
 
-        </Container>
-      
+        </Container>      
       </Card>
     )  
   }

@@ -4,14 +4,8 @@ import { combineReducers } from 'redux'
 const rootInitialState = {
   sidebarVisible: false,
   loadingPlaylist: true,
-  duration: 0,
   isPlaying: false,
-  songIndex: null,
   playlist: [],
-  favorites: null,
-  userPlaylist: [],
-  currentSong: null,
-  audioUrl: null,
   nextUrl: null
 }
 
@@ -44,12 +38,6 @@ const rootReducer = (state = rootInitialState, action) => {
         loadingPlaylist: false,
         playlist: [...state.playlist, ...action.playlist],
         nextUrl: action.nextUrl
-      }
-    case type.ON_LOAD_START:
-      return {
-        ...state,
-        currentTime: 0,
-        duration: 0
       }
     default:
       return state;
@@ -124,8 +112,30 @@ const searchReducer = (state = searchInitialState, action) => {
   }
 }
 
+export const userPlaylistReducer = (
+  state = {
+    playlist: [],
+    num: 0,
+  }, action) => {
+  switch (action.type) {
+    case type.ADD_TO_PLAYLIST:
+      return {
+        playlist: [...state.playlist, action.song],
+        num: state.num + 1
+      }
+    case type.REMOVE_FROM_PLAYLIST:
+      return {
+        playlist: action.playlist,
+        num: state.num - 1
+      }
+    default:
+      return state
+  }
+}
+
 export default combineReducers({
   root: rootReducer,
   search: searchReducer,
-  playlist: playlistReducer
+  playlist: playlistReducer,
+  userPlaylist: userPlaylistReducer
 })

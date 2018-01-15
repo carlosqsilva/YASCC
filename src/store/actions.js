@@ -60,7 +60,7 @@ export const play_song_from_btn = (index, location) => (dispatch, getState) => {
       playlist = getState().search.results;
       break;
     case "/playlist":
-      playlist = getState().playlist.userPlaylist;
+      playlist = getState().userPlaylist.playlist;
       break;
     default:
       return [];
@@ -122,4 +122,15 @@ export const load_next_results = () => (dispatch, getState) => {
     dispatch({type: type.LOADING_SEARCH_NEXT})
     dispatch(fetch_songs(nextUrl, type.LOADED_SEARCH))
   }
+}
+
+export const add_to_playlist = (song) => (dispatch) => {
+  dispatch({type: type.ADD_TO_PLAYLIST, song})
+}
+
+export const remove_from_playlist = (song) => (dispatch, getState) => {
+  let playlist = getState().userPlaylist.playlist
+
+  playlist = playlist.filter( track => (track.id !== song.id))
+  dispatch({type: type.REMOVE_FROM_PLAYLIST, playlist})
 }
