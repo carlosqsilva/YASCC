@@ -1,5 +1,4 @@
 import * as type from './constants'
-import { combineReducers } from 'redux'
 
 const rootInitialState = {
   sidebarVisible: false,
@@ -133,9 +132,9 @@ export const userPlaylistReducer = (
   }
 }
 
-export default combineReducers({
+export default {
   root: rootReducer,
   search: searchReducer,
   playlist: playlistReducer,
   userPlaylist: userPlaylistReducer
-})
+}

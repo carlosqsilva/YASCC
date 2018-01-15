@@ -146,7 +146,7 @@ class Sidebar extends React.Component {
           <Segment horizontal link onClick={this.goToPlaylist}>
             <Icon size={20} src={Playlist} />
             <Label>Playlist</Label>
-            <Tag>{this.props.num}</Tag>
+            <Tag>{this.props.userplaylist.num}</Tag>
           </Segment>
           
           <Segment>
@@ -175,7 +175,7 @@ class Sidebar extends React.Component {
 const mapStateToProps = state => {
   return {
     state: state.root,
-    num: state.userPlaylist.num
+    userplaylist: state.userPlaylist
   }
 }
 

@@ -2,15 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
-import {simpleStore} from './store'
+import {
+  // simpleStore,
+  configStore} from './store'
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
+import { PersistGate } from 'redux-persist/es/integration/react'
 
-const store = simpleStore()
+// const store = simpleStore()
+const { persistor, store } = configStore()
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <PersistGate persistor={persistor}>
+      <App />
+    </PersistGate>
   </Provider>, 
   document.getElementById('root'));
 
