@@ -8,7 +8,6 @@ import Icon from '../Utils/Icon'
 import {
   play_next,
   play_prev,
-  on_load_start,
   on_play,
   on_pause
 } from '../../store/actions'
@@ -25,13 +24,17 @@ const Wrapper = styled.div`
   height: 40px;
   padding-top: 4px;
   width: 100%;
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   left: 0px;
   display: flex;
   justify-content: flex-start;
-  transform: translateY(100%);
-  transition: transform 200ms ease-in-out;
+  transform: translateX(-100%);
+  transition: transform 500ms ease;
+
+  @media screen and (min-width: 500px) {
+    margin-left: 250px;
+  }
 `
 
 const Controls = styled.div`
@@ -128,7 +131,6 @@ class Player extends React.Component {
     const {
       playNext,
       playPrev,
-      onLoadStart,
       onPause,
       onPlay
     } = this.props
@@ -138,7 +140,7 @@ class Player extends React.Component {
     return (
       <Fragment>
 
-        <Wrapper style={ currentSong ? {transform: "translateY(0)"} : {}}>
+        <Wrapper style={ currentSong ? {transform: "translateX(0)"} : {}}>
           
           <Controls>
             <Item link noMobile onClick={playPrev} ><Icon src={back} size={20} /></Item>
@@ -164,7 +166,6 @@ class Player extends React.Component {
           src={audioUrl}
           onEnded={playNext}
           onLoadedMetadata={this.onLoadedMetadata}
-          onLoadStart={onLoadStart}
           onPause={onPause}
           onPlay={onPlay}
           onTimeUpdate={debounce(this.onTimeUpdate, 500, {maxWait: 1000})}
@@ -182,7 +183,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   playNext: () => dispatch(play_next()),
   playPrev: () => dispatch(play_prev()),
-  onLoadStart: () => dispatch(on_load_start()),
   onPause: () => dispatch(on_pause()),
   onPlay: () => dispatch(on_play())
 })

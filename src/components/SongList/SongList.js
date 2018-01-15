@@ -18,7 +18,7 @@ const SongList = (props) => {
   } = props.state
 
   return (
-    <InfiniteScroll loadMore={props.loadMore}>
+    <InfiniteScroll loadMore={props.loadMore} >
       <CardContainer>
         {
           playlist.map( (song, index) => 

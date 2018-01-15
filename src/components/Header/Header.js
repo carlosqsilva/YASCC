@@ -9,25 +9,27 @@ import Menu from './menu.svg';
 import Github from './github.svg';
 
 const Wrapper = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0px;
   left: 0px;
-  right: 0px;
+  width: 100%;
   height: 50px;
   background-color: white;
-  width: 100%;
   display: flex;
   justify-content: flex-start;
 
-&::after {
-  box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, .06);
-  position: absolute;
-  bottom: -5px;
-  width: 100%;
-  height: 5px;
-  content: "";
-  z-index: 10
-}
+  @media screen and (min-width: 500px) {
+    padding-left: 250px;
+  }
+
+  &::after {
+    box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, .06);
+    position: absolute;
+    bottom: -5px;
+    width: 100%;
+    height: 5px;
+    content: "";
+  }
 `
 
 const Input = styled.input`
@@ -69,7 +71,7 @@ class Header extends Component {
   render() {
     return (
       <Wrapper>
-        <Item link onClick={this.props.toggleSidebar}>
+        <Item link noDesktop onClick={this.props.toggleSidebar}>
           <Icon size={20} src={Menu}/>
         </Item>
 

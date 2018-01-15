@@ -2,7 +2,7 @@ import * as type from './constants'
 import { combineReducers } from 'redux'
 
 const rootInitialState = {
-  sidebarVisible: true,
+  sidebarVisible: false,
   loadingPlaylist: true,
   duration: 0,
   isPlaying: false,

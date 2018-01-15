@@ -22,6 +22,10 @@ const Item = styled.a`
   @media screen and (max-width: 500px) {
     ${ props => props.noMobile && "display: none"};
   }
+
+  @media screen and (min-width: 500px) {
+    ${ props => props.noDesktop && "display: none"};
+  }
 `
 
 export default Item

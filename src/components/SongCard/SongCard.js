@@ -96,7 +96,7 @@ const Duration = styled.span`
 
 export const CardContainer = styled.div`
   position: relative;
-  padding-bottom: 80px;
+  padding-bottom: 100px;
   grid-column: 2;
   display: grid;
   grid-gap: 10px;

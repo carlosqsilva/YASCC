@@ -1,12 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
+import debounce from 'lodash.debounce'
 
 const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr minmax(300px, 1900px) 1fr;
   padding: 10px;
-  height: 100%;
-  overflow-y: scroll;
 
   @media screen and (min-width: 500px) {
     padding: 15px;
@@ -15,16 +14,23 @@ const Container = styled.div`
 
 class  InfiniteScroll extends React.Component {
 
-  handleScroll = (e) => {
-    const {scrollTop, scrollHeight, clientHeight } = e.target
-    if ((scrollTop + clientHeight) > (scrollHeight - 40)) {
+  componentDidMount() {
+    window.addEventListener("scroll", debounce(this.handleScroll, 200), false)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", debounce(this.handleScroll, 200), false)
+  }
+
+  handleScroll = () => {
+    if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 150)) {
       this.props.loadMore()
-    }
+    } 
   }
 
   render() {
     return (
-      <Container onScroll={this.handleScroll}>
+      <Container>
         {this.props.children}
       </Container>
     )

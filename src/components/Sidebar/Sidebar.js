@@ -8,16 +8,39 @@ import Icon from '../Utils/Icon';
 import Logo from './logo.svg';
 import Playlist from './playlist.svg'
 
+const Fragment = React.Fragment
+
 const Container = styled.div`
   background-color: rgb(27, 28, 29);
   transition: all 250ms ease;
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   left: 0px;
   top: 0px;
   width: 250px;
   z-index: 100;
   overflow-y: scroll;
+  transform: translateX(-100%);
+
+  @media screen and (min-width: 500px) {
+    transform: translateX(0);
+  }
+`
+
+const Overlay = styled.div`
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  background: rgba(0,0,0,.5);
+  transition: all 250ms ease;
+
+  @media screen and (min-width: 500px) {
+    display: none;
+  }
 `
 
 const Segment = styled.div`
@@ -80,34 +103,48 @@ class Sidebar extends React.Component {
 
   render() {
     const { activeItem } = this.state
+    const {sidebarVisible} =this.props.state
 
     return (
-      <Container style={this.props.style}>
-        
-        <Segment horizontal>
-          <Icon size={30} src={Logo}/>
-          <strong title="Yet Another SoundCloud Client" >YASCC</strong>
-        </Segment>
+      <Fragment>
 
-        <Segment horizontal>
-          <Icon size={20} src={Playlist} />
-          <strong>Playlist</strong>
-        </Segment>
+        <Container style={ sidebarVisible ? {transform: "translateX(0)"}: {}} >        
+          <Segment horizontal>
+            <Icon size={30} src={Logo}/>
+            <strong title="Yet Another SoundCloud Client" >YASCC</strong>
+          </Segment>
+
+          <Segment horizontal>
+            <Icon size={20} src={Playlist} />
+            <strong>Playlist</strong>
+          </Segment>
+          
+          <Segment>
+            <Header>Music</Header>
+            {
+              music.map( (val, i) => 
+                <Option 
+                key={i}
+                name={val}
+                active={activeItem === val}
+                onClick={this.handleClick}>{val} </Option>)
+            }
+          </Segment>        
+        </Container>
         
-        <Segment>
-          <Header>Music</Header>
-          {
-            music.map( (val, i) => 
-              <Option 
-              key={i}
-              name={val}
-              active={activeItem === val}
-              onClick={this.handleClick}>{val} </Option>)
-          }
-        </Segment>
+        {
+          sidebarVisible &&
+          <Overlay onClick={this.props.toggleSidebar} />
+        }
       
-      </Container>
+      </Fragment>
     )
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+    state: state.root
   }
 }
 
@@ -118,4 +155,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(withRouter(Sidebar));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Sidebar));
