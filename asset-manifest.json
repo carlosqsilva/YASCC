@@ -1,6 +1,6 @@
 {
-  "main.js": "static/js/main.4c0e0ed8.js",
-  "main.js.map": "static/js/main.4c0e0ed8.js.map",
+  "main.js": "static/js/main.849de970.js",
+  "main.js.map": "static/js/main.849de970.js.map",
   "static/media/add.svg": "static/media/add.720728f6.svg",
   "static/media/back.svg": "static/media/back.0176b60f.svg",
   "static/media/github.svg": "static/media/github.9de88d7b.svg",
@@ -10,5 +10,6 @@
   "static/media/next.svg": "static/media/next.fb7519d8.svg",
   "static/media/pause.svg": "static/media/pause.94724fb9.svg",
   "static/media/play.svg": "static/media/play.711d8b49.svg",
-  "static/media/playlist.svg": "static/media/playlist.4b6c45cc.svg"
+  "static/media/playlist.svg": "static/media/playlist.4b6c45cc.svg",
+  "static/media/remove.svg": "static/media/remove.fd02734d.svg"
 }
