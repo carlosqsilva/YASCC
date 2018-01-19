@@ -49,6 +49,7 @@ const playlistInitialState = {
   audioUrl: null,
   currentSong: null,
   isPlaying: false,
+  location: ""
 }
 
 const playlistReducer = (state = playlistInitialState, action) => {

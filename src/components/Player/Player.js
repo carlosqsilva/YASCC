@@ -33,7 +33,7 @@ const Wrapper = styled.div`
   transition: transform 500ms ease;
 
   @media screen and (min-width: 500px) {
-    margin-left: 250px;
+    padding-left: 250px;
   }
 `
 
@@ -62,10 +62,10 @@ const Info = styled.div`
     text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: .6rem;
+    font-size: .7rem;
 
     &:first-child {
-      font-size: .75rem;
+      font-size: .8rem;
     }
   }
 `
@@ -77,6 +77,10 @@ const SliderDuration = styled.div`
   left: 0px;
   width: 100%;
   height: 4px;
+  
+  @media screen and (min-width: 500px) {
+    padding-left: 250px;
+  }
 `
 
 const SliderFill = styled.div`
@@ -84,7 +88,8 @@ const SliderFill = styled.div`
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
   height: 4px;
-  will-change: width;
+  width: 100%;
+  transform: translateX(-100%);
 `
 
 class Player extends React.Component {
@@ -135,7 +140,7 @@ class Player extends React.Component {
       onPlay
     } = this.props
     
-    const width = `${( currentTime/ duration) * 100}%`
+    const transform = `translateX(-${100 - ( currentTime/ duration) * 100}%)`
 
     return (
       <Fragment>
@@ -143,20 +148,20 @@ class Player extends React.Component {
         <Wrapper style={ currentSong ? {transform: "translateX(0)"} : {}}>
           
           <Controls>
-            <Item link noMobile onClick={playPrev} ><Icon src={back} size={20} /></Item>
-            <Item link onClick={this.togglePlay}><Icon src={isPlaying ? pause : play} size={20} /></Item>
-            <Item link noMobile onClick={playNext} ><Icon src={next} size={20} /></Item>
+            <Item link noMobile onClick={playPrev} ><Icon src={back} size={25} /></Item>
+            <Item link onClick={this.togglePlay}><Icon src={isPlaying ? pause : play} size={25} /></Item>
+            <Item link noMobile onClick={playNext} ><Icon src={next} size={25} /></Item>
           </Controls>
           
-            <Song>
-              <Info>
-                <a>{currentSong &&currentSong.title}</a>
-                <a>{currentSong && currentSong.user}</a>
-              </Info>
-            </Song>
+          <Song>
+            <Info>
+              <a>{currentSong &&currentSong.title}</a>
+              <a>{currentSong && currentSong.user}</a>
+            </Info>
+          </Song>
             
-            <SliderDuration>
-            <SliderFill style={{ width }}/>
+          <SliderDuration>
+            <SliderFill style={{ transform }}/>
           </SliderDuration>
         
         </Wrapper>

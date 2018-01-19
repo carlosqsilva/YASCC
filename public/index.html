@@ -100,14 +100,13 @@
         width: 100%;
         height: 4px;
         background: #fff;
+        transform: translateX(-100%);
+        animation-fill-mode: forwards;
         animation: load 6s linear;
       }
       @keyframes load {
-        0% {
-          width: 0;
-        }
-        100% {
-          width: 100%;
+        to {
+          transform: translateX(0);
         }
       }
     </style>

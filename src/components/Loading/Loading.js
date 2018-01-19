@@ -28,14 +28,15 @@ const LoadingSpin = styled.div`
 `
 
 const LoadMore = styled.button`
-  background-color: #444;
+  background-color: #fff;
   cursor:  pointer;
-  color: rgb(250, 250, 250);
+  color: rgba(0,0,0,.87);
   font-size: 1rem;
-  margin: 1em;
-  padding: .25em 1em;
-  border: 2px solid #dedede;
-  border-radius: 4px; 
+  margin: 0;
+  padding: .3em 1em;
+  border: 10px;
+  border-radius: 2px;
+  box-shadow: 0px 1px 6px rgba(0,0,0,.12); 
 `
 
 const Loading = (props) => {
@@ -44,7 +45,9 @@ const Loading = (props) => {
   return (
     <Wrapper>
       {
-        isLoading === true ? <LoadingSpin/> : <LoadMore onClick={loadMore}>Load More</LoadMore>
+        isLoading === true ? 
+        <LoadingSpin/> : 
+        <LoadMore onClick={loadMore}>Load More</LoadMore>
       }
     </Wrapper>
   )

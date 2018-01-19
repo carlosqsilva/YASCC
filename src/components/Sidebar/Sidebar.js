@@ -67,15 +67,16 @@ const Label = styled.strong`
 const Link = styled.a`
   display: inline;
   text-decoration: none;
-  font-size: .9rem;
+  font-size: .8rem;
   color: rgba(255, 255, 255, .9);
+  align-self: center;
+  margin: 0 20px 0 0;
 `
 
 const Header = styled.div`
   margin: 0 0 .5rem;
   font-weight: 700;
   font-size: 1.1rem;
-
 `
 
 const Tag = styled.span`
@@ -92,12 +93,12 @@ const Tag = styled.span`
 `
 
 const Option = styled.a`
-  flex: 1 0 auto;
+  flex: 1;
   cursor: pointer;
   font-size: 1rem;
   padding: 5px 0;
   transition: all 250ms ease;
-  color: ${ props => props.active === true ? "rgba(255, 255, 255, .9)" : "rgba(255, 255, 255, .5)"};
+  color: ${ props => props.active === true ? "white" : "rgba(255, 255, 255, .5)"};
 
   &:hover {
     color: rgba(255, 255, 255, .9);
@@ -137,10 +138,10 @@ class Sidebar extends React.Component {
       <Fragment>
 
         <Container style={ sidebarVisible ? {transform: "translateX(0)"}: {}} >        
-          <Segment>
-            <Icon size={40} src={Logo}/>
-            <strong title="Yet Another SoundCloud Client" >YASCC</strong>
-            <Link href="https://carloseng.com" target="_blanck" rel="noopener noreferrer"> - by Carlos Silva</Link>
+          <Segment horizontal>
+            <Icon size={35} src={Logo}/>
+            <Label title="Yet Another SoundCloud Client" >YASCC</Label>
+            <Link href="https://carloseng.com" target="_blanck" rel="noopener noreferrer">by Carlos Silva</Link>
           </Segment>
 
           <Segment horizontal link onClick={this.goToPlaylist}>

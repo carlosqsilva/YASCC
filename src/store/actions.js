@@ -52,23 +52,27 @@ export const play_song = (songIndex, song) => dispatch => {
 export const play_song_from_btn = (index, location) => (dispatch, getState) => {
   let playlist
   
-  switch (location) {
-    case "/":
+  if (location === getState().playlist.location) {
+    playlist = getState().playlist
+  } else {
+    switch (location) {
+      case "/":
       playlist = getState().root.playlist;
       break;
-    case "/search":
+      case "/search":
       playlist = getState().search.results;
       break;
-    case "/playlist":
+      case "/playlist":
       playlist = getState().userPlaylist.playlist;
       break;
-    default:
+      default:
       return [];
+    }
   }
-  
-  dispatch({type: type.ACTIVE_PLAYLIST, currentPlaylist: playlist})
+    
   const song = playlist[index]
   dispatch(play_song(index, song))
+  dispatch({type: type.ACTIVE_PLAYLIST, currentPlaylist: playlist})
 }
 
 export const play_next = () => (dispatch, getState) => {
@@ -124,13 +128,19 @@ export const load_next_results = () => (dispatch, getState) => {
   }
 }
 
-export const add_to_playlist = (song) => (dispatch) => {
-  dispatch({type: type.ADD_TO_PLAYLIST, song})
+export const add_to_playlist = (song) => (dispatch, getState) => {
+  const playlist = getState().userPlaylist.playlist
+  const repeated = playlist.filter( track => track.id === song.id)
+  if (repeated.length === 0) {
+    dispatch({type: type.ADD_TO_PLAYLIST, song})
+  }
 }
 
 export const remove_from_playlist = (song) => (dispatch, getState) => {
-  let playlist = getState().userPlaylist.playlist
-
-  playlist = playlist.filter( track => (track.id !== song.id))
+  let playlist = getState().userPlaylist.playlist.filter( track => (track.id !== song.id))
   dispatch({type: type.REMOVE_FROM_PLAYLIST, playlist})
 }
+
+// export const import_playlist = (url) => (dispatch) => {
+//   const apiCall = `http://api.soundcloud.com/resolve?url=${url}&${api_key_dev}`
+// }

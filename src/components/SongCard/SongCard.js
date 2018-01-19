@@ -1,15 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
-import Icon from '../Utils/Icon'
+import Icon, { WithTooltip } from '../Utils/Icon'
 import Play from './play.svg'
 import Add from './add.svg'
+import Remove from './remove.svg'
 
 const Card = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items; stretch;
+  position: relative;
   border-radius: 4px;
-  overflow: hidden;
   padding: 10px;
 
   background-color: white;
@@ -47,44 +48,30 @@ const Artwork = styled.div`
   }
 `
 
-const Container = styled.div`
-  position: relative;
+const Info = styled.div`
   margin-left: 5px;
+  margin-bottom: 5px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow: hidden;
   flex: 1;
-`
 
-const Title = styled.a`
-  font-size: .75rem;
-  color: #444;
-
-  @media screen and (min-width: 500px) {
-    font-size: .8rem;
-    cursor: pointer;
-
-    &:hover {
-      text-decoration: underline;
+  > a {
+    color: #444;
+    font-size: .75rem;
+    &:first-child {
+      font-size: .8rem;
     }
   }
 `
 
-const User = styled.a`
-  font-size: .7rem;
-  color: #333;
-  margin-bottom: 5px;
-`
-
 const Wrapper = styled.div`
   position: absolute;
-  bottom: 0px;
-  right: 0px;
+  bottom: 10px;
+  right: 10px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  /* z-index: 10; */
 `
 
 const Duration = styled.span`
@@ -130,27 +117,26 @@ export class SongCard  extends React.Component {
       artwork,
       duration,
     } = this.props.song
+
+    const fromPlaylist = this.props.from === "/playlist"
     
     return (
       <Card onClick={this.playSong}>        
-        <Artwork           
-          style={{backgroundImage: `url(${artwork})`}}>
+        <Artwork style={{backgroundImage: `url(${artwork})`}}>
           <Icon src={Play} size={30} />
         </Artwork>
         
-        <Container>
-          <Title>{title}</Title>
-          <User>{user}</User>
-          <Wrapper>
-            
-            <img 
-              onClick={this.addToPlaylist}
-              src={Add} width={12} height={12} 
-              title="Add to Playlist" alt=""/>
-            <Duration>{duration}</Duration>
-          </Wrapper>
-
-        </Container>      
+        <Info>
+          <a>{title}</a>
+          <a>{user}</a>
+        </Info>      
+        
+        <Wrapper>
+          <WithTooltip tooltip={fromPlaylist ? "Remove from Playlist" : "Add to Playlist"}>
+            <Icon onClick={this.addToPlaylist} size={15} alt="" src={fromPlaylist ? Remove : Add} />
+          </WithTooltip>
+          <Duration>{duration}</Duration>
+        </Wrapper>
       </Card>
     )  
   }
