@@ -1,4 +1,4 @@
-import * as type from './constants'
+import * as type from "./constants"
 
 const rootInitialState = {
   sidebarVisible: false,
@@ -29,7 +29,7 @@ const rootReducer = (state = rootInitialState, action) => {
     case type.PLAYLIST_LOADING_NEXT:
       return {
         ...state,
-        loadingPlaylist: true,
+        loadingPlaylist: true
       }
     case type.PLAYLIST_LOADED:
       return {
@@ -39,7 +39,7 @@ const rootReducer = (state = rootInitialState, action) => {
         nextUrl: action.nextUrl
       }
     default:
-      return state;
+      return state
   }
 }
 
@@ -58,6 +58,7 @@ const playlistReducer = (state = playlistInitialState, action) => {
       return {
         ...state,
         playlist: action.currentPlaylist,
+        location: action.location
       }
     case type.PLAY_SONG:
       return {
@@ -84,7 +85,7 @@ const playlistReducer = (state = playlistInitialState, action) => {
 const searchInitialState = {
   loadingSearch: false,
   results: [],
-  nextUrl: null,
+  nextUrl: null
 }
 
 const searchReducer = (state = searchInitialState, action) => {
@@ -98,7 +99,7 @@ const searchReducer = (state = searchInitialState, action) => {
     case type.LOADING_SEARCH_NEXT:
       return {
         ...state,
-        loadingSearch: true,
+        loadingSearch: true
       }
     case type.LOADED_SEARCH:
       return {
@@ -108,25 +109,24 @@ const searchReducer = (state = searchInitialState, action) => {
         nextUrl: action.nextUrl
       }
     default:
-      return state;
+      return state
   }
 }
 
 export const userPlaylistReducer = (
   state = {
-    playlist: [],
-    num: 0,
-  }, action) => {
+    playlist: []
+  },
+  action
+) => {
   switch (action.type) {
     case type.ADD_TO_PLAYLIST:
       return {
-        playlist: [...state.playlist, action.song],
-        num: state.num + 1
+        playlist: [...state.playlist, action.song]
       }
     case type.REMOVE_FROM_PLAYLIST:
       return {
-        playlist: action.playlist,
-        num: state.num - 1
+        playlist: action.playlist
       }
     default:
       return state

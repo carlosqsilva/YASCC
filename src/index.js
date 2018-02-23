@@ -1,23 +1,28 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import { h, render } from "preact"
+import { Provider } from "react-redux"
 
 import {
   // simpleStore,
-  configStore} from './store'
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
-import { PersistGate } from 'redux-persist/es/integration/react'
+  configStore
+} from "./store"
+import App from "./App"
+import registerServiceWorker from "./registerServiceWorker"
+import { PersistGate } from "redux-persist/es/integration/react"
 
 // const store = simpleStore()
 const { persistor, store } = configStore()
 
-ReactDOM.render(
+render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
       <App />
     </PersistGate>
-  </Provider>, 
-  document.getElementById('root'));
+  </Provider>,
+  document.body
+)
 
-registerServiceWorker();
+registerServiceWorker()
+
+if (module.hot) {
+  require("preact/devtools")
+}

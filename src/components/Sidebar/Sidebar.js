@@ -1,14 +1,12 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom'
-import { toggle_sidebar, load_playlist } from '../../store/actions';
-import styled from 'styled-components';
+import { h, Component } from "preact"
+import { connect } from "react-redux"
+import withRouter from "react-router-dom/es/withRouter"
+import { toggle_sidebar, load_playlist } from "../../store/actions"
+import styled from "styled-components"
 
-import Icon from '../Utils/Icon';
-import Logo from './logo.svg';
-import Playlist from './playlist.svg'
-
-const Fragment = React.Fragment
+import Icon from "../Utils/Icon"
+import Logo from "./logo.svg"
+import Playlist from "./playlist.svg"
 
 const Container = styled.div`
   background-color: rgb(27, 28, 29);
@@ -35,7 +33,7 @@ const Overlay = styled.div`
   width: 100%;
   height: 100%;
   z-index: 50;
-  background: rgba(0,0,0,.5);
+  background: rgba(0, 0, 0, 0.5);
   transition: all 250ms ease;
 
   @media screen and (min-width: 500px) {
@@ -44,16 +42,16 @@ const Overlay = styled.div`
 `
 
 const Segment = styled.div`
-  cursor: ${ props => props.link ? "pointer" : "default"};
+  cursor: ${props => (props.link ? "pointer" : "default")};
   display: flex;
   align-items: stretch;
   justify-content: flex-start;
-  flex-direction: ${props => props.horizontal ? "row" : "column"};
-  padding: .7rem 0 .7rem 1rem;
-  color: rgba(255, 255, 255, .9);
+  flex-direction: ${props => (props.horizontal ? "row" : "column")};
+  padding: 0.7rem 0 0.7rem 1rem;
+  color: rgba(255, 255, 255, 0.9);
 
   &:not(:last-child) {
-    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 `
 
@@ -67,14 +65,14 @@ const Label = styled.strong`
 const Link = styled.a`
   display: inline;
   text-decoration: none;
-  font-size: .8rem;
-  color: rgba(255, 255, 255, .9);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.9);
   align-self: center;
   margin: 0 20px 0 0;
 `
 
 const Header = styled.div`
-  margin: 0 0 .5rem;
+  margin: 0 0 0.5rem;
   font-weight: 700;
   font-size: 1.1rem;
 `
@@ -82,13 +80,13 @@ const Header = styled.div`
 const Tag = styled.span`
   display: inline-flex;
   align-items: center;
-  justify-content; center;
+  justify-content: center;
   background-color: whitesmoke;
   color: #111;
   border-radius: 5px;
   margin-right: 20px;
-  font-size: .8rem;
-  padding: 0 .7rem;
+  font-size: 0.8rem;
+  padding: 0 0.7rem;
   align-self: center;
 `
 
@@ -98,31 +96,61 @@ const Option = styled.a`
   font-size: 1rem;
   padding: 5px 0;
   transition: all 250ms ease;
-  color: ${ props => props.active === true ? "white" : "rgba(255, 255, 255, .5)"};
+  color: ${props =>
+    props.active === true ? "white" : "rgba(255, 255, 255, .5)"};
 
   &:hover {
-    color: rgba(255, 255, 255, .9);
+    color: rgba(255, 255, 255, 0.9);
   }
 `
 
-const music = ["Alternative Rock", "Ambient", "Classical", "Country", "Dance & EDM", "Dancehall", "Deep House", "Disco", "Drum & Bass", "Dubstep", "Electronic", "Hip-hop & Rap", "House", "Indie", "Jazz & Blues", "Latin", "Metal", "Piano", "Pop", "R&B & Soul", "Reggae", "Reggaeton", "Rock", "Soundtrack", "Techno", "Trance", "Trap", "Triphop", "World"]
+const music = [
+  "Alternative Rock",
+  "Ambient",
+  "Classical",
+  "Country",
+  "Dance & EDM",
+  "Dancehall",
+  "Deep House",
+  "Disco",
+  "Drum & Bass",
+  "Dubstep",
+  "Electronic",
+  "Hip-hop & Rap",
+  "House",
+  "Indie",
+  "Jazz & Blues",
+  "Latin",
+  "Metal",
+  "Piano",
+  "Pop",
+  "R&B & Soul",
+  "Reggae",
+  "Reggaeton",
+  "Rock",
+  "Soundtrack",
+  "Techno",
+  "Trance",
+  "Trap",
+  "Triphop",
+  "World"
+]
 
-class Sidebar extends React.Component {
-  
+class Sidebar extends Component {
   state = {
     activeItem: ""
   }
-  
+
   goToPlaylist = () => {
     this.props.history.push("/playlist")
   }
 
-  handleClick = (e) => {
+  handleClick = e => {
     const { name } = e.target
     this.setState({
-      activeItem: name 
+      activeItem: name
     })
-    
+
     let genre = name.replace(/[-|&|\s]+/g, "").toLowerCase()
     if (this.props.history.location.pathname !== "/") {
       this.props.history.push("/")
@@ -130,61 +158,57 @@ class Sidebar extends React.Component {
     this.props.loadPlaylist(genre)
   }
 
-  render() {
-    const { activeItem } = this.state
-    const {sidebarVisible} =this.props.state
-
+  render({ sidebarVisible, qtd }, { activeItem }) {
     return (
-      <Fragment>
-
-        <Container style={ sidebarVisible ? {transform: "translateX(0)"}: {}} >        
+      <div>
+        <Container style={sidebarVisible ? { transform: "translateX(0)" } : {}}>
           <Segment horizontal>
-            <Icon size={35} src={Logo}/>
-            <Label title="Yet Another SoundCloud Client" >YASCC</Label>
-            <Link href="https://carloseng.com" target="_blanck" rel="noopener noreferrer">by Carlos Silva</Link>
+            <Icon size={35} src={Logo} />
+            <Label title="Yet Another SoundCloud Client">YASCC</Label>
+            <Link
+              href="https://carloseng.com"
+              target="_blanck"
+              rel="noopener noreferrer"
+            >
+              by Carlos Silva
+            </Link>
           </Segment>
 
           <Segment horizontal link onClick={this.goToPlaylist}>
             <Icon size={20} src={Playlist} />
             <Label>Playlist</Label>
-            <Tag>{this.props.userplaylist.num}</Tag>
+            <Tag>{qtd}</Tag>
           </Segment>
-          
+
           <Segment>
             <Header>Music</Header>
-            {
-              music.map( (val, i) => 
-                <Option 
+            {music.map((val, i) => (
+              <Option
                 key={i}
                 name={val}
                 active={activeItem === val}
-                onClick={this.handleClick}>{val} </Option>)
-            }
-          </Segment>        
+                onClick={this.handleClick}
+              >
+                {val}{" "}
+              </Option>
+            ))}
+          </Segment>
         </Container>
-        
-        {
-          sidebarVisible &&
-          <Overlay onClick={this.props.toggleSidebar} />
-        }
-      
-      </Fragment>
+
+        {sidebarVisible && <Overlay onClick={this.props.toggleSidebar} />}
+      </div>
     )
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    state: state.root,
-    userplaylist: state.userPlaylist
-  }
+const mapStateToProps = ({ root, userPlaylist }) => ({
+  sidebarVisible: root.sidebarVisible,
+  qtd: userPlaylist.playlist.length
+})
+
+const mapDispatchToProps = {
+  loadPlaylist: load_playlist,
+  toggleSidebar: toggle_sidebar
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    loadPlaylist: (genre) => dispatch(load_playlist(genre)),
-    toggleSidebar: () => dispatch(toggle_sidebar())
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Sidebar));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Sidebar))

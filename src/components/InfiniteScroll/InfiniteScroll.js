@@ -1,6 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import debounce from 'lodash.debounce'
+import { h, Component } from "preact"
+import styled from "styled-components"
+import debounce from "lodash.debounce"
 
 export const Container = styled.div`
   display: grid;
@@ -12,27 +12,29 @@ export const Container = styled.div`
   }
 `
 
-export class InfiniteScroll extends React.Component {
-
+export class InfiniteScroll extends Component {
   componentDidMount() {
     window.addEventListener("scroll", debounce(this.handleScroll, 200), false)
   }
 
   componentWillUnmount() {
-    window.removeEventListener("scroll", debounce(this.handleScroll, 200), false)
+    window.removeEventListener(
+      "scroll",
+      debounce(this.handleScroll, 200),
+      false
+    )
   }
 
   handleScroll = () => {
-    if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 150)) {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.body.offsetHeight - 150
+    ) {
       this.props.loadMore()
-    } 
+    }
   }
 
   render() {
-    return (
-      <Container>
-        {this.props.children}
-      </Container>
-    )
+    return <Container>{this.props.children}</Container>
   }
 }

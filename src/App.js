@@ -1,18 +1,19 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { Header, Sidebar, Player, SongList, Search, UserPlaylist } from './components';
-
+import { h, Component } from "preact"
+import styled from "styled-components"
+import { connect } from "react-redux"
 import {
-  HashRouter as Router,
-  Route
-} from 'react-router-dom'
+  Header,
+  Sidebar,
+  Player,
+  SongList,
+  Search,
+  UserPlaylist
+} from "./components"
 
-import {
-  load_playlist,
-} from './store/actions'
+import HashRouter from "react-router-dom/es/HashRouter"
+import Route from "react-router-dom/es/Route"
 
-const Fragment = React.Fragment
+import { load_playlist } from "./store/actions"
 
 const Container = styled.div`
   background-color: rgba(250, 250, 250, 1);
@@ -27,43 +28,38 @@ const Container = styled.div`
 `
 
 class App extends Component {
-
   componentDidMount() {
     this.props.loadPlaylist()
 
     const ele = document.getElementById("loader")
     if (ele) {
-      setTimeout( () => {
+      setTimeout(() => {
         ele.classList.add("ready")
-        setTimeout( () => {
-          ele.outerHTML = ''
-        }, 100)
+        setTimeout(() => {
+          ele.outerHTML = ""
+        }, 2000)
       }, 2000)
     }
   }
 
   render() {
     return (
-      <Router>
-        <Fragment>
-          <Sidebar/>          
-          <Container>      
-            <Route exact path="/" component={SongList} /> 
-            <Route path="/search" component={Search} />
-            <Route path="/playlist" component={UserPlaylist} />
-          </Container>
-          <Header/>
-          <Player/>
-        </Fragment>
-      </Router>
+      <HashRouter>
+        <Container>
+          <Sidebar />
+          <Route exact path="/" component={SongList} />
+          <Route path="/search" component={Search} />
+          <Route path="/playlist" component={UserPlaylist} />
+          <Header />
+          <Player />
+        </Container>
+      </HashRouter>
     )
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    loadPlaylist: () => dispatch(load_playlist()),
-  }
+const mapDispatchToProps = {
+  loadPlaylist: load_playlist
 }
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(null, mapDispatchToProps)(App)

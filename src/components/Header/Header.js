@@ -1,13 +1,13 @@
-import React from 'react';
-import { connect } from 'react-redux'
+import { h } from "preact"
+import { connect } from "react-redux"
 
-import { toggle_sidebar } from '../../store/actions'
-import styled from 'styled-components'
-import SearchInput from '../SearchInput/searchInput'
-import Icon from '../Utils/Icon'
-import Item from '../Utils/Item'
-import Menu from './menu.svg';
-import Github from './github.svg';
+import { toggle_sidebar } from "../../store/actions"
+import styled from "styled-components"
+import SearchInput from "../SearchInput/searchInput"
+import Icon from "../Utils/Icon"
+import Item from "../Utils/Item"
+import Menu from "./menu.svg"
+import Github from "./github.svg"
 
 const Wrapper = styled.div`
   position: fixed;
@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   }
 
   &::after {
-    box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, .06);
+    box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, 0.06);
     position: absolute;
     bottom: -5px;
     width: 100%;
@@ -33,25 +33,22 @@ const Wrapper = styled.div`
   }
 `
 
-const Header = (props) => {
+const Header = ({ toggleSidebar }) => (
+  <Wrapper>
+    <Item link noDesktop onClick={toggleSidebar}>
+      <Icon size={22} src={Menu} />
+    </Item>
 
-  return (
-    <Wrapper>
-      <Item link noDesktop onClick={props.toggleSidebar}>
-        <Icon size={22} src={Menu}/>
-      </Item>
+    <SearchInput />
 
-      <SearchInput />
-      
-      <Item link noMobile href="https://github.com/carlosqsilva/yascc">
-        <Icon size={23} src={Github}/>
-      </Item>
-    </Wrapper>
-  )
+    <Item link noMobile href="https://github.com/carlosqsilva/yascc">
+      <Icon size={23} src={Github} />
+    </Item>
+  </Wrapper>
+)
+
+const actions = {
+  toggleSidebar: toggle_sidebar
 }
-
-const actions = dispatch => ({
-  toggleSidebar: () => dispatch(toggle_sidebar()),
-})
 
 export default connect(null, actions)(Header)

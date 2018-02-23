@@ -1,14 +1,11 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import styled from 'styled-components'
+import { h, Component } from "preact"
+import { connect } from "react-redux"
+import styled from "styled-components"
 
-import {
-  play_song_from_btn,
-  remove_from_playlist
-} from '../../store/actions'
+import { play_song_from_btn, remove_from_playlist } from "../../store/actions"
 
-import { SongCard, CardContainer } from '../SongCard/SongCard'
-import { Container } from '../InfiniteScroll/InfiniteScroll'
+import { SongCard, CardContainer } from "../SongCard/SongCard"
+import { Container } from "../InfiniteScroll/InfiniteScroll"
 
 const Wrapper = styled.div`
   height: 100%;
@@ -27,42 +24,48 @@ const Header = styled.div`
   }
 `
 
-const UserPlaylist = (props) => {
+class UserPlaylist extends Component {
+  playSong = index => {
+    this.props.playSong(index, this.props.location.pathname)
+  }
 
-  const {
-    playlist,
-  } = props.state
+  playlistAction = e => song => {
+    if (!e) e = window.event
+    if (e.stopPropagation) e.stopPropagation()
+    this.props.removeSong(song)
+  }
 
-  return (
-    <Wrapper>
-      <Header>
-        Playlist
-      </Header>
-      <Container loadMore={props.loadMore} >
-        <CardContainer>
-          {
-            playlist.map( (song, index) => 
-              <SongCard 
-                song={{...song, index}}
-                from="/playlist"
-                play={props.playSong}
-                playlistAction={props.removeSong}
-                key={song.id} />
-            )
-          }
-        </CardContainer>
-      </Container>
-    </Wrapper>
-  )
+  render({ playlist, location }) {
+    const path = location.pathname
+    return (
+      <Wrapper>
+        <Header>Playlist</Header>
+        <Container>
+          <CardContainer>
+            {playlist.map((song, index) => (
+              <SongCard
+                from={path}
+                song={song}
+                index={index}
+                playlistAction={this.playlistAction}
+                play={this.playSong}
+                key={song.id}
+              />
+            ))}
+          </CardContainer>
+        </Container>
+      </Wrapper>
+    )
+  }
 }
 
-const mapStateToProps = state => ({
-  state: state.userPlaylist
+const state = ({ userPlaylist }) => ({
+  playlist: userPlaylist.playlist
 })
 
-const mapDispatchToProps = dispatch => ({
-  playSong: (index, location) => dispatch(play_song_from_btn(index, location)),
-  removeSong: (song) => dispatch(remove_from_playlist(song))
-})
+const actions = {
+  playSong: play_song_from_btn,
+  removeSong: remove_from_playlist
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserPlaylist)
+export default connect(state, actions)(UserPlaylist)

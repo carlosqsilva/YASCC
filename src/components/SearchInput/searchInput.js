@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
-import { search_songs } from '../../store/actions'
+import { h, Component } from "preact"
+import { connect } from "react-redux"
+import styled from "styled-components"
+import withRouter from "react-router-dom/es/withRouter"
+import { search_songs } from "../../store/actions"
 
 const Form = styled.form`
   position: relative;
@@ -14,8 +14,8 @@ const Form = styled.form`
 `
 
 const Input = styled.input`
-  background-color: rgba(250, 250, 250, .9);
-  color: rgba(0, 0, 0, .87);
+  background-color: rgba(250, 250, 250, 0.9);
+  color: rgba(0, 0, 0, 0.87);
   border-radius: 4px;
   appearance: none;
   border: none;
@@ -26,29 +26,16 @@ const Input = styled.input`
   width: 100%;
 `
 
-const PreviewSearch = styled.div`
-  position: absolute;
-  top: 120%;
-  left: 0px;
-  width: 100%;
-  min-height: 50px;
-  background-color: white;
-  border: 1px solid rgba(250,250,250,.9);
-  border-radius: 4px;
-  box-shadow: 0px 2px 2px 0px rgba(17, 17, 17, .06);
-  z-index: 999;
-`
-
-class SearchInput extends React.Component {
+class SearchInput extends Component {
   state = {
     value: ""
   }
 
-  handleChange = (e) => {
-    this.setState({value: e.target.value})
-  }  
+  handleChange = e => {
+    this.setState({ value: e.target.value })
+  }
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault()
     this.props.searchSongs(this.state.value)
     this.props.history.push("/search")
@@ -56,31 +43,21 @@ class SearchInput extends React.Component {
 
   render() {
     const { value } = this.state
-    
-    return (
-      <Form onSubmit={this.handleSubmit} >
-        <Input placeholder="Search..." value={this.state.value} onChange={this.handleChange}/>
 
-        { value.length > 0 &&
-          <PreviewSearch>
-            
-          </PreviewSearch>
-        }
+    return (
+      <Form onSubmit={this.handleSubmit}>
+        <Input
+          placeholder="Search..."
+          value={value}
+          onChange={this.handleChange}
+        />
       </Form>
     )
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    state: state.search
-  }
+const actions = {
+  searchSongs: search_songs
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    searchSongs: (q) => dispatch(search_songs(q))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SearchInput));
+export default connect(null, actions)(withRouter(SearchInput))

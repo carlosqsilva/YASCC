@@ -1,52 +1,57 @@
-import React from 'react'
-import { connect } from 'react-redux'
-
+import { h, Component } from "preact"
+import { connect } from "react-redux"
 import {
   load_playlist_next,
   add_to_playlist,
   play_song_from_btn
-} from '../../store/actions'
+} from "../../store/actions"
 
-import Loading from '../Loading/Loading';
-import {SongCard, CardContainer} from '../SongCard/SongCard'
-import { InfiniteScroll } from '../InfiniteScroll/InfiniteScroll'
+import Loading from "../Loading/Loading"
+import { SongCard, CardContainer } from "../SongCard/SongCard"
+import { InfiniteScroll } from "../InfiniteScroll/InfiniteScroll"
 
-const SongList = (props) => {
+class SongList extends Component {
+  playSong = index => {
+    this.props.playSong(index, this.props.location.pathname)
+  }
 
-  const {
-    playlist,
-    loadingPlaylist
-  } = props.state
+  playlistAction = e => song => {
+    if (!e) e = window.event
+    if (e.stopPropagation) e.stopPropagation()
+    this.props.addToPlaylist(song)
+  }
 
-  return (
-    <InfiniteScroll loadMore={props.loadMore} >
-      <CardContainer>
-        {
-          playlist.map( (song, index) => 
-            <SongCard 
-              song={{...song, index}}
-              from="/"
-              play={props.playSong}
-              playlistAction={props.addToPlaylist}
-              key={song.id} />
-          )
-        }
-        <Loading 
-          isLoading={loadingPlaylist}
-          loadMore={props.loadMore}/>
-      </CardContainer>
-    </InfiniteScroll>
-  )
+  render({ loadMore, playlist, loading, location }) {
+    const path = location.pathname
+    return (
+      <InfiniteScroll loadMore={loadMore}>
+        <CardContainer>
+          {playlist.map((song, index) => (
+            <SongCard
+              from={path}
+              song={song}
+              index={index}
+              playlistAction={this.playlistAction}
+              play={this.playSong}
+              key={song.id}
+            />
+          ))}
+          <Loading isLoading={loading} loadMore={loadMore} />
+        </CardContainer>
+      </InfiniteScroll>
+    )
+  }
 }
 
-const mapStateToProps = state => ({
-  state: state.root
+const state = ({ root }) => ({
+  playlist: root.playlist,
+  loading: root.loadingPlaylist
 })
 
-const mapDispatchToProps = dispatch => ({
-  loadMore: () => dispatch(load_playlist_next()),
-  playSong: (index, location) => dispatch(play_song_from_btn(index, location)),
-  addToPlaylist: (song) => dispatch(add_to_playlist(song))
-})
+const actions = {
+  loadMore: load_playlist_next,
+  playSong: play_song_from_btn,
+  addToPlaylist: add_to_playlist
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(SongList)
+export default connect(state, actions)(SongList)

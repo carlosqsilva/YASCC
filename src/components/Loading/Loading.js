@@ -1,5 +1,5 @@
-import React from 'react'
-import styled, { keyframes } from 'styled-components'
+import { h } from "preact"
+import styled, { keyframes } from "styled-components"
 
 const spin = keyframes`
   0% {
@@ -29,28 +29,24 @@ const LoadingSpin = styled.div`
 
 const LoadMore = styled.button`
   background-color: #fff;
-  cursor:  pointer;
-  color: rgba(0,0,0,.87);
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.87);
   font-size: 1rem;
   margin: 0;
-  padding: .3em 1em;
+  padding: 0.3em 1em;
   border: 10px;
   border-radius: 2px;
-  box-shadow: 0px 1px 6px rgba(0,0,0,.12); 
+  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.12);
 `
 
-const Loading = (props) => {
-  const { isLoading, loadMore } = props
-
-  return (
-    <Wrapper>
-      {
-        isLoading === true ? 
-        <LoadingSpin/> : 
-        <LoadMore onClick={loadMore}>Load More</LoadMore>
-      }
-    </Wrapper>
-  )
-}
+const Loading = ({ isLoading, loadMore }) => (
+  <Wrapper>
+    {isLoading === true ? (
+      <LoadingSpin />
+    ) : (
+      <LoadMore onClick={loadMore}>Load More</LoadMore>
+    )}
+  </Wrapper>
+)
 
 export default Loading

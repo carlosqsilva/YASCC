@@ -1,13 +1,13 @@
-import { createStore, applyMiddleware } from 'redux'
-import { persistStore, persistCombineReducers } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
-import thunk from 'redux-thunk'
-import rootReducer from './reducer'
+import { createStore, applyMiddleware } from "redux"
+import { persistStore, persistCombineReducers } from "redux-persist"
+import storage from "redux-persist/lib/storage"
+import thunk from "redux-thunk"
+import rootReducer from "./reducer"
 
 const config = {
-  key: 'root',
+  key: "root",
   storage,
-  blacklist: ['playlist']
+  blacklist: ["playlist", "root", "search"]
 }
 
 const reducer = persistCombineReducers(config, rootReducer)
@@ -15,7 +15,7 @@ const reducer = persistCombineReducers(config, rootReducer)
 export const configStore = () => {
   let store = createStore(reducer, applyMiddleware(thunk))
   let persistor = persistStore(store)
-  return { persistor, store}
+  return { persistor, store }
 }
 
 // export const simpleStore = () => {
