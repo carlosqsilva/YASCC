@@ -1,16 +1,16 @@
 import { h, Component } from "preact"
 import { connect } from "react-redux"
+import { SongCard, CardContainer } from "../Components/SongCard/SongCard"
+import Loading from "../Components/Loading/Loading"
+import { InfiniteScroll } from "../Components/InfiniteScroll/InfiniteScroll"
+
 import {
-  load_playlist_next,
+  load_next_results,
   add_to_playlist,
   play_song_from_btn
-} from "../../store/actions"
+} from "../store/actions"
 
-import Loading from "../Loading/Loading"
-import { SongCard, CardContainer } from "../SongCard/SongCard"
-import { InfiniteScroll } from "../InfiniteScroll/InfiniteScroll"
-
-class SongList extends Component {
+class Search extends Component {
   playSong = index => {
     this.props.playSong(index, this.props.location.pathname)
   }
@@ -21,12 +21,12 @@ class SongList extends Component {
     this.props.addToPlaylist(song)
   }
 
-  render({ loadMore, playlist, loading, location }) {
+  render({ results, loading, loadMore, location }) {
     const path = location.pathname
     return (
       <InfiniteScroll loadMore={loadMore}>
         <CardContainer>
-          {playlist.map((song, index) => (
+          {results.map((song, index) => (
             <SongCard
               from={path}
               song={song}
@@ -43,15 +43,15 @@ class SongList extends Component {
   }
 }
 
-const state = ({ root }) => ({
-  playlist: root.playlist,
-  loading: root.loadingPlaylist
+const mapStateToProps = ({ search }) => ({
+  results: search.results,
+  loading: search.loadingSearch
 })
 
-const actions = {
-  loadMore: load_playlist_next,
+const mapDispatchToProps = {
+  loadMore: load_next_results,
   playSong: play_song_from_btn,
   addToPlaylist: add_to_playlist
 }
 
-export default connect(state, actions)(SongList)
+export default connect(mapStateToProps, mapDispatchToProps)(Search)

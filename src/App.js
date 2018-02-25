@@ -1,14 +1,11 @@
 import { h, Component } from "preact"
 import styled from "styled-components"
 import { connect } from "react-redux"
-import {
-  Header,
-  Sidebar,
-  Player,
-  SongList,
-  Search,
-  UserPlaylist
-} from "./components"
+import { Header, Sidebar, Player } from "./Components"
+
+import SongList from "./Routes/SongList"
+import Search from "./Routes/Search"
+import UserPlaylist from "./Routes/UserPlaylist"
 
 import HashRouter from "react-router-dom/es/HashRouter"
 import Route from "react-router-dom/es/Route"
@@ -37,8 +34,8 @@ class App extends Component {
         ele.classList.add("ready")
         setTimeout(() => {
           ele.outerHTML = ""
-        }, 2000)
-      }, 2000)
+        }, 1000)
+      }, 1500)
     }
   }
 

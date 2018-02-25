@@ -1,7 +1,7 @@
 import { h } from "preact"
 import { connect } from "react-redux"
 
-import { toggle_sidebar } from "../../store/actions"
+import { toggle_sidebar } from "@/store/actions"
 import styled from "styled-components"
 import SearchInput from "../SearchInput/searchInput"
 import Icon from "../Utils/Icon"

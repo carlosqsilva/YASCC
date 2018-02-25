@@ -1,7 +1,7 @@
 import { h, Component } from "preact"
 import { connect } from "react-redux"
-import withRouter from "react-router-dom/es/withRouter"
-import { toggle_sidebar, load_playlist } from "../../store/actions"
+import Link from "react-router-dom/es/Link"
+import { toggle_sidebar, load_playlist } from "@/store/actions"
 import styled from "styled-components"
 
 import Icon from "../Utils/Icon"
@@ -43,6 +43,7 @@ const Overlay = styled.div`
 
 const Segment = styled.div`
   cursor: ${props => (props.link ? "pointer" : "default")};
+  text-decoration: none;
   display: flex;
   align-items: stretch;
   justify-content: flex-start;
@@ -55,20 +56,13 @@ const Segment = styled.div`
   }
 `
 
+const LinkSegment = Segment.withComponent(Link)
+
 const Label = styled.strong`
   flex: 1;
   align-self: center;
   margin-left: 20px;
   font-size: 1.1rem;
-`
-
-const Link = styled.a`
-  display: inline;
-  text-decoration: none;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.9);
-  align-self: center;
-  margin: 0 20px 0 0;
 `
 
 const Header = styled.div`
@@ -90,10 +84,10 @@ const Tag = styled.span`
   align-self: center;
 `
 
-const Option = styled.a`
+const Option = styled(Link)`
   flex: 1;
   cursor: pointer;
-  font-size: 1rem;
+  text-decoration: none;
   padding: 5px 0;
   transition: all 250ms ease;
   color: ${props =>
@@ -141,20 +135,14 @@ class Sidebar extends Component {
     activeItem: ""
   }
 
-  goToPlaylist = () => {
-    this.props.history.push("/playlist")
-  }
-
   handleClick = e => {
     const { name } = e.target
+
     this.setState({
       activeItem: name
     })
 
     let genre = name.replace(/[-|&|\s]+/g, "").toLowerCase()
-    if (this.props.history.location.pathname !== "/") {
-      this.props.history.push("/")
-    }
     this.props.loadPlaylist(genre)
   }
 
@@ -165,26 +153,20 @@ class Sidebar extends Component {
           <Segment horizontal>
             <Icon size={35} src={Logo} />
             <Label title="Yet Another SoundCloud Client">YASCC</Label>
-            <Link
-              href="https://carloseng.com"
-              target="_blanck"
-              rel="noopener noreferrer"
-            >
-              by Carlos Silva
-            </Link>
           </Segment>
 
-          <Segment horizontal link onClick={this.goToPlaylist}>
+          <LinkSegment horizontal link to="/playlist">
             <Icon size={20} src={Playlist} />
             <Label>Playlist</Label>
             <Tag>{qtd}</Tag>
-          </Segment>
+          </LinkSegment>
 
           <Segment>
             <Header>Music</Header>
             {music.map((val, i) => (
               <Option
                 key={i}
+                to="/"
                 name={val}
                 active={activeItem === val}
                 onClick={this.handleClick}
@@ -211,4 +193,4 @@ const mapDispatchToProps = {
   toggleSidebar: toggle_sidebar
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Sidebar))
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)

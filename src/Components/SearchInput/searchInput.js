@@ -2,7 +2,7 @@ import { h, Component } from "preact"
 import { connect } from "react-redux"
 import styled from "styled-components"
 import withRouter from "react-router-dom/es/withRouter"
-import { search_songs } from "../../store/actions"
+import { search_songs } from "@/store/actions"
 
 const Form = styled.form`
   position: relative;

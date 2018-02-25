@@ -2,10 +2,10 @@ import { h, Component } from "preact"
 import { connect } from "react-redux"
 import styled from "styled-components"
 
-import { play_song_from_btn, remove_from_playlist } from "../../store/actions"
+import { play_song_from_btn, remove_from_playlist } from "../store/actions"
 
-import { SongCard, CardContainer } from "../SongCard/SongCard"
-import { Container } from "../InfiniteScroll/InfiniteScroll"
+import { SongCard, CardContainer } from "../Components/SongCard/SongCard"
+import { Container } from "../Components/InfiniteScroll/InfiniteScroll"
 
 const Wrapper = styled.div`
   height: 100%;

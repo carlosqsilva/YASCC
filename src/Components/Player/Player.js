@@ -4,8 +4,9 @@ import styled from "styled-components"
 import debounce from "lodash.debounce"
 import Item from "../Utils/Item"
 import Icon from "../Utils/Icon"
+import Slider from "../Slider/Slider"
 
-import { play_next, play_prev, on_play, on_pause } from "../../store/actions"
+import { play_next, play_prev, on_play, on_pause } from "@/store/actions"
 
 import play from "./play.svg"
 import back from "./back.svg"
@@ -15,7 +16,7 @@ import pause from "./pause.svg"
 const Wrapper = styled.div`
   background-color: white;
   height: 40px;
-  padding-top: 4px;
+  padding-top: 6px;
   width: 100%;
   position: fixed;
   bottom: 0px;
@@ -63,28 +64,6 @@ const Info = styled.div`
   }
 `
 
-const SliderDuration = styled.div`
-  background-color: rgba(0, 0, 0, 0.03);
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 4px;
-
-  @media screen and (min-width: 500px) {
-    padding-left: 250px;
-  }
-`
-
-const SliderFill = styled.div`
-  background-color: #21d4fd;
-  border-top-right-radius: 2px;
-  border-bottom-right-radius: 2px;
-  height: 4px;
-  width: 100%;
-  transform: translateX(-100%);
-`
-
 class Player extends Component {
   state = {
     duration: 0,
@@ -104,6 +83,10 @@ class Player extends Component {
     })
   }
 
+  changeCurrentTime = currentTime => {
+    this.audioElement.currentTime = currentTime
+  }
+
   togglePlay = () => {
     const { audioElement } = this
     if (audioElement.paused) {
@@ -113,15 +96,13 @@ class Player extends Component {
     }
   }
 
-  render(
-    { playlist, playNext, playPrev, onPause, onPlay },
-    { currentTime, duration }
-  ) {
+  render({ playlist, playNext, playPrev, onPause, onPlay }) {
     const { currentSong, isPlaying, audioUrl } = playlist
-    const transform = `translateX(-${100 - currentTime / duration * 100}%)`
 
     return (
       <Wrapper style={currentSong ? { transform: "translateX(0)" } : {}}>
+        <Slider onChange={this.changeCurrentTime} {...this.state} />
+
         <Controls>
           <Item link noMobile onClick={playPrev}>
             <Icon src={back} size={25} />
@@ -141,9 +122,6 @@ class Player extends Component {
           </Info>
         </Song>
 
-        <SliderDuration>
-          <SliderFill style={{ transform }} />
-        </SliderDuration>
         <audio
           crossOrigin="anonymous"
           src={audioUrl}
