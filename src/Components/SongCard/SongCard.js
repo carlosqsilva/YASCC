@@ -84,7 +84,6 @@ export const CardContainer = styled.div`
   position: relative;
   padding-bottom: 60px;
   margin-bottom: 40px;
-  grid-column: 2;
   display: grid;
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));

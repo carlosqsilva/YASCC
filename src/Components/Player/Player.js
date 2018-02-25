@@ -70,6 +70,36 @@ class Player extends Component {
     currentTime: 0
   }
 
+  componentDidMount() {
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.playbackState = "paused"
+      navigator.mediaSession.setActionHandler(
+        "previoustrack",
+        this.props.playPrev
+      )
+      navigator.mediaSession.setActionHandler("play", this.togglePlay)
+      navigator.mediaSession.setActionHandler("pause", this.togglePlay)
+      navigator.mediaSession.setActionHandler("nexttrack", this.props.playNext)
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    if ("mediaSession" in navigator) {
+      /* eslint-disable */
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: nextProps.currentSong.title,
+        artist: nextProps.currentSong.user,
+        artwork: [
+          {
+            src: nextProps.currentSong.artwork.replace("large", "t500x500"),
+            sizes: "500x500",
+            type: "image/jpg"
+          }
+        ]
+      })
+      /* eslint-enable */
+    }
+  }
+
   onLoadedMetadata = () => {
     this.setState({
       duration: this.audioElement.duration
@@ -96,9 +126,15 @@ class Player extends Component {
     }
   }
 
-  render({ playlist, playNext, playPrev, onPause, onPlay }) {
-    const { currentSong, isPlaying, audioUrl } = playlist
-
+  render({
+    currentSong,
+    isPlaying,
+    audioUrl,
+    playNext,
+    playPrev,
+    onPause,
+    onPlay
+  }) {
     return (
       <Wrapper style={currentSong ? { transform: "translateX(0)" } : {}}>
         <Slider onChange={this.changeCurrentTime} {...this.state} />
@@ -137,15 +173,17 @@ class Player extends Component {
   }
 }
 
-const mapStateToProps = ({ playlist }) => ({
-  playlist
+const state = ({ playlist }) => ({
+  currentSong: playlist.currentSong,
+  audioUrl: playlist.audioUrl,
+  isPlaying: playlist.isPlaying
 })
 
-const mapDispatchToProps = {
+const actions = {
   playNext: play_next,
   playPrev: play_prev,
   onPause: on_pause,
   onPlay: on_play
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Player)
+export default connect(state, actions)(Player)

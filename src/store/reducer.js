@@ -15,11 +15,6 @@ const rootReducer = (state = rootInitialState, action) => {
         ...state,
         sidebarVisible: !state.sidebarVisible
       }
-    case type.HIDE_SIDEBAR:
-      return {
-        ...state,
-        sidebarVisible: false
-      }
     case type.PLAYLIST_LOADING:
       return {
         ...state,

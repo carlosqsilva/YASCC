@@ -183,14 +183,14 @@ class Sidebar extends Component {
   }
 }
 
-const mapStateToProps = ({ root, userPlaylist }) => ({
+const state = ({ root, userPlaylist }) => ({
   sidebarVisible: root.sidebarVisible,
   qtd: userPlaylist.playlist.length
 })
 
-const mapDispatchToProps = {
+const actions = {
   loadPlaylist: load_playlist,
   toggleSidebar: toggle_sidebar
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)
+export default connect(state, actions)(Sidebar)

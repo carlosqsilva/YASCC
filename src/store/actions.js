@@ -27,14 +27,6 @@ export const toggle_sidebar = () => ({
   type: type.TOGGLE_SIDEBAR
 })
 
-export const hide_sidebar = () => ({
-  type: type.HIDE_SIDEBAR
-})
-
-export const on_load_start = () => ({
-  type: type.ON_LOAD_START
-})
-
 export const on_play = () => ({
   type: type.ON_PLAY
 })

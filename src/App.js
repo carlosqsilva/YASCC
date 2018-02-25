@@ -16,11 +16,14 @@ const Container = styled.div`
   background-color: rgba(250, 250, 250, 1);
   position: relative;
   min-height: 100vh;
-  padding-top: 50px;
+  max-width: 1900px;
+  margin-top: 50px;
+  padding: 10px;
   transition: all 250ms ease;
 
   @media screen and (min-width: 500px) {
     margin-left: 250px;
+    padding: 15px;
   }
 `
 
@@ -55,8 +58,8 @@ class App extends Component {
   }
 }
 
-const mapDispatchToProps = {
+const actions = {
   loadPlaylist: load_playlist
 }
 
-export default connect(null, mapDispatchToProps)(App)
+export default connect(null, actions)(App)

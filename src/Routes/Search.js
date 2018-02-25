@@ -43,15 +43,15 @@ class Search extends Component {
   }
 }
 
-const mapStateToProps = ({ search }) => ({
+const state = ({ search }) => ({
   results: search.results,
   loading: search.loadingSearch
 })
 
-const mapDispatchToProps = {
+const actions = {
   loadMore: load_next_results,
   playSong: play_song_from_btn,
   addToPlaylist: add_to_playlist
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Search)
+export default connect(state, actions)(Search)

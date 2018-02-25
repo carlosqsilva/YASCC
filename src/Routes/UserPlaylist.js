@@ -3,9 +3,7 @@ import { connect } from "react-redux"
 import styled from "styled-components"
 
 import { play_song_from_btn, remove_from_playlist } from "../store/actions"
-
 import { SongCard, CardContainer } from "../Components/SongCard/SongCard"
-import { Container } from "../Components/InfiniteScroll/InfiniteScroll"
 
 const Wrapper = styled.div`
   height: 100%;
@@ -40,20 +38,18 @@ class UserPlaylist extends Component {
     return (
       <Wrapper>
         <Header>Playlist</Header>
-        <Container>
-          <CardContainer>
-            {playlist.map((song, index) => (
-              <SongCard
-                from={path}
-                song={song}
-                index={index}
-                playlistAction={this.playlistAction}
-                play={this.playSong}
-                key={song.id}
-              />
-            ))}
-          </CardContainer>
-        </Container>
+        <CardContainer>
+          {playlist.map((song, index) => (
+            <SongCard
+              from={path}
+              song={song}
+              index={index}
+              playlistAction={this.playlistAction}
+              play={this.playSong}
+              key={song.id}
+            />
+          ))}
+        </CardContainer>
       </Wrapper>
     )
   }

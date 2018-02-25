@@ -1,16 +1,5 @@
 import { h, Component } from "preact"
-import styled from "styled-components"
 import debounce from "lodash.debounce"
-
-export const Container = styled.div`
-  display: grid;
-  grid-template-columns: 1fr minmax(300px, 1900px) 1fr;
-  padding: 10px;
-
-  @media screen and (min-width: 500px) {
-    padding: 15px;
-  }
-`
 
 export class InfiniteScroll extends Component {
   componentDidMount() {
@@ -34,7 +23,7 @@ export class InfiniteScroll extends Component {
     }
   }
 
-  render() {
-    return <Container>{this.props.children}</Container>
+  render({ children }) {
+    return children[0]
   }
 }
