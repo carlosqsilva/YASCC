@@ -13,10 +13,9 @@ import Route from "react-router-dom/es/Route"
 import { load_playlist } from "./store/actions"
 
 const Container = styled.div`
-  background-color: rgba(250, 250, 250, 1);
   position: relative;
   min-height: 100vh;
-  max-width: 1900px;
+  max-width: 100%;
   margin-top: 50px;
   padding: 10px;
   transition: all 250ms ease;

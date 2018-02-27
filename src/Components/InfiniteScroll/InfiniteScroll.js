@@ -1,23 +1,19 @@
-import { h, Component } from "preact"
+import { Component } from "preact"
 import debounce from "lodash.debounce"
 
 export class InfiniteScroll extends Component {
   componentDidMount() {
-    window.addEventListener("scroll", debounce(this.handleScroll, 200), false)
+    window.addEventListener("scroll", debounce(this.onScroll, 200), false)
   }
 
   componentWillUnmount() {
-    window.removeEventListener(
-      "scroll",
-      debounce(this.handleScroll, 200),
-      false
-    )
+    window.removeEventListener("scroll", debounce(this.onScroll, 200), false)
   }
 
-  handleScroll = () => {
+  onScroll = () => {
     if (
       window.innerHeight + window.scrollY >=
-      document.body.offsetHeight - 150
+      document.body.offsetHeight - 200
     ) {
       this.props.loadMore()
     }

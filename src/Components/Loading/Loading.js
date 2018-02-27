@@ -41,7 +41,7 @@ const LoadMore = styled.button`
 
 const Loading = ({ isLoading, loadMore }) => (
   <Wrapper>
-    {isLoading === true ? (
+    {isLoading ? (
       <LoadingSpin />
     ) : (
       <LoadMore onClick={loadMore}>Load More</LoadMore>

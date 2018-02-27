@@ -75,7 +75,7 @@ const Wrapper = styled.div`
 `
 
 const Duration = styled.span`
-  margin-left: 15px;
+  margin-right: 15px;
   color: #444;
   font-size: 0.8rem;
 `
@@ -111,6 +111,7 @@ export const SongCard = ({ song, from, index, play, playlistAction }) => {
       </Info>
 
       <Wrapper>
+        <Duration>{duration}</Duration>
         <WithTooltip
           tooltip={fromPlaylist ? "Remove from Playlist" : "Add to Playlist"}
         >
@@ -121,7 +122,6 @@ export const SongCard = ({ song, from, index, play, playlistAction }) => {
             src={fromPlaylist ? Remove : Add}
           />
         </WithTooltip>
-        <Duration>{duration}</Duration>
       </Wrapper>
     </Card>
   )
