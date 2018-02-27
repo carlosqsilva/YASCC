@@ -1,8 +1,8 @@
 {
-  "main.js": "static/js/main.b800c3a7.js",
-  "main.js.map": "static/js/main.b800c3a7.js.map",
-  "runtime.js": "static/js/runtime.a718b381.js",
-  "runtime.js.map": "static/js/runtime.a718b381.js.map",
+  "main.js": "static/js/main.d54c7758.js",
+  "main.js.map": "static/js/main.d54c7758.js.map",
+  "runtime.js": "static/js/runtime.567735e1.js",
+  "runtime.js.map": "static/js/runtime.567735e1.js.map",
   "static/media/add.svg": "static/media/add.d02a80b8.svg",
   "static/media/back.svg": "static/media/back.8ce1c030.svg",
   "static/media/github.svg": "static/media/github.26816b67.svg",
@@ -13,6 +13,6 @@
   "static/media/play.svg": "static/media/play.213768f4.svg",
   "static/media/playlist.svg": "static/media/playlist.8a2fb585.svg",
   "static/media/remove.svg": "static/media/remove.3e562134.svg",
-  "vendor.js": "static/js/vendor.3d34ffaa.js",
-  "vendor.js.map": "static/js/vendor.3d34ffaa.js.map"
+  "vendor.js": "static/js/vendor.9ed1d9fa.js",
+  "vendor.js.map": "static/js/vendor.9ed1d9fa.js.map"
 }
