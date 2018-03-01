@@ -1,11 +1,12 @@
 {
-  "main.js": "static/js/main.d93d2ff4.js",
-  "main.js.map": "static/js/main.d93d2ff4.js.map",
-  "runtime.js": "static/js/runtime.cac85569.js",
-  "runtime.js.map": "static/js/runtime.cac85569.js.map",
-  "static/media/add.svg": "static/media/add.d02a80b8.svg",
+  "main.js": "static/js/main.423054e5.js",
+  "main.js.map": "static/js/main.423054e5.js.map",
+  "runtime.js": "static/js/runtime.56efcf20.js",
+  "runtime.js.map": "static/js/runtime.56efcf20.js.map",
+  "static/media/add.svg": "static/media/add.61292292.svg",
   "static/media/back.svg": "static/media/back.8ce1c030.svg",
   "static/media/github.svg": "static/media/github.26816b67.svg",
+  "static/media/like.svg": "static/media/like.1517cac4.svg",
   "static/media/logo.svg": "static/media/logo.fa648a36.svg",
   "static/media/menu.svg": "static/media/menu.5096e131.svg",
   "static/media/next.svg": "static/media/next.74ab42e1.svg",
@@ -13,6 +14,6 @@
   "static/media/play.svg": "static/media/play.213768f4.svg",
   "static/media/playlist.svg": "static/media/playlist.8a2fb585.svg",
   "static/media/remove.svg": "static/media/remove.3e562134.svg",
-  "vendor.js": "static/js/vendor.9ed1d9fa.js",
-  "vendor.js.map": "static/js/vendor.9ed1d9fa.js.map"
+  "vendor.js": "static/js/vendor.a3c3b8bc.js",
+  "vendor.js.map": "static/js/vendor.a3c3b8bc.js.map"
 }
