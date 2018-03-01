@@ -38,17 +38,7 @@ const Controls = styled.div`
 
 const Song = styled.div`
   flex: 1;
-  display: flex;
-  justify-content: flex-start;
-  align-items: stretch;
-`
-
-const Info = styled.div`
-  overflow: hidden;
-  padding: 5px 0;
-  flex: 1;
-
-  > a {
+  > p {
     color: #444;
     overflow: hidden;
     display: block;
@@ -152,10 +142,8 @@ class Player extends Component {
         </Controls>
 
         <Song>
-          <Info>
-            <a>{currentSong && currentSong.title}</a>
-            <a>{currentSong && currentSong.user}</a>
-          </Info>
+          <p>{currentSong && currentSong.title}</p>
+          <p>{currentSong && currentSong.user}</p>
         </Song>
 
         <audio

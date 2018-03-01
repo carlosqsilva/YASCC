@@ -9,6 +9,7 @@ const Container = styled.div`
   display: inline-flex;
   align-items: center;
   position: relative;
+  align-self: center;
 
   &:hover {
     > span {

@@ -22,18 +22,16 @@ const getSongs = url => {
       const playlist = obj.collection
         .filter(track => track.artwork_url !== null && track.duration !== 30000)
         .map(track => ({
+          id: track.id,
           title: formatSongTitle(track.title),
           duration: secToTime(track.duration),
           stream: track.stream_url,
           artwork: track.artwork_url,
           user: track.user.username,
-          id: track.id,
-          likeCount: track.likes_count,
-          likesCountMin: formatNumber(track.likes_count),
-          playedCount: track.playback_count,
-          playedCountMin: formatNumber(track.playback_count)
+          likesCount: track.likes_count,
+          likesCountMin: formatNumber(track.likes_count)
         }))
-      console.table(playlist)
+      // console.table(playlist)
       return { playlist, nextUrl }
     })
 }

@@ -3,7 +3,6 @@ import styled from "styled-components"
 import Icon, { WithTooltip } from "../Utils/Icon"
 import Play from "./play.svg"
 import Add from "./add.svg"
-import Teste from "./teste.svg"
 import like from "./like.svg"
 import Remove from "./remove.svg"
 
@@ -12,6 +11,10 @@ const Card = styled.div`
   justify-content: flex-start;
   align-items: stretch;
   position: relative;
+  background: white;
+  padding: 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.08);
   cursor: pointer;
 `
 
@@ -19,8 +22,8 @@ const Artwork = styled.div`
   background-size: cover;
   background-position: center;
   display: flex;
-  min-width: 70px;
-  min-height: 70px;
+  min-width: 60px;
+  min-height: 60px;
 
   > img {
     display: none;
@@ -62,13 +65,12 @@ const Artist = styled.p`
 
 const Music = styled.p`
   color: #444;
-  font-size: 0.9rem;
-  margin-bottom: 5px;
+  font-size: 0.85rem;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   @media screen and (min-width: 500px) {
-    width: 200px;
+    width: 190px;
   }
 `
 
@@ -87,7 +89,7 @@ const Info = styled.span`
   color: #666;
 `
 
-const Duration = Info.extend`
+const Duration = styled.span`
   font-size: 0.8rem;
   color: #666;
   flex: 1;
@@ -102,8 +104,8 @@ export const CardContainer = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 
   @media screen and (min-width: 500px) {
-    grid-template-columns: repeat(auto-fit, 285px);
-    grid-gap: 20px;
+    grid-template-columns: repeat(auto-fit, 270px);
+    grid-gap: 15px;
   }
 `
 
@@ -117,14 +119,14 @@ export const SongCard = ({ song, from, index, play, playlistAction }) => {
       </Artwork>
 
       <Container>
-        <Music>{title}</Music>
+        <Music title={title}>{title}</Music>
         <Artist>{user}</Artist>
 
         <Wrapper>
           <Duration>{duration}</Duration>
 
           <WithTooltip tooltip={`${likesCount} likes`}>
-            <Icon src={like} size={8} alt="" />
+            <Icon src={like} size={9} alt="" />
             <Info>{likesCountMin}</Info>
           </WithTooltip>
 
@@ -133,8 +135,9 @@ export const SongCard = ({ song, from, index, play, playlistAction }) => {
           >
             <Icon
               onClick={e => playlistAction(e)(song)}
-              src={fromPlaylist ? Remove : Teste}
-              size={12}
+              src={fromPlaylist ? Remove : Add}
+              style={{ marginTop: "1px" }}
+              size={16}
               alt=""
             />
           </WithTooltip>

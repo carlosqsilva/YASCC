@@ -15,7 +15,8 @@ const Wrapper = styled.div`
   left: 0px;
   width: 100%;
   height: 50px;
-  background: linear-gradient(white, #fafafa);
+  /* background: linear-gradient(white, #fafafa); */
+  background: white;
   display: flex;
   justify-content: flex-start;
 
