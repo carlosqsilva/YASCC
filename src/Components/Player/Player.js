@@ -27,7 +27,7 @@ const Wrapper = styled.div`
   transition: transform 500ms ease;
 
   @media screen and (min-width: 500px) {
-    padding-left: 250px;
+    margin-left: 220px;
   }
 `
 

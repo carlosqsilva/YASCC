@@ -9,10 +9,6 @@ const SliderDuration = styled.div`
   left: 0px;
   width: 100%;
   height: 6px;
-
-  @media screen and (min-width: 500px) {
-    margin-left: 250px;
-  }
 `
 
 const SliderFill = styled.div`

@@ -14,7 +14,7 @@ const Form = styled.form`
 `
 
 const Input = styled.input`
-  background-color: rgba(250, 250, 250, 0.9);
+  background: #f5f5f5;
   color: rgba(0, 0, 0, 0.87);
   border-radius: 4px;
   appearance: none;

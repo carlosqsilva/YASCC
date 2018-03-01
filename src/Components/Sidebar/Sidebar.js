@@ -15,7 +15,7 @@ const Container = styled.div`
   bottom: 0px;
   left: 0px;
   top: 0px;
-  width: 250px;
+  width: 220px;
   z-index: 100;
   overflow-y: scroll;
   transform: translateX(-100%);
@@ -88,7 +88,7 @@ const Option = styled(Link)`
   flex: 1;
   cursor: pointer;
   text-decoration: none;
-  padding: 5px 0;
+  padding: 3px 0;
   transition: all 250ms ease;
   color: ${props =>
     props.active === true ? "white" : "rgba(255, 255, 255, .5)"};

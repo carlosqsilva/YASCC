@@ -7,6 +7,7 @@ const Image = styled.img`
 
 const Container = styled.div`
   display: inline-flex;
+  align-items: center;
   position: relative;
 
   &:hover {
@@ -29,16 +30,16 @@ const Tooltip = styled.span`
     border-radius: 6px;
     white-space: nowrap;
     position: absolute;
-    top: 150%;
+    top: 180%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-85%);
     z-index: 999;
 
     &::after {
       content: "";
       position: absolute;
       bottom: 100%;
-      left: 50%;
+      right: 10%;
       margin-left: -5px;
       border-width: 5px;
       border-style: solid;

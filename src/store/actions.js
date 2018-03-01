@@ -1,27 +1,6 @@
 import * as type from "./constants"
-
-import { api_key_dev } from "./api_keys"
-import { truncateString, msToTime } from "./utils"
-
-const api_tracks = `https://api.soundcloud.com/tracks?linked_partitioning=1&limit=35&offset=0&${api_key_dev}`
-
-const filter_data = data => {
-  let newData = data.collection
-    .filter(track => track.artwork_url !== null && track.duration !== 30000)
-    .map(track => {
-      return {
-        title: truncateString(track.title),
-        duration: msToTime(track.duration),
-        stream: track.stream_url,
-        artwork: track.artwork_url,
-        user: track.user.username,
-        id: track.id,
-        likes: track.likes_count
-      }
-    })
-
-  return { playlist: newData, nextUrl: data.next_href }
-}
+import { formatSongTitle, secToTime, formatNumber } from "./utils"
+import { audioStream, searchUrl, genreUrl } from "./api"
 
 export const toggle_sidebar = () => ({
   type: type.TOGGLE_SIDEBAR
@@ -35,9 +14,32 @@ export const on_pause = () => ({
   type: type.ON_PAUSE
 })
 
-export const play_song = (songIndex, song) => dispatch => {
-  const audioUrl = `${song.stream}?${api_key_dev}`
+const getSongs = url => {
+  return fetch(url)
+    .then(res => res.json())
+    .then(obj => {
+      const nextUrl = obj.next_href
+      const playlist = obj.collection
+        .filter(track => track.artwork_url !== null && track.duration !== 30000)
+        .map(track => ({
+          title: formatSongTitle(track.title),
+          duration: secToTime(track.duration),
+          stream: track.stream_url,
+          artwork: track.artwork_url,
+          user: track.user.username,
+          id: track.id,
+          likeCount: track.likes_count,
+          likesCountMin: formatNumber(track.likes_count),
+          playedCount: track.playback_count,
+          playedCountMin: formatNumber(track.playback_count)
+        }))
+      console.table(playlist)
+      return { playlist, nextUrl }
+    })
+}
 
+export const play_song = (songIndex, song) => dispatch => {
+  const audioUrl = audioStream(song.stream)
   dispatch({ type: type.PLAY_SONG, songIndex, song, audioUrl })
 }
 
@@ -83,20 +85,13 @@ export const play_prev = () => (dispatch, getState) => {
   dispatch(play_song(prevSong, playlist[prevSong]))
 }
 
-const fetch_songs = (url, action) => dispatch => {
-  fetch(url)
-    .then(resp => resp.json())
-    .then(data => filter_data(data))
-    .then(({ playlist, nextUrl }) =>
-      dispatch({ type: action, playlist, nextUrl })
-    )
-}
-
-export const load_playlist = (genre = "house") => dispatch => {
-  const url = `${api_tracks}&genres=${genre}`
+export const load_playlist = genre => dispatch => {
+  const url = genreUrl(genre || "house")
 
   dispatch({ type: type.PLAYLIST_LOADING })
-  dispatch(fetch_songs(url, type.PLAYLIST_LOADED))
+  getSongs(url).then(({ playlist, nextUrl }) =>
+    dispatch({ type: type.PLAYLIST_LOADED, playlist, nextUrl })
+  )
 }
 
 export const load_playlist_next = () => (dispatch, getState) => {
@@ -104,19 +99,18 @@ export const load_playlist_next = () => (dispatch, getState) => {
 
   if (!loadingPlaylist) {
     dispatch({ type: type.PLAYLIST_LOADING_NEXT })
-    dispatch(fetch_songs(nextUrl, type.PLAYLIST_LOADED))
+    getSongs(nextUrl).then(({ playlist, nextUrl }) =>
+      dispatch({ type: type.PLAYLIST_LOADED, playlist, nextUrl })
+    )
   }
 }
 
 export const search_songs = q => dispatch => {
-  const query = q
-    .trim()
-    .split(" ")
-    .filter(str => str.length > 0)
-    .join("%20")
-  const url = `${api_tracks}&q=${query}`
+  const url = searchUrl(q)
   dispatch({ type: type.LOADING_SEARCH })
-  dispatch(fetch_songs(url, type.LOADED_SEARCH))
+  getSongs(url).then(({ playlist, nextUrl }) =>
+    dispatch({ type: type.LOADED_SEARCH, playlist, nextUrl })
+  )
 }
 
 export const load_next_results = () => (dispatch, getState) => {
@@ -124,7 +118,9 @@ export const load_next_results = () => (dispatch, getState) => {
 
   if (!loadingSearch) {
     dispatch({ type: type.LOADING_SEARCH_NEXT })
-    dispatch(fetch_songs(nextUrl, type.LOADED_SEARCH))
+    getSongs(nextUrl).then(({ playlist, nextUrl }) =>
+      dispatch({ type: type.LOADED_SEARCH, playlist, nextUrl })
+    )
   }
 }
 
@@ -142,7 +138,3 @@ export const remove_from_playlist = song => (dispatch, getState) => {
   )
   dispatch({ type: type.REMOVE_FROM_PLAYLIST, playlist })
 }
-
-// export const import_playlist = (url) => (dispatch) => {
-//   const apiCall = `http://api.soundcloud.com/resolve?url=${url}&${api_key_dev}`
-// }

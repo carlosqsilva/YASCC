@@ -3,6 +3,8 @@ import styled from "styled-components"
 import Icon, { WithTooltip } from "../Utils/Icon"
 import Play from "./play.svg"
 import Add from "./add.svg"
+import Teste from "./teste.svg"
+import like from "./like.svg"
 import Remove from "./remove.svg"
 
 const Card = styled.div`
@@ -10,19 +12,15 @@ const Card = styled.div`
   justify-content: flex-start;
   align-items: stretch;
   position: relative;
-  border-radius: 4px;
-  padding: 10px;
-
-  background-color: white;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.08);
   cursor: pointer;
 `
 
 const Artwork = styled.div`
-  background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  width: 65px;
+  display: flex;
+  min-width: 70px;
+  min-height: 70px;
 
   > img {
     display: none;
@@ -33,9 +31,7 @@ const Artwork = styled.div`
       opacity: 0;
       transform: scale(0);
       transition: all 200ms ease;
-
-      width: 100%;
-      margin: 20px auto;
+      margin: auto;
       display: block;
     }
 
@@ -48,36 +44,53 @@ const Artwork = styled.div`
   }
 `
 
-const Info = styled.div`
-  margin-left: 5px;
-  margin-bottom: 5px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+const Container = styled.div`
+  overflow: hidden;
+  margin: 0 0 0 5px;
+  position: relative;
   flex: 1;
 
-  > a {
-    color: #444;
-    font-size: 0.75rem;
-    &:first-child {
-      font-size: 0.8rem;
-    }
+  @media screen and (min-width: 500px) {
+    overflow: initial;
+  }
+`
+
+const Artist = styled.p`
+  color: #777;
+  font-size: 0.8rem;
+`
+
+const Music = styled.p`
+  color: #444;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  @media screen and (min-width: 500px) {
+    width: 200px;
   }
 `
 
 const Wrapper = styled.div`
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
 `
 
-const Duration = styled.span`
-  margin-right: 15px;
-  color: #444;
+const Info = styled.span`
+  margin: 0 10px 0 3px;
+  font-size: 0.7rem;
+  color: #666;
+`
+
+const Duration = Info.extend`
   font-size: 0.8rem;
+  color: #666;
+  flex: 1;
 `
 
 export const CardContainer = styled.div`
@@ -87,17 +100,15 @@ export const CardContainer = styled.div`
   display: grid;
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  grid-auto-rows: 85px;
 
   @media screen and (min-width: 500px) {
-    grid-template-columns: repeat(auto-fit, 310px);
-    grid-auto-rows: 85px;
-    grid-gap: 15px;
+    grid-template-columns: repeat(auto-fit, 285px);
+    grid-gap: 20px;
   }
 `
 
 export const SongCard = ({ song, from, index, play, playlistAction }) => {
-  const { title, user, artwork, duration } = song
+  const { title, user, artwork, duration, likesCount, likesCountMin } = song
   const fromPlaylist = from === "/playlist"
   return (
     <Card onClick={() => play(index)}>
@@ -105,24 +116,30 @@ export const SongCard = ({ song, from, index, play, playlistAction }) => {
         <Icon src={Play} size={30} />
       </Artwork>
 
-      <Info>
-        <a>{title}</a>
-        <a>{user}</a>
-      </Info>
+      <Container>
+        <Music>{title}</Music>
+        <Artist>{user}</Artist>
 
-      <Wrapper>
-        <Duration>{duration}</Duration>
-        <WithTooltip
-          tooltip={fromPlaylist ? "Remove from Playlist" : "Add to Playlist"}
-        >
-          <Icon
-            onClick={e => playlistAction(e)(song)}
-            size={15}
-            alt=""
-            src={fromPlaylist ? Remove : Add}
-          />
-        </WithTooltip>
-      </Wrapper>
+        <Wrapper>
+          <Duration>{duration}</Duration>
+
+          <WithTooltip tooltip={`${likesCount} likes`}>
+            <Icon src={like} size={8} alt="" />
+            <Info>{likesCountMin}</Info>
+          </WithTooltip>
+
+          <WithTooltip
+            tooltip={fromPlaylist ? "Remove from Playlist" : "Add to Playlist"}
+          >
+            <Icon
+              onClick={e => playlistAction(e)(song)}
+              src={fromPlaylist ? Remove : Teste}
+              size={12}
+              alt=""
+            />
+          </WithTooltip>
+        </Wrapper>
+      </Container>
     </Card>
   )
 }

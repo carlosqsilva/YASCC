@@ -21,7 +21,7 @@ const Container = styled.div`
   transition: all 250ms ease;
 
   @media screen and (min-width: 500px) {
-    margin-left: 250px;
+    margin-left: 220px;
     padding: 15px;
   }
 `

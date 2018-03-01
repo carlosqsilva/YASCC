@@ -6,31 +6,27 @@ const padZero = (num, size) => {
   return s
 }
 
-export const secToTime = num => {
+export const secToTime = duration => {
+  const num = parseInt(duration / 1000, 10)
   const minutes = padZero(Math.floor(num / 60), 2)
   const seconds = padZero(num % 60, 2)
   return `${minutes}:${seconds}`
 }
 
-export const msToTime = duration => {
-  let second = parseInt((duration / 1000) % 60, 10)
-  let minute = parseInt((duration / (1000 * 60)) % 60, 10)
-  let hour = parseInt((duration / (1000 * 60 * 60)) % 24, 10)
-
-  hour = hour < 10 ? "0" + hour : hour
-  minute = minute < 10 ? "0" + minute : minute
-  second = second < 10 ? "0" + second : second
-
-  if (hour < 1) {
-    return `${minute}:${second}`
-  }
-
-  return `${hour}:${minute}:${second}`
+export const formatSongTitle = str => {
+  if (!str) return ""
+  return str
+    .replace("–", "-")
+    .split("-")
+    .pop()
+    .replace(/[[|(|*|@|✪]/g, "?")
+    .split("?")[0]
 }
 
-export const truncateString = (str, size = 50) => {
-  if (str.length > size) {
-    return str.substring(0, size) + "..."
-  }
-  return str
+export const formatNumber = likes => {
+  if (likes < 1000) return likes
+  const str = likes.toString()
+  const num = str.length
+  const qtd = num % 3 === 0 ? 3 : num % 3
+  return `${str.substring(0, qtd)}${num >= 7 ? "M" : "K"}`
 }

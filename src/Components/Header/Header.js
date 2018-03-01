@@ -15,12 +15,12 @@ const Wrapper = styled.div`
   left: 0px;
   width: 100%;
   height: 50px;
-  background-color: white;
+  background: linear-gradient(white, #fafafa);
   display: flex;
   justify-content: flex-start;
 
   @media screen and (min-width: 500px) {
-    padding-left: 250px;
+    padding-left: 220px;
   }
 
   &::after {
