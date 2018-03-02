@@ -14,7 +14,6 @@ const Card = styled.div`
   background: white;
   padding: 8px;
   border-radius: 4px;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.08);
   cursor: pointer;
 `
 
@@ -70,7 +69,7 @@ const Music = styled.p`
   white-space: nowrap;
   overflow: hidden;
   @media screen and (min-width: 500px) {
-    width: 190px;
+    width: 180px;
   }
 `
 
@@ -104,7 +103,7 @@ export const CardContainer = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 
   @media screen and (min-width: 500px) {
-    grid-template-columns: repeat(auto-fit, 270px);
+    grid-template-columns: repeat(auto-fit, 260px);
     grid-gap: 15px;
   }
 `

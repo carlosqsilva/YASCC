@@ -40,23 +40,23 @@
     body {
       font-size: 16px;
       font-family: 'Roboto Mono', sans-serif;
-      background-color: rgba(250, 250, 250, 1);
+      background: linear-gradient(to right bottom, #ece9e6, #fff);
       overflow-x: hidden;
     }
 
     ::-webkit-scrollbar {
       -webkit-appearance: none;
-      width: 3px;
+      width: 4px;
     }
 
     ::-webkit-scrollbar-thumb {
       cursor: pointer;
       border-radius: 2px;
-      background: rgba(0, 0, 0, .2);
+      background: #999;
     }
 
     ::-webkit-scrollbar-track {
-      background: rgba(250, 250, 250, 1);
+      background: transparent;
     }
 
     #loader.ready {
@@ -77,8 +77,6 @@
       justify-content: center;
       flex-direction: column;
       overflow: hidden;
-      -webkit-transition: opacity cubic-bezier(.4, 0, .2, 1) 436ms;
-      -moz-transition: opacity cubic-bezier(.4, 0, .2, 1) 436ms;
       transition: opacity cubic-bezier(.4, 0, .2, 1) 436ms;
     }
 

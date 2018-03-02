@@ -23,11 +23,13 @@ const Wrapper = styled.div`
   left: 0px;
   display: flex;
   justify-content: flex-start;
-  transform: translateX(-100%);
+  transform: ${props =>
+    props.visible ? "translateX(0)" : "translateX(-100%)"};
   transition: transform 500ms ease;
 
   @media screen and (min-width: 500px) {
     margin-left: 220px;
+    width: calc(100% - 220px);
   }
 `
 
@@ -126,7 +128,7 @@ class Player extends Component {
     onPlay
   }) {
     return (
-      <Wrapper style={currentSong ? { transform: "translateX(0)" } : {}}>
+      <Wrapper visible={currentSong !== null}>
         <Slider onChange={this.changeCurrentTime} {...this.state} />
 
         <Controls>

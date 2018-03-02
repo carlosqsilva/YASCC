@@ -9,7 +9,7 @@ import Logo from "./logo.svg"
 import Playlist from "./playlist.svg"
 
 const Container = styled.div`
-  background-color: rgb(27, 28, 29);
+  background: linear-gradient(to right, #232526, #414345);
   transition: all 250ms ease;
   position: fixed;
   bottom: 0px;
@@ -18,7 +18,8 @@ const Container = styled.div`
   width: 220px;
   z-index: 100;
   overflow-y: scroll;
-  transform: translateX(-100%);
+  transform: ${props =>
+    props.visible ? "translateX(0)" : "translateX(-100%)"};
 
   @media screen and (min-width: 500px) {
     transform: translateX(0);
@@ -34,7 +35,6 @@ const Overlay = styled.div`
   height: 100%;
   z-index: 50;
   background: rgba(0, 0, 0, 0.5);
-  transition: all 250ms ease;
 
   @media screen and (min-width: 500px) {
     display: none;
@@ -42,9 +42,8 @@ const Overlay = styled.div`
 `
 
 const Segment = styled.div`
-  cursor: ${props => (props.link ? "pointer" : "default")};
-  text-decoration: none;
   display: flex;
+  text-decoration: none;
   align-items: stretch;
   justify-content: flex-start;
   flex-direction: ${props => (props.horizontal ? "row" : "column")};
@@ -65,36 +64,27 @@ const Label = styled.strong`
   font-size: 1.1rem;
 `
 
-const Header = styled.div`
-  margin: 0 0 0.5rem;
-  font-weight: 700;
-  font-size: 1.1rem;
-`
-
 const Tag = styled.span`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   background-color: whitesmoke;
   color: #111;
   border-radius: 5px;
   margin-right: 20px;
   font-size: 0.8rem;
-  padding: 0 0.7rem;
+  padding: 0 0.5rem;
   align-self: center;
 `
 
 const Option = styled(Link)`
   flex: 1;
   cursor: pointer;
+  font-weight: 500;
   text-decoration: none;
   padding: 3px 0;
   transition: all 250ms ease;
-  color: ${props =>
-    props.active === true ? "white" : "rgba(255, 255, 255, .5)"};
+  color: ${props => (props.active ? "white" : "rgba(255, 255, 255, .5)")};
 
   &:hover {
-    color: rgba(255, 255, 255, 0.9);
+    color: white;
   }
 `
 
@@ -149,20 +139,19 @@ class Sidebar extends Component {
   render({ sidebarVisible, qtd }, { activeItem }) {
     return (
       <div>
-        <Container style={sidebarVisible ? { transform: "translateX(0)" } : {}}>
+        <Container visible={sidebarVisible}>
           <Segment horizontal>
             <Icon size={35} src={Logo} />
             <Label title="Yet Another SoundCloud Client">YASCC</Label>
           </Segment>
 
-          <LinkSegment horizontal link to="/playlist">
+          <LinkSegment horizontal to="/playlist">
             <Icon size={20} src={Playlist} />
             <Label>Playlist</Label>
             <Tag>{qtd}</Tag>
           </LinkSegment>
 
           <Segment>
-            <Header>Music</Header>
             {music.map((val, i) => (
               <Option
                 key={i}
