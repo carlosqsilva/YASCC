@@ -1,20 +1,20 @@
 import { h } from "preact"
 import styled from "styled-components"
-import Icon, { WithTooltip } from "../Utils/Icon"
+import { Icon, WithTooltip } from "../Utils/Icon"
 import Play from "./play.svg"
 import Add from "./add.svg"
 import like from "./like.svg"
 import Remove from "./remove.svg"
 
 const Card = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: stretch;
   position: relative;
   background: white;
-  padding: 8px;
-  border-radius: 4px;
   cursor: pointer;
+  padding: 8px;
+  display: flex;
+  @media screen and (min-width: 500px) {
+    border-radius: 4px;
+  }
 `
 
 const Artwork = styled.div`
@@ -23,33 +23,30 @@ const Artwork = styled.div`
   display: flex;
   min-width: 60px;
   min-height: 60px;
+`
 
-  > img {
+const PlayIcon = Icon.extend`
     display: none;
-  }
 
   @media screen and (min-width: 500px) {
-    > img {
       opacity: 0;
-      transform: scale(0);
-      transition: all 200ms ease;
+      transition: transform 200ms ease;
       margin: auto;
       display: block;
+      transform: scale(0.1);
     }
 
     &:hover {
-      > img {
-        opacity: 1;
-        transform: scale(1);
-      }
+      opacity: 1;
+      transform: scale(1);
     }
   }
 `
 
 const Container = styled.div`
-  overflow: hidden;
-  margin: 0 0 0 5px;
   position: relative;
+  margin: 0 0 0 5px;
+  overflow: hidden;
   flex: 1;
 
   @media screen and (min-width: 500px) {
@@ -114,7 +111,7 @@ export const SongCard = ({ song, from, index, play, playlistAction }) => {
   return (
     <Card onClick={() => play(index)}>
       <Artwork style={{ backgroundImage: `url(${artwork})` }}>
-        <Icon src={Play} size={30} />
+        <PlayIcon src={Play} size={30} />
       </Artwork>
 
       <Container>
@@ -137,7 +134,6 @@ export const SongCard = ({ song, from, index, play, playlistAction }) => {
               src={fromPlaylist ? Remove : Add}
               style={{ marginTop: "1px" }}
               size={16}
-              alt=""
             />
           </WithTooltip>
         </Wrapper>

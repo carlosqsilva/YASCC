@@ -15,10 +15,8 @@ const Wrapper = styled.div`
   left: 0px;
   width: 100%;
   height: 50px;
-  /* background: linear-gradient(white, #fafafa); */
   background: white;
   display: flex;
-  justify-content: flex-start;
 
   @media screen and (min-width: 500px) {
     padding-left: 220px;
@@ -42,8 +40,14 @@ const Header = ({ toggleSidebar }) => (
 
     <SearchInput />
 
-    <Item link noMobile href="https://github.com/carlosqsilva/yascc">
-      <Icon size={23} src={Github} />
+    <Item
+      link
+      noMobile
+      href="https://github.com/carlosqsilva/yascc"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <Icon size={24} src={Github} />
     </Item>
   </Wrapper>
 )

@@ -1,10 +1,6 @@
 import { h } from "preact"
 import styled from "styled-components"
 
-const Image = styled.img`
-  align-self: center;
-`
-
 const Container = styled.div`
   display: inline-flex;
   align-items: center;
@@ -49,9 +45,13 @@ const Tooltip = styled.span`
   }
 `
 
-const Icon = ({ size, src, ...other }) => (
-  <Image width={size} height={size} src={src} {...other} />
-)
+export const Icon = styled.img.attrs({
+  alt: "",
+  width: props => props.size,
+  height: props => props.size
+})`
+  align-self: center;
+`
 
 export const WithTooltip = ({ children, tooltip }) => (
   <Container>

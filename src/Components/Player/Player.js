@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 import styled from "styled-components"
 import debounce from "lodash.debounce"
 import Item from "../Utils/Item"
-import Icon from "../Utils/Icon"
+import { Icon } from "../Utils/Icon"
 import Slider from "../Slider/Slider"
 
 import { play_next, play_prev, on_play, on_pause } from "@/store/actions"

@@ -4,7 +4,7 @@ import Link from "react-router-dom/es/Link"
 import { toggle_sidebar, load_playlist } from "@/store/actions"
 import styled from "styled-components"
 
-import Icon from "../Utils/Icon"
+import { Icon } from "../Utils/Icon"
 import Logo from "./logo.svg"
 import Playlist from "./playlist.svg"
 
@@ -127,13 +127,11 @@ class Sidebar extends Component {
 
   handleClick = e => {
     const { name } = e.target
+    this.props.loadPlaylist(name)
 
     this.setState({
       activeItem: name
     })
-
-    let genre = name.replace(/[-|&|\s]+/g, "").toLowerCase()
-    this.props.loadPlaylist(genre)
   }
 
   render({ sidebarVisible, qtd }, { activeItem }) {

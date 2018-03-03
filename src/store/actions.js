@@ -1,6 +1,7 @@
 import * as type from "./constants"
-import { formatSongTitle, secToTime, formatNumber } from "./utils"
-import { audioStream, searchUrl, genreUrl } from "./api"
+import { api } from "./api"
+
+const API = new api(35)
 
 export const toggle_sidebar = () => ({
   type: type.TOGGLE_SIDEBAR
@@ -14,31 +15,10 @@ export const on_pause = () => ({
   type: type.ON_PAUSE
 })
 
-const getSongs = url => {
-  return fetch(url)
-    .then(res => res.json())
-    .then(obj => {
-      const nextUrl = obj.next_href
-      const playlist = obj.collection
-        .filter(track => track.artwork_url !== null && track.duration !== 30000)
-        .map(track => ({
-          id: track.id,
-          title: formatSongTitle(track.title),
-          duration: secToTime(track.duration),
-          stream: track.stream_url,
-          artwork: track.artwork_url,
-          user: track.user.username,
-          likesCount: track.likes_count,
-          likesCountMin: formatNumber(track.likes_count)
-        }))
-      // console.table(playlist)
-      return { playlist, nextUrl }
-    })
-}
-
 export const play_song = (songIndex, song) => dispatch => {
-  const audioUrl = audioStream(song.stream)
-  dispatch({ type: type.PLAY_SONG, songIndex, song, audioUrl })
+  API.audioStream(song.stream).then(audioUrl =>
+    dispatch({ type: type.PLAY_SONG, songIndex, song, audioUrl })
+  )
 }
 
 export const play_song_from_btn = (index, route) => (dispatch, getState) => {
@@ -84,40 +64,41 @@ export const play_prev = () => (dispatch, getState) => {
 }
 
 export const load_playlist = genre => dispatch => {
-  const url = genreUrl(genre || "house")
-
   dispatch({ type: type.PLAYLIST_LOADING })
-  getSongs(url).then(({ playlist, nextUrl }) =>
-    dispatch({ type: type.PLAYLIST_LOADED, playlist, nextUrl })
+
+  API.load(genre).then(playlist =>
+    dispatch({ type: type.PLAYLIST_LOADED, playlist })
   )
 }
 
 export const load_playlist_next = () => (dispatch, getState) => {
-  const { nextUrl, loadingPlaylist } = getState().root
+  const { loadingPlaylist } = getState().root
 
   if (!loadingPlaylist) {
     dispatch({ type: type.PLAYLIST_LOADING_NEXT })
-    getSongs(nextUrl).then(({ playlist, nextUrl }) =>
-      dispatch({ type: type.PLAYLIST_LOADED, playlist, nextUrl })
+
+    API.loadNext().then(playlist =>
+      dispatch({ type: type.PLAYLIST_LOADED, playlist })
     )
   }
 }
 
 export const search_songs = q => dispatch => {
-  const url = searchUrl(q)
   dispatch({ type: type.LOADING_SEARCH })
-  getSongs(url).then(({ playlist, nextUrl }) =>
-    dispatch({ type: type.LOADED_SEARCH, playlist, nextUrl })
+
+  API.search(q).then(playlist =>
+    dispatch({ type: type.LOADED_SEARCH, playlist })
   )
 }
 
 export const load_next_results = () => (dispatch, getState) => {
-  const { nextUrl, loadingSearch } = getState().search
+  const { loadingSearch } = getState().search
 
   if (!loadingSearch) {
     dispatch({ type: type.LOADING_SEARCH_NEXT })
-    getSongs(nextUrl).then(({ playlist, nextUrl }) =>
-      dispatch({ type: type.LOADED_SEARCH, playlist, nextUrl })
+
+    API.loadNext().then(playlist =>
+      dispatch({ type: type.LOADED_SEARCH, playlist })
     )
   }
 }

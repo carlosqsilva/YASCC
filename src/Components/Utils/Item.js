@@ -1,14 +1,12 @@
 import styled from "styled-components"
 
 const Item = styled.a`
-  flex: ${props => (props.fluid ? 1 : 0)};
-  cursor: ${props => (props.link ? "pointer" : "default")};
+  cursor: pointer;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  color: rgba(0, 0, 0, 0.87);
   text-decoration: none;
   font-size: 0.9rem;
 

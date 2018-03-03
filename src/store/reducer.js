@@ -4,8 +4,7 @@ const rootInitialState = {
   sidebarVisible: false,
   loadingPlaylist: true,
   isPlaying: false,
-  playlist: [],
-  nextUrl: null
+  playlist: []
 }
 
 const rootReducer = (state = rootInitialState, action) => {
@@ -30,8 +29,7 @@ const rootReducer = (state = rootInitialState, action) => {
       return {
         ...state,
         loadingPlaylist: false,
-        playlist: [...state.playlist, ...action.playlist],
-        nextUrl: action.nextUrl
+        playlist: [...state.playlist, ...action.playlist]
       }
     default:
       return state
@@ -79,8 +77,7 @@ const playlistReducer = (state = playlistInitialState, action) => {
 
 const searchInitialState = {
   loadingSearch: false,
-  results: [],
-  nextUrl: null
+  results: []
 }
 
 const searchReducer = (state = searchInitialState, action) => {
@@ -100,8 +97,7 @@ const searchReducer = (state = searchInitialState, action) => {
       return {
         ...state,
         loadingSearch: false,
-        results: [...state.results, ...action.playlist],
-        nextUrl: action.nextUrl
+        results: [...state.results, ...action.playlist]
       }
     default:
       return state

@@ -20,6 +20,6 @@ export class InfiniteScroll extends Component {
   }
 
   render({ children }) {
-    return children[0]
+    return { children }
   }
 }
