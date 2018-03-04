@@ -1,21 +1,24 @@
-import { Component } from "preact"
+import { h, Component } from "preact"
 import styled from "styled-components"
+import debounce from "lodash.debounce"
+import Loading from "../Components/Loading/Loading"
+import { SongCard, CardContainer } from "../Components/SongCard/SongCard"
 
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
 `
 
-const WithActions = (InnerComponent, infinite = false) =>
+export const WithActions = (InnerComponent, infinite = false) =>
   class OuterComponent extends Component {
     componentDidMount() {
-      if (this.props.infinity) {
+      if (infinite) {
         window.addEventListener("scroll", debounce(this.onScroll, 200), false)
       }
     }
 
     componentWillUnmount() {
-      if (this.props.infinity) {
+      if (infinite) {
         window.removeEventListener(
           "scroll",
           debounce(this.onScroll, 200),
@@ -65,5 +68,3 @@ const WithActions = (InnerComponent, infinite = false) =>
       )
     }
   }
-
-export default WithActions
