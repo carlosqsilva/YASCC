@@ -1,12 +1,14 @@
 import { h, Component } from "preact"
 import { connect } from "react-redux"
-import Link from "react-router-dom/es/Link"
-import { toggle_sidebar, load_playlist } from "@/store/actions"
+import withRouter from "react-router-dom/es/withRouter"
+import { toggle_sidebar, set_genre, set_tag, set_filter } from "@/store/actions"
 import styled from "styled-components"
 
+import { filter, tags, genre } from "./options"
 import { Icon } from "../Utils/Icon"
-import Logo from "./logo.svg"
+import Select from "../SelectInput"
 import Playlist from "./playlist.svg"
+import Filter from "./filter.svg"
 
 const Container = styled.div`
   background: linear-gradient(to right, #232526, #414345);
@@ -27,8 +29,7 @@ const Container = styled.div`
 `
 
 const Overlay = styled.div`
-  display: block;
-  position: absolute;
+  position: fixed;
   top: 0px;
   left: 0px;
   width: 100%;
@@ -55,13 +56,20 @@ const Segment = styled.div`
   }
 `
 
-const LinkSegment = Segment.withComponent(Link)
+const LinkSegment = Segment.extend`
+  cursor: pointer;
+`
 
 const Label = styled.strong`
   flex: 1;
   align-self: center;
   margin-left: 20px;
   font-size: 1.1rem;
+`
+
+const Header = styled.strong`
+  color: #fafafa;
+  margin-bottom: 3px;
 `
 
 const Tag = styled.span`
@@ -74,96 +82,95 @@ const Tag = styled.span`
   align-self: center;
 `
 
-const Option = styled(Link)`
+const Option = styled.a`
   flex: 1;
   cursor: pointer;
   font-weight: 500;
   text-decoration: none;
   padding: 3px 0;
   transition: all 250ms ease;
-  color: ${props => (props.active ? "white" : "rgba(255, 255, 255, .5)")};
+  color: ${props => (props.active ? "white" : "#999")};
 
   &:hover {
     color: white;
   }
 `
 
-const music = [
-  "Alternative Rock",
-  "Ambient",
-  "Classical",
-  "Country",
-  "Dance & EDM",
-  "Dancehall",
-  "Deep House",
-  "Disco",
-  "Drum & Bass",
-  "Dubstep",
-  "Electronic",
-  "Hip-hop & Rap",
-  "House",
-  "Indie",
-  "Jazz & Blues",
-  "Latin",
-  "Metal",
-  "Piano",
-  "Pop",
-  "R&B & Soul",
-  "Reggae",
-  "Reggaeton",
-  "Rock",
-  "Soundtrack",
-  "Techno",
-  "Trance",
-  "Trap",
-  "Triphop",
-  "World"
-]
-
 class Sidebar extends Component {
   state = {
     activeItem: ""
   }
 
-  handleClick = e => {
-    const { name } = e.target
-    this.props.loadPlaylist(name)
+  changeRoute = route => {
+    if (this.props.location.pathname !== route) {
+      this.props.history.push(route)
+    }
+  }
 
-    this.setState({
-      activeItem: name
-    })
+  active = name => {
+    this.setState({ activeItem: name })
+    this.changeRoute("/")
+  }
+
+  onChange = e => {
+    this.props.setFilter(e.target.value)
+  }
+
+  onTag = e => {
+    const { name } = e.target
+    this.props.setTag(name)
+    this.active(name)
+  }
+
+  onGenre = e => {
+    const { name } = e.target
+    this.props.setGenre(name)
+    this.active(name)
   }
 
   render({ sidebarVisible, qtd }, { activeItem }) {
     return (
       <div>
         <Container visible={sidebarVisible}>
-          <Segment horizontal>
-            <Icon size={35} src={Logo} />
-            <Label title="Yet Another SoundCloud Client">YASCC</Label>
-          </Segment>
-
-          <LinkSegment horizontal to="/playlist">
+          <LinkSegment horizontal onClick={() => this.changeRoute("/playlist")}>
             <Icon size={20} src={Playlist} />
             <Label>Playlist</Label>
             <Tag>{qtd}</Tag>
           </LinkSegment>
 
+          <Segment horizontal>
+            <Icon size={20} src={Filter} />
+            <Select options={filter} onChange={this.onChange} />
+          </Segment>
+
           <Segment>
-            {music.map((val, i) => (
+            <Header>Popular Tags</Header>
+            {tags.map((_, i) => (
               <Option
                 key={i}
-                to="/"
-                name={val}
-                active={activeItem === val}
-                onClick={this.handleClick}
+                name={_.value}
+                active={activeItem === _.value}
+                onClick={this.onTag}
               >
-                {val}{" "}
+                {_.label}
+              </Option>
+            ))}
+          </Segment>
+
+          <Segment>
+            <Header>Music Genres</Header>
+            {genre.map((_, i) => (
+              <Option
+                key={i}
+                name={_.value}
+                active={activeItem === _.value}
+                onClick={this.onGenre}
+              >
+                {_.label}
               </Option>
             ))}
           </Segment>
         </Container>
-
         {sidebarVisible && <Overlay onClick={this.props.toggleSidebar} />}
       </div>
     )
@@ -176,8 +183,10 @@ const state = ({ root, userPlaylist }) => ({
 })
 
 const actions = {
-  loadPlaylist: load_playlist,
+  setFilter: set_filter,
+  setGenre: set_genre,
+  setTag: set_tag,
   toggleSidebar: toggle_sidebar
 }
 
-export default connect(state, actions)(Sidebar)
+export default withRouter(connect(state, actions)(Sidebar))

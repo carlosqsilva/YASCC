@@ -1,7 +1,7 @@
 import * as type from "./constants"
 import { api } from "./api"
 
-const API = new api(35)
+const API = new api(50)
 
 export const toggle_sidebar = () => ({
   type: type.TOGGLE_SIDEBAR
@@ -67,6 +67,30 @@ export const load_playlist = genre => dispatch => {
   dispatch({ type: type.PLAYLIST_LOADING })
 
   API.load(genre).then(playlist =>
+    dispatch({ type: type.PLAYLIST_LOADED, playlist })
+  )
+}
+
+export const set_genre = genre => dispatch => {
+  dispatch({ type: type.PLAYLIST_LOADING })
+
+  API.setGenre(genre).then(playlist =>
+    dispatch({ type: type.PLAYLIST_LOADED, playlist })
+  )
+}
+
+export const set_tag = tag => dispatch => {
+  dispatch({ type: type.PLAYLIST_LOADING })
+
+  API.setTag(tag).then(playlist =>
+    dispatch({ type: type.PLAYLIST_LOADED, playlist })
+  )
+}
+
+export const set_filter = filter => dispatch => {
+  dispatch({ type: type.PLAYLIST_LOADING })
+
+  API.setFilter(filter).then(playlist =>
     dispatch({ type: type.PLAYLIST_LOADED, playlist })
   )
 }

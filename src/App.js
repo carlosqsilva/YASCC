@@ -1,14 +1,13 @@
 import { h, Component } from "preact"
 import styled from "styled-components"
+import Route from "react-router-dom/es/Route"
+import HashRouter from "react-router-dom/es/HashRouter"
 import { connect } from "react-redux"
-import { Header, Sidebar, Player } from "./Components"
 
+import { Header, Sidebar, Player } from "./Components"
 import SongList from "./Routes/SongList"
 import Search from "./Routes/Search"
 import UserPlaylist from "./Routes/UserPlaylist"
-
-import HashRouter from "react-router-dom/es/HashRouter"
-import Route from "react-router-dom/es/Route"
 
 import { load_playlist } from "./store/actions"
 
