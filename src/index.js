@@ -25,4 +25,6 @@ registerServiceWorker()
 
 if (module.hot) {
   require("preact/devtools")
+} else {
+  console.log("hello there...")
 }

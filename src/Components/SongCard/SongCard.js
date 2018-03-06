@@ -6,6 +6,18 @@ import Add from "./add.svg"
 import like from "./like.svg"
 import Remove from "./remove.svg"
 
+const PlayIcon = Icon.extend`
+  display: none;
+
+  @media screen and (min-width: 500px) {
+    opacity: 0;
+    transition: transform 200ms ease;
+    margin: auto;
+    display: block;
+    transform: scale(0.1);
+  }
+`
+
 const Card = styled.div`
   position: relative;
   background: white;
@@ -15,6 +27,13 @@ const Card = styled.div`
   @media screen and (min-width: 500px) {
     border-radius: 4px;
   }
+
+  &:hover {
+    ${PlayIcon} {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 `
 
 const Artwork = styled.div`
@@ -23,24 +42,6 @@ const Artwork = styled.div`
   display: flex;
   min-width: 60px;
   min-height: 60px;
-`
-
-const PlayIcon = Icon.extend`
-    display: none;
-
-  @media screen and (min-width: 500px) {
-      opacity: 0;
-      transition: transform 200ms ease;
-      margin: auto;
-      display: block;
-      transform: scale(0.1);
-    }
-
-    &:hover {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
 `
 
 const Container = styled.div`

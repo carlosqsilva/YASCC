@@ -41,8 +41,7 @@ const playlistInitialState = {
   songIndex: null,
   audioUrl: null,
   currentSong: null,
-  isPlaying: false,
-  location: ""
+  isPlaying: false
 }
 
 const playlistReducer = (state = playlistInitialState, action) => {
@@ -50,8 +49,7 @@ const playlistReducer = (state = playlistInitialState, action) => {
     case type.ACTIVE_PLAYLIST:
       return {
         ...state,
-        playlist: action.currentPlaylist,
-        location: action.location
+        playlist: action.currentPlaylist
       }
     case type.PLAY_SONG:
       return {
