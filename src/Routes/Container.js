@@ -13,17 +13,17 @@ export const WithActions = (InnerComponent, infinite = false) =>
   class OuterComponent extends Component {
     componentDidMount() {
       if (infinite) {
-        window.addEventListener("scroll", debounce(this.onScroll, 200), false)
+        window.addEventListener("scroll", debounce(this.onScroll, 200), {
+          passive: true
+        })
       }
     }
 
     componentWillUnmount() {
       if (infinite) {
-        window.removeEventListener(
-          "scroll",
-          debounce(this.onScroll, 200),
-          false
-        )
+        window.removeEventListener("scroll", debounce(this.onScroll, 200), {
+          passive: true
+        })
       }
     }
 
