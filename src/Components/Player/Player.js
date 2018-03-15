@@ -1,7 +1,6 @@
 import { h, Component } from "preact"
 import { connect } from "react-redux"
 import styled from "styled-components"
-import debounce from "lodash.debounce"
 import Item from "../Utils/Item"
 import { Icon } from "../Utils/Icon"
 import Slider from "../Slider/Slider"
@@ -14,15 +13,14 @@ import next from "./next.svg"
 import pause from "./pause.svg"
 
 const Wrapper = styled.div`
-  background-color: white;
-  height: 40px;
+  background: white;
   padding-top: 6px;
-  width: 100%;
   position: fixed;
   bottom: 0px;
   left: 0px;
+  width: 100%;
+  height: 40px;
   display: flex;
-  justify-content: flex-start;
   transform: ${props =>
     props.visible ? "translateX(0)" : "translateX(-100%)"};
   transition: transform 500ms ease;
@@ -97,6 +95,7 @@ class Player extends Component {
       duration: this.audioElement.duration
     })
     this.audioElement.play()
+    document.title = this.props.currentSong.title
   }
 
   onTimeUpdate = () => {
@@ -143,10 +142,12 @@ class Player extends Component {
           </Item>
         </Controls>
 
-        <Song>
-          <p>{currentSong && currentSong.title}</p>
-          <p>{currentSong && currentSong.user}</p>
-        </Song>
+        {currentSong && (
+          <Song>
+            <p>{currentSong.title}</p>
+            <p>{currentSong.user}</p>
+          </Song>
+        )}
 
         <audio
           crossOrigin="anonymous"
@@ -155,7 +156,7 @@ class Player extends Component {
           onLoadedMetadata={this.onLoadedMetadata}
           onPause={onPause}
           onPlay={onPlay}
-          onTimeUpdate={debounce(this.onTimeUpdate, 500, { maxWait: 1000 })}
+          onTimeUpdate={this.onTimeUpdate}
           ref={element => (this.audioElement = element)}
         />
       </Wrapper>

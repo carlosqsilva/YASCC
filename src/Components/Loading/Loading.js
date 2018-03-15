@@ -1,4 +1,4 @@
-import { h } from "preact"
+import { h, Component } from "preact"
 import styled, { keyframes } from "styled-components"
 
 const spin = keyframes`
@@ -10,15 +10,8 @@ const spin = keyframes`
   }
 `
 
-const Wrapper = styled.div`
-  position: absolute;
-  bottom: 0px;
-  left: 50%;
-  transform: translateX(-50%);
-`
-
 const LoadingSpin = styled.div`
-  margin: 20px auto;
+  margin: 0 auto;
   border-radius: 50%;
   width: 24px;
   height: 24px;
@@ -27,26 +20,43 @@ const LoadingSpin = styled.div`
   animation: ${spin} 1s infinite linear;
 `
 
-const LoadMore = styled.button`
-  background-color: #fff;
+const LoadMore = styled.a`
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.87);
-  font-size: 1rem;
-  margin: 0;
-  padding: 0.3em 1em;
-  border: 10px;
+  text-align: center;
+  background-color: #757575;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding: 0.3rem 1rem;
   border-radius: 2px;
-  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.12);
+  transition: all 400ms ease-out;
+  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
+  &:hover {
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+  }
 `
 
-const Loading = ({ isLoading, loadMore }) => (
-  <Wrapper>
-    {isLoading ? (
-      <LoadingSpin />
-    ) : (
-      <LoadMore onClick={loadMore}>Load More</LoadMore>
-    )}
-  </Wrapper>
-)
+class Loading extends Component {
+  componentDidMount() {
+    this.observer = new IntersectionObserver(this.props.loadMore)
+    this.observer.observe(this.target)
+  }
+
+  componentWillUnmount() {
+    this.observer.unobserve(this.target)
+  }
+
+  render({ loadMore, isLoading }) {
+    return (
+      <LoadMore onClick={loadMore} innerRef={e => (this.target = e)}>
+        {isLoading ? <LoadingSpin /> : "Load More"}
+      </LoadMore>
+    )
+  }
+}
 
 export default Loading

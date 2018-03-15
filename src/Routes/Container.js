@@ -1,41 +1,23 @@
 import { h, Component } from "preact"
 import styled from "styled-components"
-import debounce from "lodash.debounce"
 import Loading from "../Components/Loading/Loading"
 import { SongCard, CardContainer } from "../Components/SongCard/SongCard"
 
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
+  position: relative;
+  padding-bottom: 55px;
+  margin-bottom: 60px;
 `
 
-export const WithActions = (InnerComponent, infinite = false) =>
-  class OuterComponent extends Component {
-    componentDidMount() {
-      if (infinite) {
-        window.addEventListener("scroll", debounce(this.onScroll, 200), {
-          passive: true
-        })
-      }
-    }
-
-    componentWillUnmount() {
-      if (infinite) {
-        window.removeEventListener("scroll", debounce(this.onScroll, 200), {
-          passive: true
-        })
-      }
-    }
-
-    onScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 200
-      ) {
-        this.props.loadMore()
-      }
-    }
-
+export const WithActions = (
+  InnerComponent,
+  infinite = false,
+  fromPlaylist = false
+) => {
+  const Card = SongCard(fromPlaylist)
+  return class OuterComponent extends Component {
     playSong = index => {
       this.props.playSong(index, this.props.location.pathname)
     }
@@ -46,15 +28,13 @@ export const WithActions = (InnerComponent, infinite = false) =>
       this.props.playlistAction(song)
     }
 
-    render({ loadMore, playlist, loading, location }) {
-      const path = location.pathname
+    render({ loadMore, playlist, loading }) {
       return (
         <Wrapper>
-          <InnerComponent />
+          {InnerComponent && <InnerComponent />}
           <CardContainer>
             {playlist.map((song, index) => (
-              <SongCard
-                from={path}
+              <Card
                 song={song}
                 index={index}
                 playlistAction={this.playlistAction}
@@ -62,9 +42,10 @@ export const WithActions = (InnerComponent, infinite = false) =>
                 key={song.id}
               />
             ))}
-            {infinite && <Loading isLoading={loading} loadMore={loadMore} />}
           </CardContainer>
+          {infinite && <Loading isLoading={loading} loadMore={loadMore} />}
         </Wrapper>
       )
     }
   }
+}

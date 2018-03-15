@@ -94,8 +94,6 @@ const Duration = styled.span`
 
 export const CardContainer = styled.div`
   position: relative;
-  padding-bottom: 60px;
-  margin-bottom: 40px;
   display: grid;
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -106,33 +104,31 @@ export const CardContainer = styled.div`
   }
 `
 
-export const SongCard = ({ song, from, index, play, playlistAction }) => {
-  const { title, user, artwork, duration, likesCount, likesCountMin } = song
-  const fromPlaylist = from === "/playlist"
-  return (
+export const SongCard = fromPlaylist => {
+  const option = fromPlaylist ? Remove : Add
+  const message = fromPlaylist ? "Remove from Playlist" : "Add to Playlist"
+  return ({ song, index, play, playlistAction }) => (
     <Card onClick={() => play(index)}>
-      <Artwork style={{ backgroundImage: `url(${artwork})` }}>
+      <Artwork style={{ backgroundImage: `url(${song.artwork})` }}>
         <PlayIcon src={Play} size={30} />
       </Artwork>
 
       <Container>
-        <Music title={title}>{title}</Music>
-        <Artist>{user}</Artist>
+        <Music title={song.title}>{song.title}</Music>
+        <Artist>{song.user}</Artist>
 
         <Wrapper>
-          <Duration>{duration}</Duration>
+          <Duration>{song.duration}</Duration>
 
-          <WithTooltip tooltip={`${likesCount} likes`}>
+          <WithTooltip tooltip={`${song.likesCount} likes`}>
             <Icon src={like} size={9} alt="" />
-            <Info>{likesCountMin}</Info>
+            <Info>{song.likesCountMin}</Info>
           </WithTooltip>
 
-          <WithTooltip
-            tooltip={fromPlaylist ? "Remove from Playlist" : "Add to Playlist"}
-          >
+          <WithTooltip tooltip={message}>
             <Icon
               onClick={e => playlistAction(e)(song)}
-              src={fromPlaylist ? Remove : Add}
+              src={option}
               style={{ marginTop: "1px" }}
               size={16}
             />
