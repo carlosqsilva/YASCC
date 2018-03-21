@@ -5,9 +5,20 @@ import { play_song_from_btn, remove_from_playlist } from "../store/actions"
 
 const Playlist = WithActions(null, false, true)
 
-const state = ({ userPlaylist }) => ({
-  playlist: userPlaylist.playlist
-})
+const state = ({ userPlaylist, playlist }, ownProps) => {
+  if (playlist.location === ownProps.location.pathname) {
+    if (playlist.currentSong !== null) {
+      return {
+        playlist: userPlaylist.playlist,
+        active: playlist.songIndex
+      }
+    }
+  }
+  return {
+    playlist: userPlaylist.playlist,
+    active: null
+  }
+}
 
 const actions = {
   playSong: play_song_from_btn,

@@ -10,12 +10,12 @@ import Menu from "./menu.svg"
 import Github from "./github.svg"
 
 const Wrapper = styled.div`
+  background: ${props => (props.online ? "#fff" : "#ef5350")};
   position: fixed;
   top: 0px;
   left: 0px;
   width: 100%;
   height: 50px;
-  background: white;
   display: flex;
 
   @media screen and (min-width: 500px) {
@@ -32,10 +32,10 @@ const Wrapper = styled.div`
   }
 `
 
-const Header = ({ toggleSidebar }) => (
-  <Wrapper>
+const Header = ({ toggleSidebar, online }) => (
+  <Wrapper online={online}>
     <Item link noDesktop onClick={toggleSidebar}>
-      <Icon size={22} src={Menu} />
+      <Icon size={24} src={Menu} />
     </Item>
 
     <SearchInput />
@@ -52,8 +52,12 @@ const Header = ({ toggleSidebar }) => (
   </Wrapper>
 )
 
+const state = ({ root }) => ({
+  online: root.online
+})
+
 const actions = {
   toggleSidebar: toggle_sidebar
 }
 
-export default connect(null, actions)(Header)
+export default connect(state, actions)(Header)

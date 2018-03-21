@@ -5,11 +5,11 @@ import HashRouter from "react-router-dom/es/HashRouter"
 import { connect } from "react-redux"
 
 import { Header, Sidebar, Player } from "./Components"
-import SongList from "./Routes/SongList"
+import Home from "./Routes/Home"
 import Search from "./Routes/Search"
-import UserPlaylist from "./Routes/UserPlaylist"
+import Playlist from "./Routes/Playlist"
 
-import { load_playlist } from "./store/actions"
+import { load_playlist, is_online, is_offline } from "./store/actions"
 
 const Container = styled.div`
   position: relative;
@@ -27,17 +27,20 @@ const Container = styled.div`
 
 class App extends Component {
   componentDidMount() {
-    this.props.loadPlaylist()
-
-    const ele = document.getElementById("loader")
-    if (ele) {
-      setTimeout(() => {
-        ele.classList.add("ready")
+    this.props.loadPlaylist().then(() => {
+      const ele = document.getElementById("loader")
+      if (ele) {
         setTimeout(() => {
-          ele.outerHTML = ""
+          ele.classList.add("ready")
+          setTimeout(() => {
+            ele.outerHTML = ""
+          }, 600)
         }, 1000)
-      }, 1500)
-    }
+      }
+    })
+
+    window.addEventListener("online", this.props.isOnline)
+    window.addEventListener("offline", this.props.isOffline)
   }
 
   render() {
@@ -45,9 +48,9 @@ class App extends Component {
       <HashRouter>
         <Container>
           <Sidebar />
-          <Route exact path="/" component={SongList} />
+          <Route exact path="/" component={Home} />
           <Route path="/search" component={Search} />
-          <Route path="/playlist" component={UserPlaylist} />
+          <Route path="/playlist" component={Playlist} />
           <Header />
           <Player />
         </Container>
@@ -57,7 +60,9 @@ class App extends Component {
 }
 
 const actions = {
-  loadPlaylist: load_playlist
+  loadPlaylist: load_playlist,
+  isOnline: is_online,
+  isOffline: is_offline
 }
 
 export default connect(null, actions)(App)

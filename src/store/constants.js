@@ -1,3 +1,5 @@
+export const ONLINE = "ONLINE"
+export const OFFLINE = "OFFLINE"
 export const TOGGLE_SIDEBAR = "TOGGLE_SIDEBAR"
 export const HIDE_SIDEBAR = "HIDE_SIDEBAR"
 export const PLAYLIST_LOADING = "PLAYLIST_LOADING"

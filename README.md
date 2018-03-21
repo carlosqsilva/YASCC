@@ -16,7 +16,7 @@ This application also can be considered a PWA(Progressive Web App) by using Serv
 
 ## Todo
 
-* [ ] Highlight the current music card.
+* [x] Highlight the current music card.
 * [ ] Add nice transitions between routes.
 * [ ] Make it controllable by keyboard.
 * [ ] Add a dark mode.

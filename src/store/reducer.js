@@ -4,7 +4,8 @@ const rootInitialState = {
   sidebarVisible: false,
   loadingPlaylist: true,
   isPlaying: false,
-  playlist: []
+  playlist: [],
+  online: true
 }
 
 const rootReducer = (state = rootInitialState, action) => {
@@ -31,6 +32,16 @@ const rootReducer = (state = rootInitialState, action) => {
         loadingPlaylist: false,
         playlist: [...state.playlist, ...action.playlist]
       }
+    case type.ONLINE:
+      return {
+        ...state,
+        online: true
+      }
+    case type.OFFLINE:
+      return {
+        ...state,
+        online: false
+      }
     default:
       return state
   }
@@ -41,7 +52,8 @@ const playlistInitialState = {
   songIndex: null,
   audioUrl: null,
   currentSong: null,
-  isPlaying: false
+  isPlaying: false,
+  location: ""
 }
 
 const playlistReducer = (state = playlistInitialState, action) => {
@@ -49,7 +61,8 @@ const playlistReducer = (state = playlistInitialState, action) => {
     case type.ACTIVE_PLAYLIST:
       return {
         ...state,
-        playlist: action.currentPlaylist
+        playlist: action.currentPlaylist,
+        location: action.location
       }
     case type.PLAY_SONG:
       return {

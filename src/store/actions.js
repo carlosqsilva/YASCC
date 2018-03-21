@@ -1,7 +1,15 @@
 import * as type from "./constants"
 import { api } from "./api"
 
-const API = new api(50)
+const API = new api(35)
+
+export const is_online = () => ({
+  type: type.ONLINE
+})
+
+export const is_offline = () => ({
+  type: type.OFFLINE
+})
 
 export const toggle_sidebar = () => ({
   type: type.TOGGLE_SIDEBAR
@@ -22,7 +30,7 @@ export const play_song = (songIndex, song) => dispatch => {
 }
 
 export const play_song_from_btn = (index, route) => (dispatch, getState) => {
-  const current = getState().playlist.playlist.length
+  const { playlist, location } = getState().playlist
   let newPlaylist
 
   switch (route) {
@@ -39,14 +47,15 @@ export const play_song_from_btn = (index, route) => (dispatch, getState) => {
       return []
   }
 
-  if (current !== newPlaylist.length) {
+  dispatch(play_song(index, newPlaylist[index]))
+
+  if (playlist.length !== newPlaylist.length || location !== route) {
     dispatch({
       type: type.ACTIVE_PLAYLIST,
-      currentPlaylist: newPlaylist
+      currentPlaylist: newPlaylist,
+      location: route
     })
   }
-
-  dispatch(play_song(index, newPlaylist[index]))
 }
 
 export const play_next = () => (dispatch, getState) => {
@@ -64,7 +73,7 @@ export const play_prev = () => (dispatch, getState) => {
 export const load_playlist = genre => dispatch => {
   dispatch({ type: type.PLAYLIST_LOADING })
 
-  API.load(genre).then(playlist =>
+  return API.load(genre).then(playlist =>
     dispatch({ type: type.PLAYLIST_LOADED, playlist })
   )
 }

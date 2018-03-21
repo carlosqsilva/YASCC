@@ -13,7 +13,7 @@ import next from "./next.svg"
 import pause from "./pause.svg"
 
 const Wrapper = styled.div`
-  background: white;
+  background: ${props => (props.online ? "#fff" : "#ef5350")};
   padding-top: 6px;
   position: fixed;
   bottom: 0px;
@@ -109,11 +109,10 @@ class Player extends Component {
   }
 
   togglePlay = () => {
-    const { audioElement } = this
-    if (audioElement.paused) {
-      audioElement.play()
+    if (this.audioElement.paused) {
+      this.audioElement.play()
     } else {
-      audioElement.pause()
+      this.audioElement.pause()
     }
   }
 
@@ -124,10 +123,11 @@ class Player extends Component {
     playNext,
     playPrev,
     onPause,
-    onPlay
+    onPlay,
+    online
   }) {
     return (
-      <Wrapper visible={currentSong !== null}>
+      <Wrapper visible={currentSong !== null} online={online}>
         <Slider onChange={this.changeCurrentTime} {...this.state} />
 
         <Controls>
@@ -164,10 +164,11 @@ class Player extends Component {
   }
 }
 
-const state = ({ playlist }) => ({
+const state = ({ playlist, root }) => ({
   currentSong: playlist.currentSong,
   audioUrl: playlist.audioUrl,
-  isPlaying: playlist.isPlaying
+  isPlaying: playlist.isPlaying,
+  online: root.online
 })
 
 const actions = {

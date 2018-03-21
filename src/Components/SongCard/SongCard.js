@@ -19,11 +19,12 @@ const PlayIcon = Icon.extend`
 `
 
 const Card = styled.div`
+  background: ${props => (props.active ? "transparent" : "white")};
   position: relative;
-  background: white;
   cursor: pointer;
   padding: 8px;
   display: flex;
+
   @media screen and (min-width: 500px) {
     border-radius: 4px;
   }
@@ -107,8 +108,8 @@ export const CardContainer = styled.div`
 export const SongCard = fromPlaylist => {
   const option = fromPlaylist ? Remove : Add
   const message = fromPlaylist ? "Remove from Playlist" : "Add to Playlist"
-  return ({ song, index, play, playlistAction }) => (
-    <Card onClick={() => play(index)}>
+  return ({ song, index, play, playlistAction, active }) => (
+    <Card onClick={() => play(index)} active={active}>
       <Artwork style={{ backgroundImage: `url(${song.artwork})` }}>
         <PlayIcon src={Play} size={30} />
       </Artwork>

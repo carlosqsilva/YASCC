@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
-  padding-bottom: 55px;
+  padding-bottom: 65px;
   margin-bottom: 60px;
 `
 
@@ -28,7 +28,7 @@ export const WithActions = (
       this.props.playlistAction(song)
     }
 
-    render({ loadMore, playlist, loading }) {
+    render({ loadMore, playlist, loading, active }) {
       return (
         <Wrapper>
           {InnerComponent && <InnerComponent />}
@@ -37,6 +37,7 @@ export const WithActions = (
               <Card
                 song={song}
                 index={index}
+                active={active === index}
                 playlistAction={this.playlistAction}
                 play={this.playSong}
                 key={song.id}

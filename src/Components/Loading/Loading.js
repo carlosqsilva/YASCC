@@ -13,9 +13,9 @@ const spin = keyframes`
 const LoadingSpin = styled.div`
   margin: 0 auto;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  border: 0.25rem solid #dedede;
+  width: 20px;
+  height: 20px;
+  border: 0.2rem solid #dedede;
   border-top-color: #444;
   animation: ${spin} 1s infinite linear;
 `
@@ -27,16 +27,13 @@ const LoadMore = styled.a`
   right: 0px;
   cursor: pointer;
   text-align: center;
-  background-color: #757575;
+  background-color: rgba(0, 0, 0, 0.3);
   color: #fff;
-  font-size: 1.2rem;
   font-weight: 500;
-  padding: 0.3rem 1rem;
+  padding: 10px 15px;
   border-radius: 2px;
-  transition: all 400ms ease-out;
-  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2);
   &:hover {
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.4);
   }
 `
 
@@ -53,7 +50,7 @@ class Loading extends Component {
   render({ loadMore, isLoading }) {
     return (
       <LoadMore onClick={loadMore} innerRef={e => (this.target = e)}>
-        {isLoading ? <LoadingSpin /> : "Load More"}
+        {isLoading ? <LoadingSpin /> : "Load More..."}
       </LoadMore>
     )
   }
