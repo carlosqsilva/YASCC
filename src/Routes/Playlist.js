@@ -10,7 +10,7 @@ const state = ({ userPlaylist, playlist }, ownProps) => {
     if (playlist.currentSong !== null) {
       return {
         playlist: userPlaylist.playlist,
-        active: playlist.songIndex
+        active: playlist.currentSong.id
       }
     }
   }

@@ -15,7 +15,7 @@ const state = ({ root, playlist }, ownProps) => {
       return {
         playlist: root.playlist,
         loading: root.loadingPlaylist,
-        active: playlist.songIndex
+        active: playlist.currentSong.id
       }
     }
   }

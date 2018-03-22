@@ -15,7 +15,7 @@ const state = ({ search, playlist }, ownProps) => {
       return {
         playlist: search.results,
         loading: search.loadingSearch,
-        active: playlist.songIndex
+        active: playlist.currentSong.id
       }
     }
   }

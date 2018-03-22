@@ -37,7 +37,7 @@ export const WithActions = (
               <Card
                 song={song}
                 index={index}
-                active={active === index}
+                active={active === song.id}
                 playlistAction={this.playlistAction}
                 play={this.playSong}
                 key={song.id}

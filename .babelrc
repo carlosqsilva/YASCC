@@ -1,0 +1,24 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "modules": false,
+        "useBuiltIns": true,
+        "targets": {
+          "browsers": ["since 2018"]
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "transform-react-jsx",
+      {
+        "pragma": "h"
+      }
+    ],
+    ["transform-class-properties"],
+    ["transform-object-rest-spread", { "useBuiltIns": true }]
+  ]
+}
