@@ -21,10 +21,9 @@ render(
   document.body
 )
 
-registerServiceWorker()
-
 if (module.hot) {
   require("preact/devtools")
 } else {
+  registerServiceWorker()
   console.log("hello there...")
 }

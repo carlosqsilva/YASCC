@@ -45,8 +45,6 @@ const Overlay = styled.div`
 const Segment = styled.div`
   display: flex;
   text-decoration: none;
-  align-items: stretch;
-  justify-content: flex-start;
   flex-direction: ${props => (props.horizontal ? "row" : "column")};
   padding: 0.7rem 0 0.7rem 1rem;
   color: rgba(255, 255, 255, 0.9);

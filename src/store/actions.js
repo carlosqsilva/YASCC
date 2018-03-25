@@ -30,9 +30,7 @@ export const play_song = (songIndex, song) => dispatch => {
 }
 
 export const play_song_from_btn = (index, route) => (dispatch, getState) => {
-  const { playlist, location } = getState().playlist
   let newPlaylist
-
   switch (route) {
     case "/":
       newPlaylist = getState().root.playlist
@@ -48,14 +46,11 @@ export const play_song_from_btn = (index, route) => (dispatch, getState) => {
   }
 
   dispatch(play_song(index, newPlaylist[index]))
-
-  if (playlist.length !== newPlaylist.length || location !== route) {
-    dispatch({
-      type: type.ACTIVE_PLAYLIST,
-      currentPlaylist: newPlaylist,
-      location: route
-    })
-  }
+  dispatch({
+    type: type.ACTIVE_PLAYLIST,
+    currentPlaylist: newPlaylist,
+    location: route
+  })
 }
 
 export const play_next = () => (dispatch, getState) => {
