@@ -50,7 +50,7 @@ export class api {
 
   load() {
     const url = [this.tracks, this.genre, this.tag, this.created_at]
-      .filter(_ => _ !== null)
+      .filter(opt => opt !== null)
       .join("&")
     return this.getSongs(url)
   }
@@ -68,11 +68,7 @@ export class api {
   }
 
   setFilter(filter) {
-    if (!filter) this.created_at = null
-    this.created_at = `created_at=${filter}`
-      .toLowerCase()
-      .split(" ")
-      .join("_")
+    this.created_at = !filter ? null : `created_at=${filter}`
     return this.load()
   }
 
