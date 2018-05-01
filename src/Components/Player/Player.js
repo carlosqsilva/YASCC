@@ -1,75 +1,52 @@
 import { h, Component } from "preact"
-import { connect } from "react-redux"
+import { connect } from "preact-redux"
 import styled from "styled-components"
-import Item from "../Utils/Item"
-import { Icon } from "../Utils/Icon"
+import throttle from "lodash.throttle"
+
 import Slider from "../Slider/Slider"
 
-import { play_next, play_prev, on_play, on_pause } from "@/store/actions"
+import {
+  play_next,
+  on_play,
+  on_pause,
+  change_time,
+  change_duration,
+  on_load_start
+} from "@/store/actions"
 
-import play from "./play.svg"
-import back from "./back.svg"
-import next from "./next.svg"
-import pause from "./pause.svg"
+import PlayerControls from "./PlayerControls"
 
 const Wrapper = styled.div`
   background: ${props => (props.online ? "#fff" : "#ef5350")};
-  padding-top: 6px;
   position: fixed;
   bottom: 0px;
   left: 0px;
   width: 100%;
-  height: 40px;
+  height: 45px;
   display: flex;
-  transform: ${props =>
-    props.visible ? "translateX(0)" : "translateX(-100%)"};
+  transform: ${props => (props.visible ? "translateY(0)" : "translateY(100%)")};
   transition: transform 500ms ease;
 
   @media screen and (min-width: 500px) {
-    margin-left: 220px;
-    width: calc(100% - 220px);
-  }
-`
-
-const Controls = styled.div`
-  display: flex;
-  justify-content: center;
-`
-
-const Song = styled.div`
-  flex: 1;
-  > p {
-    color: #444;
-    overflow: hidden;
-    display: block;
-    text-decoration: none;
-    text-align: left;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 0.7rem;
-
-    &:first-child {
-      font-size: 0.8rem;
-    }
+    padding-left: 220px;
   }
 `
 
 class Player extends Component {
-  state = {
-    duration: 0,
-    currentTime: 0
-  }
-
   componentDidMount() {
+    const { playNext, playPrev } = this.props
     if ("mediaSession" in navigator) {
       navigator.mediaSession.playbackState = "paused"
-      navigator.mediaSession.setActionHandler(
-        "previoustrack",
-        this.props.playPrev
-      )
+      navigator.mediaSession.setActionHandler("previoustrack", playPrev)
       navigator.mediaSession.setActionHandler("play", this.togglePlay)
       navigator.mediaSession.setActionHandler("pause", this.togglePlay)
-      navigator.mediaSession.setActionHandler("nexttrack", this.props.playNext)
+      navigator.mediaSession.setActionHandler("nexttrack", playNext)
+    } else {
+      window.addEventListener("keydown", ({ code }) => {
+        if (code === "MediaPlayPause") this.togglePlay()
+        if (code === "MediaTrackNext") playNext()
+        if (code === "MediaTrackPrevious") playPrev()
+      })
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -80,7 +57,10 @@ class Player extends Component {
         artist: nextProps.currentSong.user,
         artwork: [
           {
-            src: nextProps.currentSong.artwork.replace("large", "t500x500"),
+            src: nextProps.currentSong.artworkOriginal.replace(
+              "large",
+              "t500x500"
+            ),
             sizes: "500x500",
             type: "image/jpg"
           }
@@ -91,73 +71,46 @@ class Player extends Component {
   }
 
   onLoadedMetadata = () => {
-    this.setState({
-      duration: this.audioElement.duration
-    })
-    this.audioElement.play()
-    document.title = this.props.currentSong.title
+    this.props.changeDuration(this.audio.duration)
+    this.audio.play()
   }
 
   onTimeUpdate = () => {
-    this.setState({
-      currentTime: this.audioElement.currentTime
-    })
+    this.props.changeTime(this.audio.currentTime)
   }
 
-  changeCurrentTime = currentTime => {
-    this.audioElement.currentTime = currentTime
+  changeTime = newTime => {
+    this.audio.currentTime = newTime
   }
 
   togglePlay = () => {
-    if (this.audioElement.paused) {
-      this.audioElement.play()
+    if (this.audio.paused) {
+      this.audio.play()
     } else {
-      this.audioElement.pause()
+      this.audio.pause()
     }
   }
 
-  render({
-    currentSong,
-    isPlaying,
-    audioUrl,
-    playNext,
-    playPrev,
-    onPause,
-    onPlay,
-    online
-  }) {
+  render(
+    { audioUrl, playNext, onPause, onPlay, onLoadStart, online },
+    { playing }
+  ) {
     return (
-      <Wrapper visible={currentSong !== null} online={online}>
-        <Slider onChange={this.changeCurrentTime} {...this.state} />
+      <Wrapper online={online} visible={audioUrl !== null}>
+        <PlayerControls toggle={this.togglePlay} />
 
-        <Controls>
-          <Item link noMobile onClick={playPrev}>
-            <Icon src={back} size={25} />
-          </Item>
-          <Item link onClick={this.togglePlay}>
-            <Icon src={isPlaying ? pause : play} size={25} />
-          </Item>
-          <Item link noMobile onClick={playNext}>
-            <Icon src={next} size={25} />
-          </Item>
-        </Controls>
-
-        {currentSong && (
-          <Song>
-            <p>{currentSong.title}</p>
-            <p>{currentSong.user}</p>
-          </Song>
-        )}
+        {audioUrl && <Slider onChange={this.changeTime} />}
 
         <audio
           crossOrigin="anonymous"
-          src={audioUrl}
-          onEnded={playNext}
+          onTimeUpdate={throttle(this.onTimeUpdate, 1000, { leading: false })}
           onLoadedMetadata={this.onLoadedMetadata}
+          onLoadStart={onLoadStart}
+          onEnded={playNext}
           onPause={onPause}
           onPlay={onPlay}
-          onTimeUpdate={this.onTimeUpdate}
-          ref={element => (this.audioElement = element)}
+          src={audioUrl}
+          ref={e => (this.audio = e)}
         />
       </Wrapper>
     )
@@ -165,17 +118,17 @@ class Player extends Component {
 }
 
 const state = ({ playlist, root }) => ({
-  currentSong: playlist.currentSong,
   audioUrl: playlist.audioUrl,
-  isPlaying: playlist.isPlaying,
   online: root.online
 })
 
 const actions = {
-  playNext: play_next,
-  playPrev: play_prev,
+  onPlay: on_play,
   onPause: on_pause,
-  onPlay: on_play
+  playNext: play_next,
+  changeTime: change_time,
+  onLoadStart: on_load_start,
+  changeDuration: change_duration
 }
 
 export default connect(state, actions)(Player)

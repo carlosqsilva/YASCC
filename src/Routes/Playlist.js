@@ -1,4 +1,4 @@
-import { connect } from "react-redux"
+import { connect } from "preact-redux"
 import { WithActions } from "./Container"
 
 import { play_song_from_btn, remove_from_playlist } from "../store/actions"
@@ -6,17 +6,15 @@ import { play_song_from_btn, remove_from_playlist } from "../store/actions"
 const Playlist = WithActions(null, false, true)
 
 const state = ({ userPlaylist, playlist }, ownProps) => {
+  let active = null
   if (playlist.location === ownProps.location.pathname) {
     if (playlist.currentSong !== null) {
-      return {
-        playlist: userPlaylist.playlist,
-        active: playlist.currentSong.id
-      }
+      active = playlist.currentSong.id
     }
   }
   return {
     playlist: userPlaylist.playlist,
-    active: null
+    active
   }
 }
 

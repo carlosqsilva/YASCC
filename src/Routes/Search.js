@@ -1,4 +1,4 @@
-import { connect } from "react-redux"
+import { connect } from "preact-redux"
 import { WithActions } from "./Container"
 
 import {
@@ -10,19 +10,16 @@ import {
 const Search = WithActions(null, true)
 
 const state = ({ search, playlist }, ownProps) => {
+  let active = null
   if (playlist.location === ownProps.location.pathname) {
     if (playlist.currentSong !== null) {
-      return {
-        playlist: search.results,
-        loading: search.loadingSearch,
-        active: playlist.currentSong.id
-      }
+      active = playlist.currentSong.id
     }
   }
   return {
     playlist: search.results,
     loading: search.loadingSearch,
-    active: null
+    active
   }
 }
 

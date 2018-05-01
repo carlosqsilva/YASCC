@@ -1,15 +1,11 @@
 import { h, render } from "preact"
-import { Provider } from "react-redux"
+import { Provider } from "preact-redux"
 
-import {
-  // simpleStore,
-  configStore
-} from "./store"
+import { configStore } from "./store"
 import App from "./App"
 import registerServiceWorker from "./registerServiceWorker"
 import { PersistGate } from "redux-persist/es/integration/react"
 
-// const store = simpleStore()
 const { persistor, store } = configStore()
 
 render(
@@ -23,6 +19,7 @@ render(
 
 if (module.hot) {
   require("preact/devtools")
+  document.getElementById("loader").remove() //Remove the loader animation for development sanity
 } else {
   registerServiceWorker()
   console.log("hello there...")

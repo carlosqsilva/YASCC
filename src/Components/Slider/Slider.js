@@ -1,23 +1,41 @@
 import { h, Component } from "preact"
+import { connect } from "preact-redux"
 import styled from "styled-components"
 
-const SliderDuration = styled.div`
-  background-color: rgba(0, 0, 0, 0.03);
+const Container = styled.div`
+  flex: 1;
+  position: relative;
+  background-image: url(${props => props.image});
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+
+  position: relative;
   cursor: pointer;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 6px;
+  overflow: hidden;
 `
 
 const SliderFill = styled.div`
-  background-color: #21d4fd;
-  border-radius: 0 3px 3px 0;
-  height: 6px;
-  width: 100%;
   transform: translateX(-100%);
-  /* will-change: width; */
+  background-color: #21d4fd;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  z-index: -10;
+`
+
+const Text = styled.p`
+  color: #222;
+  overflow: hidden;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  &:last-child {
+    font-size: 0.9rem;
+  }
 `
 
 const offsetLeft = element => {
@@ -40,14 +58,22 @@ class Slider extends Component {
     onChange(percent * duration)
   }
 
-  render({ currentTime, duration }) {
-    const transform = `translateX(-${100 - currentTime / duration * 100}%)`
+  render({ time, duration, song, children }) {
+    const transform = `translateX(-${100 - time / duration * 100}%)`
     return (
-      <SliderDuration onClick={this.onClick}>
+      <Container onClick={this.onClick} image={song.waveform}>
         <SliderFill style={{ transform }} />
-      </SliderDuration>
+        <Text>{song.title}</Text>
+        <Text>{song.user}</Text>
+      </Container>
     )
   }
 }
 
-export default Slider
+const state = ({ playlist }) => ({
+  song: playlist.currentSong,
+  time: playlist.time,
+  duration: playlist.duration
+})
+
+export default connect(state)(Slider)

@@ -2,7 +2,7 @@ import { h, Component } from "preact"
 import styled from "styled-components"
 import Route from "react-router-dom/es/Route"
 import HashRouter from "react-router-dom/es/HashRouter"
-import { connect } from "react-redux"
+import { connect } from "preact-redux"
 
 import { Header, Sidebar, Player } from "./Components"
 import Home from "./Routes/Home"
@@ -34,8 +34,8 @@ class App extends Component {
           ele.classList.add("ready")
           setTimeout(() => {
             ele.outerHTML = ""
-          }, 600)
-        }, 1000)
+          }, 500)
+        }, 500)
       }
     })
 

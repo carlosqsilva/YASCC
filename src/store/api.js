@@ -3,19 +3,13 @@
 //   "client_id=JAgPhXap7XK0g8dUOtklbE7UnF05W8AH",
 //   "client_id=x3d1i5dxXwTtUNJAy8djMDh7yYdxSZX0"
 // ]
-
-const padZero = (num, size) => {
-  let s = String(num)
-  while (s.length < size) {
-    s = `0${s}`
-  }
-  return s
-}
-
+/*
+  https://api.soundcloud.com/tracks?linked_partitioning=1&limit=10&client_id=a7Ucuq0KY8Ksn8WzBG6wj4x6pcId6BpU&genres=house
+*/
 const secToTime = duration => {
   const num = parseInt(duration / 1000, 10)
-  const minutes = padZero(Math.floor(num / 60), 2)
-  const seconds = padZero(num % 60, 2)
+  const minutes = String(Math.floor(num / 60)).padStart(2, "0")
+  const seconds = String(num % 60).padStart(2, "0")
   return `${minutes}:${seconds}`
 }
 
@@ -103,7 +97,9 @@ export class api {
             title: formatSongTitle(track.title),
             duration: secToTime(track.duration),
             stream: track.stream_url,
-            artwork: track.artwork_url,
+            artworkOriginal: track.artwork_url,
+            artwork: track.artwork_url.replace("large", "t67x67"),
+            waveform: track.waveform_url,
             user: track.user.username,
             likesCount: track.likes_count,
             likesCountMin: formatNumber(track.likes_count)

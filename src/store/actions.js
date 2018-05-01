@@ -15,12 +15,26 @@ export const toggle_sidebar = () => ({
   type: type.TOGGLE_SIDEBAR
 })
 
+export const on_load_start = () => ({
+  type: type.ON_LOAD_START
+})
+
 export const on_play = () => ({
   type: type.ON_PLAY
 })
 
 export const on_pause = () => ({
   type: type.ON_PAUSE
+})
+
+export const change_time = time => ({
+  type: type.ON_TIME_UPDATE,
+  time
+})
+
+export const change_duration = duration => ({
+  type: type.ON_LOADED_METADATA,
+  duration
 })
 
 export const play_song = (songIndex, song) => dispatch => {

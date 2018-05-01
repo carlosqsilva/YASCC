@@ -53,7 +53,10 @@ const playlistInitialState = {
   audioUrl: null,
   currentSong: null,
   isPlaying: false,
-  location: ""
+  loading: false,
+  location: "",
+  duration: 0,
+  time: 0
 }
 
 const playlistReducer = (state = playlistInitialState, action) => {
@@ -71,6 +74,11 @@ const playlistReducer = (state = playlistInitialState, action) => {
         audioUrl: action.audioUrl,
         currentSong: action.song
       }
+    case type.ON_LOAD_START:
+      return {
+        ...state,
+        loading: true
+      }
     case type.ON_PLAY:
       return {
         ...state,
@@ -80,6 +88,17 @@ const playlistReducer = (state = playlistInitialState, action) => {
       return {
         ...state,
         isPlaying: false
+      }
+    case type.ON_TIME_UPDATE:
+      return {
+        ...state,
+        time: action.time
+      }
+    case type.ON_LOADED_METADATA:
+      return {
+        ...state,
+        loading: false,
+        duration: action.duration
       }
     default:
       return state

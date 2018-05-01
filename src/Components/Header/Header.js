@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { connect } from "react-redux"
+import { connect } from "preact-redux"
 
 import { toggle_sidebar } from "@/store/actions"
 import styled from "styled-components"
@@ -17,6 +17,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 50px;
   display: flex;
+  z-index: 10;
 
   @media screen and (min-width: 500px) {
     padding-left: 220px;

@@ -1,5 +1,5 @@
 import { h, Component } from "preact"
-import { connect } from "react-redux"
+import { connect } from "preact-redux"
 import withRouter from "react-router-dom/es/withRouter"
 import { toggle_sidebar, set_genre, set_tag, set_filter } from "@/store/actions"
 import styled from "styled-components"
@@ -12,7 +12,7 @@ import Filter from "./filter.svg"
 
 const Container = styled.div`
   background: linear-gradient(to right, #232526, #414345);
-  transition: all 250ms ease;
+  transition: transform 200ms linear;
   position: fixed;
   bottom: 0px;
   left: 0px;
