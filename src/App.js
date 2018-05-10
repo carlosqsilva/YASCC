@@ -5,6 +5,7 @@ import HashRouter from "react-router-dom/es/HashRouter"
 import { connect } from "preact-redux"
 
 import { Header, Sidebar, Player } from "./Components"
+
 import Home from "./Routes/Home"
 import Search from "./Routes/Search"
 import Playlist from "./Routes/Playlist"
@@ -12,9 +13,8 @@ import Playlist from "./Routes/Playlist"
 import { load_playlist, is_online, is_offline } from "./store/actions"
 
 const Container = styled.div`
-  position: relative;
   min-height: 100vh;
-  max-width: 100%;
+  max-width: 100vw;
   margin-top: 50px;
   padding: 10px;
   transition: all 250ms ease;
@@ -27,18 +27,7 @@ const Container = styled.div`
 
 class App extends Component {
   componentDidMount() {
-    this.props.loadPlaylist().then(() => {
-      const ele = document.getElementById("loader")
-      if (ele) {
-        setTimeout(() => {
-          ele.classList.add("ready")
-          setTimeout(() => {
-            ele.outerHTML = ""
-          }, 500)
-        }, 500)
-      }
-    })
-
+    this.props.loadPlaylist()
     window.addEventListener("online", this.props.isOnline)
     window.addEventListener("offline", this.props.isOffline)
   }
@@ -48,11 +37,11 @@ class App extends Component {
       <HashRouter>
         <Container>
           <Sidebar />
+          <Header />
+          <Player />
           <Route exact path="/" component={Home} />
           <Route path="/search" component={Search} />
           <Route path="/playlist" component={Playlist} />
-          <Header />
-          <Player />
         </Container>
       </HashRouter>
     )

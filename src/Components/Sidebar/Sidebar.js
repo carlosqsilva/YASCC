@@ -12,7 +12,7 @@ import Filter from "./filter.svg"
 
 const Container = styled.div`
   background: linear-gradient(to right, #232526, #414345);
-  transition: transform 200ms linear;
+  transition: transform 0.2s;
   position: fixed;
   bottom: 0px;
   left: 0px;
@@ -83,10 +83,9 @@ const Tag = styled.span`
 const Option = styled.a`
   flex: 1;
   cursor: pointer;
-  font-weight: 500;
+  font-size: 1rem;
   text-decoration: none;
-  padding: 3px 0;
-  transition: all 250ms ease;
+  padding: 4px 0;
   color: ${props => (props.active ? "white" : "#999")};
 
   &:hover {
@@ -128,7 +127,7 @@ class Sidebar extends Component {
 
   render({ sidebarVisible, qtd }, { activeItem }) {
     return (
-      <div>
+      <aside>
         <Container visible={sidebarVisible}>
           <LinkSegment horizontal onClick={() => this.changeRoute("/playlist")}>
             <Icon size={20} src={Playlist} />
@@ -170,7 +169,7 @@ class Sidebar extends Component {
           </Segment>
         </Container>
         {sidebarVisible && <Overlay onClick={this.props.toggleSidebar} />}
-      </div>
+      </aside>
     )
   }
 }

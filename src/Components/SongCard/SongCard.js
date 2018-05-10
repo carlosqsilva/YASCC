@@ -9,10 +9,8 @@ import Add from "./add.svg"
 
 const PlayIcon = Icon.extend`
   opacity: 0;
-  transition: transform 200ms ease;
   margin: auto;
   display: block;
-  transform: scale(0.1);
 `
 
 const PlaylistAction = Icon.extend`
@@ -21,17 +19,13 @@ const PlaylistAction = Icon.extend`
   top: 2px;
   right: 2px;
   z-index: 5;
-  transition: transform 200ms ease-in-out, opacity 200ms;
+  transition: transform 200ms, opacity 200ms;
   transform: translateX(100%);
-  &:hover {
-    border: 1px solid transparent;
-  }
 `
 
 const Active = css`
   ${PlayIcon} {
     opacity: 1;
-    transform: scale(1);
   }
   ${PlaylistAction} {
     opacity: 1;
@@ -73,7 +67,6 @@ const Artwork = styled.div`
 `
 
 const Container = styled.div`
-  position: relative;
   display: flex;
   flex-direction: column;
   margin-left: 5px;
@@ -104,7 +97,7 @@ const Wrapper = styled.div`
 
 const Info = styled.span`
   align-self: center;
-  margin-right: 5px;
+  margin-left: 5px;
   font-size: 0.85rem;
   display: flex;
   align-items: center;
@@ -147,10 +140,8 @@ export const SongCard = fromPlaylist => {
         <Music title={song.title}>{song.title}</Music>
         <Wrapper>
           <Duration>{song.duration}</Duration>
-          <Info title={`${song.likesCount} likes`}>
-            <Icon src={Like} size={14} />
-            {song.likesCountMin}
-          </Info>
+          <Icon src={Like} size={12} />
+          <Info title={`${song.likesCount} likes`}>{song.likesCountMin}</Info>
         </Wrapper>
       </Container>
     </Card>

@@ -29,7 +29,6 @@ const LoadMore = styled.a`
   text-align: center;
   background-color: rgba(0, 0, 0, 0.3);
   color: #fff;
-  font-weight: 500;
   padding: 10px 15px;
   border-radius: 2px;
   &:hover {
@@ -50,7 +49,7 @@ class Loading extends Component {
   render({ loadMore, isLoading }) {
     return (
       <LoadMore onClick={loadMore} innerRef={e => (this.target = e)}>
-        {isLoading ? <LoadingSpin /> : "Load More..."}
+        {isLoading ? <LoadingSpin /> : <strong>Load More...</strong>}
       </LoadMore>
     )
   }

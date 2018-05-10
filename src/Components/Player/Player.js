@@ -6,6 +6,7 @@ import throttle from "lodash.throttle"
 import Slider from "../Slider/Slider"
 
 import {
+  play_prev,
   play_next,
   on_play,
   on_pause,
@@ -26,6 +27,7 @@ const Wrapper = styled.div`
   display: flex;
   transform: ${props => (props.visible ? "translateY(0)" : "translateY(100%)")};
   transition: transform 500ms ease;
+  z-index: 10;
 
   @media screen and (min-width: 500px) {
     padding-left: 220px;
@@ -42,25 +44,24 @@ class Player extends Component {
       navigator.mediaSession.setActionHandler("pause", this.togglePlay)
       navigator.mediaSession.setActionHandler("nexttrack", playNext)
     } else {
-      window.addEventListener("keydown", ({ code }) => {
-        if (code === "MediaPlayPause") this.togglePlay()
-        if (code === "MediaTrackNext") playNext()
-        if (code === "MediaTrackPrevious") playPrev()
-      })
+      window.addEventListener("keyup", this.keyboardKey, false)
     }
   }
+
+  componentWillUnmount() {
+    window.removeEventListener("keyup", this.keyboardKey, false)
+  }
+
   componentWillReceiveProps(nextProps) {
     if ("mediaSession" in navigator) {
+      const { title, user, artworkOriginal } = nextProps.song
       /* eslint-disable */
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: nextProps.currentSong.title,
-        artist: nextProps.currentSong.user,
+        title: title,
+        artist: user,
         artwork: [
           {
-            src: nextProps.currentSong.artworkOriginal.replace(
-              "large",
-              "t500x500"
-            ),
+            src: artworkOriginal.replace("large", "t500x500"),
             sizes: "500x500",
             type: "image/jpg"
           }
@@ -68,6 +69,13 @@ class Player extends Component {
       })
       /* eslint-enable */
     }
+  }
+
+  keyboardKey = ({ code }) => {
+    const { playPrev, playNext } = this.props
+    if (code === "MediaPlayPause") this.togglePlay()
+    if (code === "MediaTrackNext") playNext()
+    if (code === "MediaTrackPrevious") playPrev()
   }
 
   onLoadedMetadata = () => {
@@ -118,6 +126,7 @@ class Player extends Component {
 }
 
 const state = ({ playlist, root }) => ({
+  song: playlist.currentSong,
   audioUrl: playlist.audioUrl,
   online: root.online
 })
@@ -125,6 +134,7 @@ const state = ({ playlist, root }) => ({
 const actions = {
   onPlay: on_play,
   onPause: on_pause,
+  playPrev: play_prev,
   playNext: play_next,
   changeTime: change_time,
   onLoadStart: on_load_start,

@@ -41,9 +41,7 @@ class SearchInput extends Component {
     this.props.history.push("/search")
   }
 
-  render() {
-    const { value } = this.state
-
+  render(_, { value }) {
     return (
       <Form onSubmit={this.handleSubmit}>
         <Input
