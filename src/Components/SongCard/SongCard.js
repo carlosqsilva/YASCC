@@ -14,12 +14,13 @@ const PlayIcon = Icon.extend`
 `
 
 const PlaylistAction = Icon.extend`
-  opacity: 0;
+  /* opacity: 0; */
+  display: none;
   position: absolute;
   top: 2px;
   right: 2px;
   z-index: 5;
-  transition: transform 200ms, opacity 200ms;
+  transition: transform 200ms;
   transform: translateX(100%);
 `
 
@@ -28,7 +29,7 @@ const Active = css`
     opacity: 1;
   }
   ${PlaylistAction} {
-    opacity: 1;
+    display: initial;
     transform: translateX(0);
   }
 `

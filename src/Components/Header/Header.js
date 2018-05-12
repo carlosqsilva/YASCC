@@ -11,6 +11,7 @@ import Github from "./github.svg"
 
 const Wrapper = styled.div`
   background: ${props => (props.online ? "#fff" : "#ef5350")};
+  backface-visibility: hidden;
   position: fixed;
   top: 0px;
   left: 0px;

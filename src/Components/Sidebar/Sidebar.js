@@ -13,6 +13,7 @@ import Filter from "./filter.svg"
 const Container = styled.div`
   background: linear-gradient(to right, #232526, #414345);
   transition: transform 0.2s;
+  will-change: transform;
   position: fixed;
   bottom: 0px;
   left: 0px;
