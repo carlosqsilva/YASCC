@@ -4,7 +4,7 @@ import { connect } from "preact-redux"
 import { toggle_sidebar } from "@/store/actions"
 import styled from "styled-components"
 import SearchInput from "../SearchInput/searchInput"
-import Icon from "../Utils/Icon"
+import { Icon } from "../Utils/Icon"
 import Item from "../Utils/Item"
 import Menu from "./menu.svg"
 import Github from "./github.svg"
@@ -62,4 +62,7 @@ const actions = {
   toggleSidebar: toggle_sidebar
 }
 
-export default connect(state, actions)(Header)
+export default connect(
+  state,
+  actions
+)(Header)

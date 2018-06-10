@@ -70,12 +70,12 @@ export class api {
     return this.getSongs(this.next)
   }
 
-  audioStream(url) {
-    return Promise.resolve(`${url}?${this.key}`)
+  async audioStream(url) {
+    return `${url}?${this.key}`
   }
 
-  search(q) {
-    if (!q.trim()) return Promise.resolve([])
+  async search(q) {
+    if (!q.trim()) return []
     const query = q
       .split(" ")
       .filter(str => str.length > 0)
@@ -83,28 +83,30 @@ export class api {
     return this.getSongs(`${this.tracks}&q=${query}`)
   }
 
-  getSongs(url) {
-    return fetch(url)
-      .then(res => res.json())
-      .then(obj => {
-        this.next = obj.next_href
-        const playlist = obj.collection
-          .filter(
-            track => track.artwork_url !== null && track.duration !== 30000
-          )
-          .map(track => ({
-            id: track.id,
-            title: formatSongTitle(track.title),
-            duration: secToTime(track.duration),
-            stream: track.stream_url,
-            artworkOriginal: track.artwork_url,
-            artwork: track.artwork_url.replace("large", "t67x67"),
-            waveform: track.waveform_url,
-            user: track.user.username,
-            likesCount: track.likes_count,
-            likesCountMin: formatNumber(track.likes_count)
-          }))
-        return playlist
-      })
+  async getSongs(url) {
+    try {
+      const response = await fetch(url).then(res => res.json())
+      this.next = response.next_href
+
+      const playlist = response.collection
+        .filter(track => track.artwork_url !== null && track.duration !== 30000)
+        .map(track => ({
+          id: track.id,
+          title: formatSongTitle(track.title),
+          duration: secToTime(track.duration),
+          stream: track.stream_url,
+          artworkOriginal: track.artwork_url,
+          artwork: track.artwork_url.replace("large", "t67x67"),
+          waveform: track.waveform_url,
+          user: track.user.username,
+          likesCount: track.likes_count,
+          likesCountMin: formatNumber(track.likes_count)
+        }))
+
+      return playlist
+    } catch (err) {
+      console.log(err)
+      return []
+    }
   }
 }

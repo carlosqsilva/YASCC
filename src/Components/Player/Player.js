@@ -100,10 +100,7 @@ class Player extends Component {
     }
   }
 
-  render(
-    { audioUrl, playNext, onPause, onPlay, onLoadStart, online },
-    { playing }
-  ) {
+  render({ audioUrl, playNext, onPause, onPlay, onLoadStart, online, repeat }) {
     return (
       <Wrapper online={online} visible={audioUrl !== null}>
         <PlayerControls toggle={this.togglePlay} />
@@ -119,6 +116,7 @@ class Player extends Component {
           onPause={onPause}
           onPlay={onPlay}
           src={audioUrl}
+          loop={repeat}
           ref={e => (this.audio = e)}
         />
       </Wrapper>
@@ -129,6 +127,7 @@ class Player extends Component {
 const state = ({ playlist, root }) => ({
   song: playlist.currentSong,
   audioUrl: playlist.audioUrl,
+  repeat: playlist.repeat,
   online: root.online
 })
 
@@ -142,4 +141,7 @@ const actions = {
   changeDuration: change_duration
 }
 
-export default connect(state, actions)(Player)
+export default connect(
+  state,
+  actions
+)(Player)

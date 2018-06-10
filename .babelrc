@@ -5,8 +5,9 @@
       {
         "modules": false,
         "useBuiltIns": false,
+        "loose": true,
         "targets": {
-          "browsers": ["since 2018"]
+          "browsers": ["last 2 Chrome versions"]
         }
       }
     ]

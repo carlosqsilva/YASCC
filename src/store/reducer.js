@@ -53,6 +53,7 @@ const playlistInitialState = {
   audioUrl: null,
   currentSong: null,
   isPlaying: false,
+  repeat: false,
   loading: false,
   location: "",
   duration: 0,
@@ -88,6 +89,11 @@ const playlistReducer = (state = playlistInitialState, action) => {
       return {
         ...state,
         isPlaying: false
+      }
+    case type.TOGGLE_REPEAT:
+      return {
+        ...state,
+        repeat: !state.repeat
       }
     case type.ON_TIME_UPDATE:
       return {

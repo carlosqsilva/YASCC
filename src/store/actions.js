@@ -27,6 +27,10 @@ export const on_pause = () => ({
   type: type.ON_PAUSE
 })
 
+export const toggle_repeat = () => ({
+  type: type.TOGGLE_REPEAT
+})
+
 export const change_time = time => ({
   type: type.ON_TIME_UPDATE,
   time
@@ -37,10 +41,9 @@ export const change_duration = duration => ({
   duration
 })
 
-export const play_song = (songIndex, song) => dispatch => {
-  API.audioStream(song.stream).then(audioUrl =>
-    dispatch({ type: type.PLAY_SONG, songIndex, song, audioUrl })
-  )
+export const play_song = (songIndex, song) => async dispatch => {
+  const audioUrl = await API.audioStream(song.stream)
+  dispatch({ type: type.PLAY_SONG, songIndex, song, audioUrl })
 }
 
 export const play_song_from_btn = (index, route) => (dispatch, getState) => {
@@ -79,74 +82,67 @@ export const play_prev = () => (dispatch, getState) => {
   dispatch(play_song(prevSong, playlist[prevSong]))
 }
 
-export const load_playlist = genre => dispatch => {
+export const load_playlist = genre => async dispatch => {
   dispatch({ type: type.PLAYLIST_LOADING })
 
-  return API.load(genre).then(playlist =>
-    dispatch({ type: type.PLAYLIST_LOADED, playlist })
-  )
+  const playlist = await API.load(genre)
+  dispatch({ type: type.PLAYLIST_LOADED, playlist })
 }
 
-export const set_genre = genre => dispatch => {
+export const set_genre = genre => async dispatch => {
   dispatch({ type: type.PLAYLIST_LOADING })
 
-  API.setGenre(genre).then(playlist =>
-    dispatch({ type: type.PLAYLIST_LOADED, playlist })
-  )
+  const playlist = await API.setGenre(genre)
+  dispatch({ type: type.PLAYLIST_LOADED, playlist })
 }
 
-export const set_tag = tag => dispatch => {
+export const set_tag = tag => async dispatch => {
   dispatch({ type: type.PLAYLIST_LOADING })
 
-  API.setTag(tag).then(playlist =>
-    dispatch({ type: type.PLAYLIST_LOADED, playlist })
-  )
+  const playlist = await API.setTag(tag)
+  dispatch({ type: type.PLAYLIST_LOADED, playlist })
 }
 
-export const set_filter = filter => dispatch => {
+export const set_filter = filter => async dispatch => {
   dispatch({ type: type.PLAYLIST_LOADING })
 
-  API.setFilter(filter).then(playlist =>
-    dispatch({ type: type.PLAYLIST_LOADED, playlist })
-  )
+  const playlist = await API.setFilter(filter)
+  dispatch({ type: type.PLAYLIST_LOADED, playlist })
 }
 
-export const load_playlist_next = () => (dispatch, getState) => {
+export const load_playlist_next = () => async (dispatch, getState) => {
   const { loadingPlaylist } = getState().root
 
   if (!loadingPlaylist) {
     dispatch({ type: type.PLAYLIST_LOADING_NEXT })
 
-    API.loadNext().then(playlist =>
-      dispatch({ type: type.PLAYLIST_LOADED, playlist })
-    )
+    const playlist = await API.loadNext()
+    dispatch({ type: type.PLAYLIST_LOADED, playlist })
   }
 }
 
-export const search_songs = q => dispatch => {
+export const search_songs = q => async dispatch => {
   dispatch({ type: type.LOADING_SEARCH })
 
-  API.search(q).then(playlist =>
-    dispatch({ type: type.LOADED_SEARCH, playlist })
-  )
+  const playlist = await API.search(q)
+  dispatch({ type: type.LOADED_SEARCH, playlist })
 }
 
-export const load_next_results = () => (dispatch, getState) => {
+export const load_next_results = () => async (dispatch, getState) => {
   const { loadingSearch } = getState().search
 
   if (!loadingSearch) {
     dispatch({ type: type.LOADING_SEARCH_NEXT })
 
-    API.loadNext().then(playlist =>
-      dispatch({ type: type.LOADED_SEARCH, playlist })
-    )
+    const playlist = await API.loadNext()
+    dispatch({ type: type.LOADED_SEARCH, playlist })
   }
 }
 
 export const add_to_playlist = song => (dispatch, getState) => {
   const playlist = getState().userPlaylist.playlist
-  const repeated = playlist.filter(track => track.id === song.id)
-  if (repeated.length === 0) {
+  const repeated = playlist.some(track => track.id === song.id)
+  if (!repeated) {
     dispatch({ type: type.ADD_TO_PLAYLIST, song })
   }
 }

@@ -8,4 +8,10 @@ export const Icon = styled.img.attrs({
   align-self: center;
 `
 
-export default Icon
+export const SVGIcon = styled.svg.attrs({
+  width: props => props.size,
+  height: props => props.size,
+  viewBox: "0 0 24 24"
+})`
+  fill: ${props => (props.active ? "#21d4fd" : "#444")};
+`
