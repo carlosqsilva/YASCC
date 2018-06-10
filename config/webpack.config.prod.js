@@ -233,7 +233,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
     new webpack.optimize.ModuleConcatenationPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       name: "vendor",
@@ -314,6 +314,7 @@ module.exports = {
       uglifyOptions: {
         compress: {
           warnings: false,
+          reduce_vars: false,
           // Disabled because of an issue with Uglify breaking seemingly valid code:
           // https://github.com/facebookincubator/create-react-app/issues/2376
           // Pending further investigation:
