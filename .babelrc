@@ -5,7 +5,6 @@
       {
         "modules": false,
         "useBuiltIns": false,
-        "loose": true,
         "targets": {
           "browsers": ["last 2 Chrome versions"]
         }
