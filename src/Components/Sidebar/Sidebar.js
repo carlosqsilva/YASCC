@@ -11,8 +11,8 @@ import Playlist from "./playlist.svg"
 import Filter from "./filter.svg"
 
 const Container = styled.div`
-  background: linear-gradient(to right, #232526, #414345);
-  transition: transform 0.2s;
+  background: ${props => props.theme.lightDark};
+  transition: transform 200ms;
   will-change: transform;
   position: fixed;
   bottom: 0px;
@@ -48,7 +48,6 @@ const Segment = styled.div`
   text-decoration: none;
   flex-direction: ${props => (props.horizontal ? "row" : "column")};
   padding: 0.7rem 0 0.7rem 1rem;
-  color: rgba(255, 255, 255, 0.9);
 
   &:not(:last-child) {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -64,10 +63,11 @@ const Label = styled.strong`
   align-self: center;
   margin-left: 20px;
   font-size: 1.1rem;
+  color: ${props => props.theme.light};
 `
 
 const Header = styled.strong`
-  color: #fafafa;
+  color: ${props => props.theme.light};
   margin-bottom: 3px;
 `
 
@@ -83,11 +83,12 @@ const Tag = styled.span`
 
 const Option = styled.a`
   flex: 1;
+  display: flex;
   cursor: pointer;
   font-size: 1rem;
   text-decoration: none;
   padding: 4px 0;
-  color: ${props => (props.active ? "white" : "#999")};
+  color: ${props => (props.active ? "#fff" : "#999")};
 
   &:hover {
     color: white;
@@ -187,4 +188,9 @@ const actions = {
   toggleSidebar: toggle_sidebar
 }
 
-export default withRouter(connect(state, actions)(Sidebar))
+export default withRouter(
+  connect(
+    state,
+    actions
+  )(Sidebar)
+)

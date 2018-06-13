@@ -14,10 +14,9 @@ const Form = styled.form`
 `
 
 const Input = styled.input`
-  background: #fafafa;
-  color: rgba(0, 0, 0, 0.87);
+  background: ${props => props.theme.light};
+  color: ${props => props.theme.secondary};
   border-radius: 4px;
-  appearance: none;
   border: none;
   outline: 0;
   font-size: 1rem;
@@ -58,4 +57,7 @@ const actions = {
   searchSongs: search_songs
 }
 
-export default connect(null, actions)(withRouter(SearchInput))
+export default connect(
+  null,
+  actions
+)(withRouter(SearchInput))

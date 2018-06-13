@@ -18,7 +18,8 @@ import {
 import PlayerControls from "./PlayerControls"
 
 const Wrapper = styled.div`
-  background: ${props => (props.online ? "#fff" : "#ef5350")};
+  background: ${props =>
+    props.online ? props.theme.primary : props.theme.danger};
   backface-visibility: hidden;
   position: fixed;
   bottom: 0px;
@@ -26,12 +27,23 @@ const Wrapper = styled.div`
   width: 100%;
   height: 45px;
   display: flex;
-  transform: ${props => (props.visible ? "translateY(0)" : "translateY(100%)")};
+  /* transform: ${props =>
+    props.visible ? "translateY(0)" : "translateY(100%)"}; */
   transition: transform 500ms ease;
   z-index: 10;
 
   @media screen and (min-width: 500px) {
     padding-left: 220px;
+  }
+
+  &::after {
+    box-shadow: inset 0px -4px 8px -3px rgba(17, 17, 17, 0.06);
+    position: absolute;
+    top: -5px;
+    right: 0px;
+    width: 100%;
+    height: 5px;
+    content: "";
   }
 `
 
@@ -100,7 +112,16 @@ class Player extends Component {
     }
   }
 
-  render({ audioUrl, playNext, onPause, onPlay, onLoadStart, online, repeat }) {
+  render({
+    audioUrl,
+    playNext,
+    onPause,
+    onPlay,
+    onLoadStart,
+    online,
+    repeat,
+    volume
+  }) {
     return (
       <Wrapper online={online} visible={audioUrl !== null}>
         <PlayerControls toggle={this.togglePlay} />
@@ -115,6 +136,7 @@ class Player extends Component {
           onEnded={playNext}
           onPause={onPause}
           onPlay={onPlay}
+          volume={volume}
           src={audioUrl}
           loop={repeat}
           ref={e => (this.audio = e)}
@@ -128,6 +150,7 @@ const state = ({ playlist, root }) => ({
   song: playlist.currentSong,
   audioUrl: playlist.audioUrl,
   repeat: playlist.repeat,
+  volume: playlist.volume,
   online: root.online
 })
 

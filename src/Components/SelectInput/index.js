@@ -5,7 +5,7 @@ import arrow from "./arrow.svg"
 const Select = styled.select`
   appearance: none;
   background: transparent url(${arrow}) no-repeat 82% 50%;
-  color: whitesmoke;
+  color: ${props => props.theme.light};
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
@@ -17,8 +17,8 @@ const Select = styled.select`
 `
 
 const Option = styled.option`
-  color: whitesmoke;
-  background: #242526;
+  color: ${props => props.theme.light};
+  background: ${props => props.theme.lightDark};
 `
 
 const SelectInput = ({ options, ...props }) => (

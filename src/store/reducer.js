@@ -2,6 +2,7 @@ import * as type from "./constants"
 
 const rootInitialState = {
   sidebarVisible: false,
+  darkMode: false,
   loadingPlaylist: true,
   isPlaying: false,
   playlist: [],
@@ -14,6 +15,11 @@ const rootReducer = (state = rootInitialState, action) => {
       return {
         ...state,
         sidebarVisible: !state.sidebarVisible
+      }
+    case type.TOGGLE_DARK_MODE:
+      return {
+        ...state,
+        darkMode: !state.darkMode
       }
     case type.PLAYLIST_LOADING:
       return {
@@ -54,6 +60,7 @@ const playlistInitialState = {
   currentSong: null,
   isPlaying: false,
   repeat: false,
+  volume: 1,
   loading: false,
   location: "",
   duration: 0,
@@ -99,6 +106,11 @@ const playlistReducer = (state = playlistInitialState, action) => {
       return {
         ...state,
         time: action.time
+      }
+    case type.ON_VOLUME_CHANGE:
+      return {
+        ...state,
+        volume: action.volume
       }
     case type.ON_LOADED_METADATA:
       return {

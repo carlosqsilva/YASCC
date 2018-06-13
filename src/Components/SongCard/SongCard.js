@@ -14,7 +14,6 @@ const PlayIcon = Icon.extend`
 `
 
 const PlaylistAction = Icon.extend`
-  /* opacity: 0; */
   display: none;
   position: absolute;
   top: 2px;
@@ -40,7 +39,7 @@ const Card = styled.div`
   cursor: pointer;
   padding: 6px;
   display: flex;
-  background: #fff;
+  background: ${props => props.theme.primary};
 
   ${props => props.active && Active};
 
@@ -60,6 +59,7 @@ const Card = styled.div`
 `
 
 const Artwork = styled.div`
+  background: url(${props => props.image});
   background-size: cover;
   background-position: center;
   display: flex;
@@ -76,13 +76,13 @@ const Container = styled.div`
 `
 
 const Artist = styled.p`
-  color: #777;
+  color: ${props => props.theme.textGray};
   font-size: 0.8rem;
 `
 
 const Music = styled.p`
-  color: #444;
-  font-size: 0.85rem;
+  color: ${props => props.theme.secondary};
+  font-size: 0.9rem;
   @media screen and (min-width: 500px) {
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -97,16 +97,11 @@ const Wrapper = styled.div`
 `
 
 const Info = styled.span`
-  align-self: center;
-  margin-left: 5px;
+  flex: ${props => (props.flex ? 1 : 0)};
   font-size: 0.85rem;
   display: flex;
   align-items: center;
-  color: #666;
-`
-
-const Duration = Info.extend`
-  flex: 1;
+  color: ${props => props.theme.textGray};
 `
 
 export const CardContainer = styled.div`
@@ -132,7 +127,7 @@ export const SongCard = fromPlaylist => {
         size={24}
       />
 
-      <Artwork style={{ backgroundImage: `url(${song.artwork})` }}>
+      <Artwork image={song.artwork}>
         <PlayIcon src={active ? Playing : Play} size={40} />
       </Artwork>
 
@@ -140,8 +135,8 @@ export const SongCard = fromPlaylist => {
         <Artist>{song.user}</Artist>
         <Music title={song.title}>{song.title}</Music>
         <Wrapper>
-          <Duration>{song.duration}</Duration>
-          <Icon src={Like} size={12} />
+          <Info flex>{song.duration}</Info>
+          <Icon src={Like} size={11} />
           <Info title={`${song.likesCount} likes`}>{song.likesCountMin}</Info>
         </Wrapper>
       </Container>

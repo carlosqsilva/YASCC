@@ -16,7 +16,7 @@ const Container = styled.div`
 
 const SliderFill = styled.div`
   transform: translateX(-100%);
-  background-color: #21d4fd;
+  background-color: ${props => props.theme.info};
   position: absolute;
   bottom: 0px;
   left: 0px;
@@ -26,7 +26,7 @@ const SliderFill = styled.div`
 `
 
 const Text = styled.p`
-  color: #222;
+  color: ${props => props.theme.lightDark};
   overflow: hidden;
   display: block;
   text-overflow: ellipsis;
@@ -59,7 +59,7 @@ class Slider extends Component {
   }
 
   render({ time, duration, song, children }) {
-    const transform = `translateX(-${100 - time / duration * 100}%)`
+    const transform = `translateX(-${100 - (time / duration) * 100}%)`
     return (
       <Container onClick={this.onClick} image={song.waveform}>
         <SliderFill style={{ transform }} />
