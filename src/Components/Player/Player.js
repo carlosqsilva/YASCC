@@ -27,8 +27,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 45px;
   display: flex;
-  /* transform: ${props =>
-    props.visible ? "translateY(0)" : "translateY(100%)"}; */
+  transform: ${props => (props.visible ? "translateY(0)" : "translateY(100%)")};
   transition: transform 500ms ease;
   z-index: 10;
 

@@ -1,7 +1,7 @@
-import { h, Component } from "preact"
+import { h } from "preact"
 import styled, { ThemeProvider } from "styled-components"
 import Route from "react-router-dom/es/Route"
-import HashRouter from "react-router-dom/es/HashRouter"
+import BrowserRouter from "react-router-dom/es/BrowserRouter"
 import { connect } from "preact-redux"
 
 import { Header, Sidebar, Player, lightTheme, darkTheme } from "./Components"
@@ -9,8 +9,6 @@ import { Header, Sidebar, Player, lightTheme, darkTheme } from "./Components"
 import Home from "./Routes/Home"
 import Search from "./Routes/Search"
 import Playlist from "./Routes/Playlist"
-
-import { load_playlist, is_online, is_offline } from "./store/actions"
 
 const Container = styled.div`
   min-height: 100vh;
@@ -26,42 +24,25 @@ const Container = styled.div`
   }
 `
 
-class App extends Component {
-  componentDidMount() {
-    this.props.loadPlaylist()
-    window.addEventListener("online", this.props.isOnline)
-    window.addEventListener("offline", this.props.isOffline)
-  }
-
-  render({ darkMode }) {
-    return (
-      <HashRouter>
-        <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-          <Container>
-            <Sidebar />
-            <Header />
-            <Player />
-            <Route exact path="/" component={Home} />
-            <Route path="/search" component={Search} />
-            <Route path="/playlist" component={Playlist} />
-          </Container>
-        </ThemeProvider>
-      </HashRouter>
-    )
-  }
+const app = ({ darkMode }) => {
+  return (
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+        <Container>
+          <Sidebar />
+          <Header />
+          <Player />
+          <Route exact path="/" component={Home} />
+          <Route path="/search" component={Search} />
+          <Route path="/playlist" component={Playlist} />
+        </Container>
+      </ThemeProvider>
+    </BrowserRouter>
+  )
 }
 
-const state = ({ root }) => ({
-  darkMode: root.darkMode
+const state = ({ root: { darkMode } }) => ({
+  darkMode
 })
 
-const actions = {
-  loadPlaylist: load_playlist,
-  isOnline: is_online,
-  isOffline: is_offline
-}
-
-export default connect(
-  state,
-  actions
-)(App)
+export default connect(state)(app)

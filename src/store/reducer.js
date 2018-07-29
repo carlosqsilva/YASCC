@@ -1,3 +1,4 @@
+import { combineReducers } from "redux"
 import * as type from "./constants"
 
 const rootInitialState = {
@@ -159,6 +160,12 @@ export const userPlaylistReducer = (
   action
 ) => {
   switch (action.type) {
+    case type.INITIAL_LOAD:
+      if (action.playlist) {
+        return {
+          playlist: action.playlist
+        }
+      } else return state
     case type.ADD_TO_PLAYLIST:
       return {
         playlist: [...state.playlist, action.song]
@@ -172,9 +179,9 @@ export const userPlaylistReducer = (
   }
 }
 
-export default {
+export default combineReducers({
   root: rootReducer,
   search: searchReducer,
   playlist: playlistReducer,
   userPlaylist: userPlaylistReducer
-}
+})

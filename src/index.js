@@ -1,25 +1,45 @@
 import { h, render } from "preact"
 import { Provider } from "preact-redux"
 
-import { configStore } from "./store"
-import { PersistGate } from "redux-persist/es/integration/react"
+import store from "./store"
+import { init, online, offline } from "./store/actions"
 import registerServiceWorker from "./registerServiceWorker"
 import App from "./App"
 
-const { persistor, store } = configStore()
-
 render(
   <Provider store={store}>
-    <PersistGate persistor={persistor}>
-      <App />
-    </PersistGate>
+    <App />
   </Provider>,
   document.body
 )
 
-if (module.hot) {
-  require("preact/devtools")
-} else {
-  registerServiceWorker()
+window.addEventListener("online", () => {
+  store.dispatch(online())
+})
+
+window.addEventListener("offline", () => {
+  store.dispatch(offline())
+})
+
+window.addEventListener("load", () => {
+  store.dispatch(init()).then(() => registerServiceWorker())
   console.log("%c hello there...", "font-size: 30px; color: red")
-}
+})
+
+// const PageVisibility = {
+//   originalTitle: document.title,
+//   emoji: "🎶",
+//   init() {
+//     if (document.hidden) {
+//       const { isPlaying, currentSong } = store.getState().playlist
+
+//       if (isPlaying) {
+//         document.title = `${this.emoji} ${currentSong.title}`
+//       }
+//     } else {
+//       document.title = this.originalTitle
+//     }
+//   }
+// }
+
+// document.addEventListener("visibilitychange", PageVisibility.init)

@@ -21,10 +21,10 @@ const formatSongTitle = str => {
     .pop()
 }
 
-const formatNumber = likes => {
-  if (likes < 1000) return likes
-  if (!likes) return 0
-  const str = likes.toString()
+const formatNumber = number => {
+  if (!number) return 0
+  if (number < 1000) return number
+  const str = number.toString()
   const num = str.length
   const qtd = num % 3 === 0 ? 3 : num % 3
   return `${str.substring(0, qtd)}${num >= 7 ? "M" : "K"}`
@@ -37,37 +37,30 @@ export class api {
       this.key
     }`
     this.created_at = null
-    this.genre = "genres=house"
+    this.genre = ""
     this.tag = null
     this.next = ""
-  }
-
-  load() {
-    const url = [this.tracks, this.genre, this.tag, this.created_at]
-      .filter(opt => opt !== null)
-      .join("&")
-    return this.getSongs(url)
   }
 
   setGenre(genre) {
     this.genre = `genres=${genre}`
     this.tag = null
-    return this.load()
+    return this._load()
   }
 
   setTag(tag) {
     this.tag = `tags=${tag}`
     this.genre = null
-    return this.load()
+    return this._load()
   }
 
   setFilter(filter) {
     this.created_at = !filter ? null : `created_at=${filter}`
-    return this.load()
+    return this._load()
   }
 
   loadNext() {
-    return this.getSongs(this.next)
+    return this._getSongs(this.next)
   }
 
   async audioStream(url) {
@@ -80,10 +73,17 @@ export class api {
       .split(" ")
       .filter(str => str.length > 0)
       .join("%20")
-    return this.getSongs(`${this.tracks}&q=${query}`)
+    return this._getSongs(`${this.tracks}&q=${query}`)
   }
 
-  async getSongs(url) {
+  _load() {
+    const url = [this.tracks, this.genre, this.tag, this.created_at]
+      .filter(opt => opt !== null)
+      .join("&")
+    return this._getSongs(url)
+  }
+
+  async _getSongs(url) {
     try {
       const response = await fetch(url).then(res => res.json())
       this.next = response.next_href

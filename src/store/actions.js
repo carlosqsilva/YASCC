@@ -1,13 +1,23 @@
 import * as type from "./constants"
 import { api } from "./api"
+import Storage from "./storage"
 
 const API = new api(35)
+const DB = new Storage({
+  name: "yascc",
+  store: [
+    {
+      name: "playlist",
+      key: "id"
+    }
+  ]
+})
 
-export const is_online = () => ({
+export const online = () => ({
   type: type.ONLINE
 })
 
-export const is_offline = () => ({
+export const offline = () => ({
   type: type.OFFLINE
 })
 
@@ -57,19 +67,10 @@ export const play_song = (songIndex, song) => async dispatch => {
 
 export const play_song_from_btn = (index, route) => (dispatch, getState) => {
   let newPlaylist
-  switch (route) {
-    case "/":
-      newPlaylist = getState().root.playlist
-      break
-    case "/search":
-      newPlaylist = getState().search.results
-      break
-    case "/playlist":
-      newPlaylist = getState().userPlaylist.playlist
-      break
-    default:
-      return []
-  }
+
+  if (route === "/") newPlaylist = getState().root.playlist
+  else if (route === "/search") newPlaylist = getState().search.results
+  else if (route === "/playlist") newPlaylist = getState().userPlaylist.playlist
 
   dispatch(play_song(index, newPlaylist[index]))
   dispatch({
@@ -91,12 +92,12 @@ export const play_prev = () => (dispatch, getState) => {
   dispatch(play_song(prevSong, playlist[prevSong]))
 }
 
-export const load_playlist = genre => async dispatch => {
-  dispatch({ type: type.PLAYLIST_LOADING })
+// export const load_playlist = genre => async dispatch => {
+//   dispatch({ type: type.PLAYLIST_LOADING })
 
-  const playlist = await API.load(genre)
-  dispatch({ type: type.PLAYLIST_LOADED, playlist })
-}
+//   const playlist = await API.load(genre)
+//   dispatch({ type: type.PLAYLIST_LOADED, playlist })
+// }
 
 export const set_genre = genre => async dispatch => {
   dispatch({ type: type.PLAYLIST_LOADING })
@@ -152,7 +153,9 @@ export const add_to_playlist = song => (dispatch, getState) => {
   const playlist = getState().userPlaylist.playlist
   const repeated = playlist.some(track => track.id === song.id)
   if (!repeated) {
-    dispatch({ type: type.ADD_TO_PLAYLIST, song })
+    Promise.resolve(dispatch({ type: type.ADD_TO_PLAYLIST, song })).then(() =>
+      DB.save("playlist", song)
+    )
   }
 }
 
@@ -160,5 +163,21 @@ export const remove_from_playlist = song => (dispatch, getState) => {
   let playlist = getState().userPlaylist.playlist.filter(
     track => track.id !== song.id
   )
-  dispatch({ type: type.REMOVE_FROM_PLAYLIST, playlist })
+  Promise.resolve(dispatch({ type: type.REMOVE_FROM_PLAYLIST, playlist })).then(
+    () => DB.delete("playlist", [song.id])
+  )
+}
+
+export const init = () => async dispatch => {
+  await DB.init()
+
+  const playlist = await DB.getAll("playlist")
+
+  Promise.all([
+    dispatch({
+      type: type.INITIAL_LOAD,
+      playlist
+    }),
+    dispatch(set_genre("house"))
+  ])
 }

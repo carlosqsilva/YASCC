@@ -114,7 +114,7 @@ const PlayerControls = ({
       </SVGIcon>
     </Item>
 
-    <Container link>
+    <Container link noMobile>
       <Icon src={volumeIcon} size={30} />
       <Volume>
         <InputRange onChange={changeVolume} value={volume} />
