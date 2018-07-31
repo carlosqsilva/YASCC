@@ -65,6 +65,7 @@ const playlistInitialState = {
   loading: false,
   location: "",
   duration: 0,
+  muted: false,
   time: 0
 }
 
@@ -98,6 +99,11 @@ const playlistReducer = (state = playlistInitialState, action) => {
         ...state,
         isPlaying: false
       }
+    case type.TOGGLE_MUTE:
+      return {
+        ...state,
+        muted: !state.muted
+      }
     case type.TOGGLE_REPEAT:
       return {
         ...state,
@@ -111,7 +117,8 @@ const playlistReducer = (state = playlistInitialState, action) => {
     case type.ON_VOLUME_CHANGE:
       return {
         ...state,
-        volume: action.volume
+        volume: action.volume,
+        muted: action.volume === "0" ? true : false
       }
     case type.ON_LOADED_METADATA:
       return {

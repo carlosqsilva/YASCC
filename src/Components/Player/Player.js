@@ -119,6 +119,7 @@ class Player extends Component {
     onLoadStart,
     online,
     repeat,
+    muted,
     volume
   }) {
     return (
@@ -136,6 +137,7 @@ class Player extends Component {
           onPause={onPause}
           onPlay={onPlay}
           volume={volume}
+          muted={muted}
           src={audioUrl}
           loop={repeat}
           ref={e => (this.audio = e)}
@@ -145,12 +147,16 @@ class Player extends Component {
   }
 }
 
-const state = ({ playlist, root }) => ({
-  song: playlist.currentSong,
-  audioUrl: playlist.audioUrl,
-  repeat: playlist.repeat,
-  volume: playlist.volume,
-  online: root.online
+const state = ({
+  playlist: { currentSong, audioUrl, repeat, volume, muted },
+  root: { online }
+}) => ({
+  song: currentSong,
+  audioUrl,
+  repeat,
+  muted,
+  volume,
+  online
 })
 
 const actions = {

@@ -5,6 +5,7 @@ import styled from "styled-components"
 import Item from "../Utils/Item"
 
 import {
+  toggle_mute,
   play_next,
   play_prev,
   toggle_repeat,
@@ -16,6 +17,7 @@ import playIcon from "./play.svg"
 import backIcon from "./back.svg"
 import nextIcon from "./next.svg"
 import pauseIcon from "./pause.svg"
+import mutedIcon from "./mute.svg"
 import volumeIcon from "./volume.svg"
 
 const Wrapper = styled.div`
@@ -26,13 +28,12 @@ const Wrapper = styled.div`
 
 const Volume = styled.div`
   position: absolute;
-  bottom: 100%;
+  top: 0;
   left: 0px;
   right: 0px;
   height: 120px;
   background: ${props => props.theme.light};
   opacity: 0;
-  transform: translateY(50%);
   transition: all 200ms;
 `
 
@@ -70,12 +71,16 @@ const InputRange = styled.input.attrs({
   }
 `
 
-const Container = Item.extend`
+const Container = styled.div`
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
   position: relative;
+
   &:hover {
     ${Volume} {
       opacity: 1;
-      transform: translateY(0%);
+      transform: translateY(-99.5%);
     }
   }
 `
@@ -84,19 +89,20 @@ const PlayerControls = ({
   playing,
   playNext,
   playPrev,
+  toggleMute,
   toggleRepeat,
   loading,
   toggle,
   repeat,
-  volume,
+  muted,
   changeVolume
 }) => (
   <Wrapper>
-    <Item link noMobile onClick={playPrev}>
+    <Item noMobile onClick={playPrev}>
       <Icon src={backIcon} size={30} />
     </Item>
 
-    <Item link onClick={toggle}>
+    <Item onClick={toggle}>
       {loading ? (
         <Icon src={spinIcon} size={30} />
       ) : (
@@ -104,35 +110,38 @@ const PlayerControls = ({
       )}
     </Item>
 
-    <Item link noMobile onClick={playNext}>
+    <Item noMobile onClick={playNext}>
       <Icon src={nextIcon} size={30} />
     </Item>
 
-    <Item link noMobile onClick={toggleRepeat}>
+    <Item noMobile onClick={toggleRepeat}>
       <SVGIcon size={30} active={repeat}>
         <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z" />
       </SVGIcon>
     </Item>
 
-    <Container link noMobile>
-      <Icon src={volumeIcon} size={30} />
+    <Container>
+      <Item noMobile onClick={toggleMute}>
+        <Icon src={muted ? mutedIcon : volumeIcon} size={30} />
+      </Item>
       <Volume>
-        <InputRange onChange={changeVolume} value={volume} />
+        <InputRange onChange={changeVolume} />
       </Volume>
     </Container>
   </Wrapper>
 )
 
-const state = ({ playlist }) => ({
-  playing: playlist.isPlaying,
-  loading: playlist.loading,
-  repeat: playlist.repeat,
-  volume: playlist.volume
+const state = ({ playlist: { isPlaying, loading, repeat, muted } }) => ({
+  playing: isPlaying,
+  loading,
+  repeat,
+  muted
 })
 
 const actions = {
   playNext: play_next,
   playPrev: play_prev,
+  toggleMute: toggle_mute,
   toggleRepeat: toggle_repeat,
   changeVolume: change_volume
 }

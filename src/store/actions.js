@@ -50,6 +50,10 @@ export const change_time = time => ({
   time
 })
 
+export const toggle_mute = () => ({
+  type: type.TOGGLE_MUTE
+})
+
 export const change_volume = event => ({
   type: type.ON_VOLUME_CHANGE,
   volume: event.target.value

@@ -51,7 +51,6 @@ const Header = ({ toggleSidebar, toggleDarkMode, online, darkMode }) => (
     </Item>
 
     <Item
-      link
       noMobile
       href="https://github.com/carlosqsilva/yascc"
       target="_blank"
