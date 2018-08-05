@@ -1,8 +1,8 @@
 {
-  "main.js": "static/js/main.3d16.js",
-  "main.js.map": "static/js/main.3d16.js.map",
-  "runtime.js": "static/js/runtime.3627.js",
-  "runtime.js.map": "static/js/runtime.3627.js.map",
-  "vendor.js": "static/js/vendor.a84d.js",
-  "vendor.js.map": "static/js/vendor.a84d.js.map"
+  "main.js": "static/js/main.c0d1.js",
+  "main.js.map": "static/js/main.c0d1.js.map",
+  "runtime.js": "static/js/runtime.0ade.js",
+  "runtime.js.map": "static/js/runtime.0ade.js.map",
+  "vendor.js": "static/js/vendor.468a.js",
+  "vendor.js.map": "static/js/vendor.468a.js.map"
 }
