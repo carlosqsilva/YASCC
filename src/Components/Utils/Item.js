@@ -17,11 +17,11 @@ const Item = styled.a`
     background-color: rgba(0, 0, 0, 0.03);
   }
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 640px) {
     ${props => props.noMobile && "display: none"};
   }
 
-  @media screen and (min-width: 500px) {
+  @media screen and (min-width: 640px) {
     ${props => props.noDesktop && "display: none"};
   }
 `

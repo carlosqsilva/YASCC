@@ -1,7 +1,7 @@
 import { h, Component } from "preact"
 import { connect } from "preact-redux"
 import withRouter from "react-router-dom/es/withRouter"
-import { toggle_sidebar, set_genre, set_tag, set_filter } from "@/actions"
+import { set_genre, set_tag, set_filter } from "@/actions"
 import styled from "styled-components"
 
 import { filter, tags, genres } from "./options"
@@ -13,7 +13,6 @@ import Filter from "./filter.svg"
 const Container = styled.div`
   background: var(--lightDark);
   overscroll-behavior-y: contain;
-  transition: transform 200ms;
   will-change: transform;
   position: fixed;
   bottom: 0px;
@@ -26,22 +25,8 @@ const Container = styled.div`
   transform: ${props =>
     props.visible ? "translateX(0)" : "translateX(-100%)"};
 
-  @media screen and (min-width: 500px) {
+  @media screen and (min-width: 640px) {
     transform: translateX(0);
-  }
-`
-
-const Overlay = styled.div`
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  z-index: 50;
-  background: rgba(0, 0, 0, 0.5);
-
-  @media screen and (min-width: 500px) {
-    display: none;
   }
 `
 
@@ -129,51 +114,48 @@ class Sidebar extends Component {
     this.active(name)
   }
 
-  render({ sidebarVisible, qtd }, { active }) {
+  render({ sidebarVisible, qtd, InnerProps }, { active }) {
     return (
-      <aside>
-        <Container visible={sidebarVisible}>
-          <LinkSegment horizontal onClick={() => this.changeRoute("/playlist")}>
-            <Icon size={20} src={Playlist} />
-            <Label>Playlist</Label>
-            <Tag>{qtd}</Tag>
-          </LinkSegment>
+      <Container visible={sidebarVisible} {...InnerProps}>
+        <LinkSegment horizontal onClick={() => this.changeRoute("/playlist")}>
+          <Icon size={20} src={Playlist} />
+          <Label>Playlist</Label>
+          <Tag>{qtd}</Tag>
+        </LinkSegment>
 
-          <Segment horizontal>
-            <Icon size={20} src={Filter} />
-            <Select options={filter} onChange={this.onChange} />
-          </Segment>
+        <Segment horizontal>
+          <Icon size={20} src={Filter} />
+          <Select options={filter} onChange={this.onChange} />
+        </Segment>
 
-          <Segment>
-            <Header>Popular Tags</Header>
-            {tags.map((tag, i) => (
-              <Option
-                key={i}
-                name={tag.value}
-                active={active === tag.value}
-                onClick={this.onTag}
-              >
-                {tag.label}
-              </Option>
-            ))}
-          </Segment>
+        <Segment>
+          <Header>Popular Tags</Header>
+          {tags.map((tag, i) => (
+            <Option
+              key={i}
+              name={tag.value}
+              active={active === tag.value}
+              onClick={this.onTag}
+            >
+              {tag.label}
+            </Option>
+          ))}
+        </Segment>
 
-          <Segment>
-            <Header>Music Genres</Header>
-            {genres.map((genre, i) => (
-              <Option
-                key={i}
-                name={genre.value}
-                active={active === genre.value}
-                onClick={this.onGenre}
-              >
-                {genre.label}
-              </Option>
-            ))}
-          </Segment>
-        </Container>
-        {sidebarVisible && <Overlay onClick={this.props.toggleSidebar} />}
-      </aside>
+        <Segment>
+          <Header>Music Genres</Header>
+          {genres.map((genre, i) => (
+            <Option
+              key={i}
+              name={genre.value}
+              active={active === genre.value}
+              onClick={this.onGenre}
+            >
+              {genre.label}
+            </Option>
+          ))}
+        </Segment>
+      </Container>
     )
   }
 }
@@ -186,8 +168,7 @@ const state = ({ root, userPlaylist }) => ({
 const actions = {
   setFilter: set_filter,
   setGenre: set_genre,
-  setTag: set_tag,
-  toggleSidebar: toggle_sidebar
+  setTag: set_tag
 }
 
 export default withRouter(

@@ -106,6 +106,10 @@ class Player extends Component {
     }
   }
 
+  handleRef = node => {
+    this.audio = node
+  }
+
   render({
     audioUrl,
     playNext,
@@ -134,7 +138,7 @@ class Player extends Component {
           muted={muted}
           src={audioUrl}
           loop={repeat}
-          ref={e => (this.audio = e)}
+          ref={this.handleRef}
         />
       </Wrapper>
     )

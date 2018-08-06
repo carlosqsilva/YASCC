@@ -68,14 +68,17 @@
 
       --sidebarSpace: 0;
       --sidebarWidth: 250px;
-      --sidebarFontSize: 1.2rem
+      --sidebarFontSize: 1.2rem;
+      --overlay: initial;
     }
 
-    @media screen and (min-width: 500px) {
+    @media screen and (min-width: 640px) {
       html {
         --sidebarSpace: 220px;
         --sidebarWidth: 220px;
         --sidebarFontSize: 1rem;
+
+        --overlay: none;
       }
     }
 
