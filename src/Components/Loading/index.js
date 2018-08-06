@@ -20,17 +20,18 @@ const LoadingSpin = styled.div`
   animation: ${spin} 1s infinite linear;
 `
 
-const LoadMore = styled.a`
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
+const LoadMore = styled.button`
+  all: unset;
   cursor: pointer;
+  box-sizing: border-box;
+  width: 100%;
   text-align: center;
   background-color: rgba(0, 0, 0, 0.3);
   color: #fff;
   padding: 10px 15px;
+  margin-bottom: 60px;
   border-radius: 2px;
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.4);
   }

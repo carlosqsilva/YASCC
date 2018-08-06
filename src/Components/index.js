@@ -1,7 +1,3 @@
-import Header from "./Header/Header"
-import Sidebar from "./Sidebar/Sidebar"
-import Player from "./Player/Player"
-
-import { lightTheme, darkTheme } from "./colors"
-
-export { Player, Sidebar, Header, darkTheme, lightTheme }
+export { default as Header } from "./Header"
+export { default as Sidebar } from "./Sidebar"
+export { default as Player } from "./Player"

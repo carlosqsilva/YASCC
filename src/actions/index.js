@@ -25,10 +25,6 @@ export const toggle_sidebar = () => ({
   type: type.TOGGLE_SIDEBAR
 })
 
-export const toggle_dark_mode = () => ({
-  type: type.TOGGLE_DARK_MODE
-})
-
 export const on_load_start = () => ({
   type: type.ON_LOAD_START
 })
@@ -63,6 +59,20 @@ export const change_duration = duration => ({
   type: type.ON_LOADED_METADATA,
   duration
 })
+
+export const toggle_dark_mode = () => (dispatch, getState) => {
+  const { darkMode } = getState().root
+
+  if (darkMode) {
+    document.documentElement.setAttribute("data-theme", "light")
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark")
+  }
+
+  dispatch({
+    type: type.TOGGLE_DARK_MODE
+  })
+}
 
 export const play_song = (songIndex, song) => async dispatch => {
   const audioUrl = await API.audioStream(song.stream)

@@ -20,7 +20,7 @@ export const tags = [
   { value: "workout", label: "#Workout" }
 ]
 
-export const genre = [
+export const genres = [
   { value: "alternative", label: "Alternative Rock" },
   { value: "ambient", label: "Ambient" },
   { value: "classical", label: "Classical" },

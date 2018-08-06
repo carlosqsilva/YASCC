@@ -1,7 +1,7 @@
 import { connect } from "preact-redux"
 import { WithActions } from "./Container"
 
-import { play_song_from_btn, remove_from_playlist } from "../store/actions"
+import { play_song_from_btn, remove_from_playlist } from "@/actions"
 
 const Playlist = WithActions(null, false, true)
 
@@ -23,4 +23,7 @@ const actions = {
   playlistAction: remove_from_playlist
 }
 
-export default connect(state, actions)(Playlist)
+export default connect(
+  state,
+  actions
+)(Playlist)

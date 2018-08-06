@@ -16,7 +16,8 @@ const Container = styled.div`
 
 const SliderFill = styled.div`
   transform: translateX(-100%);
-  background-color: ${props => props.theme.info};
+  will-change: transform;
+  background-color: var(--info);
   position: absolute;
   bottom: 0px;
   left: 0px;
@@ -26,7 +27,7 @@ const SliderFill = styled.div`
 `
 
 const Text = styled.p`
-  color: ${props => props.theme.lightDark};
+  color: var(--lightDark);
   overflow: hidden;
   display: block;
   text-overflow: ellipsis;

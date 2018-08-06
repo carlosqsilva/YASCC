@@ -3,7 +3,8 @@ import { connect } from "preact-redux"
 import styled from "styled-components"
 import throttle from "lodash.throttle"
 
-import Slider from "../Slider/Slider"
+import PlayerControls from "./PlayerControls"
+import Slider from "./Slider"
 
 import {
   play_prev,
@@ -13,13 +14,11 @@ import {
   change_time,
   change_duration,
   on_load_start
-} from "@/store/actions"
-
-import PlayerControls from "./PlayerControls"
+} from "@/actions"
 
 const Wrapper = styled.div`
-  background: ${props =>
-    props.online ? props.theme.primary : props.theme.danger};
+  padding-left: var(--sidebarSpace);
+  background: var(--primary);
   backface-visibility: hidden;
   position: fixed;
   bottom: 0px;
@@ -28,12 +27,8 @@ const Wrapper = styled.div`
   height: 45px;
   display: flex;
   transform: ${props => (props.visible ? "translateY(0)" : "translateY(100%)")};
-  transition: transform 500ms ease;
+  transition: transform 500ms ease-in-out;
   z-index: 10;
-
-  @media screen and (min-width: 500px) {
-    padding-left: 220px;
-  }
 
   &::after {
     box-shadow: inset 0px -4px 8px -3px rgba(17, 17, 17, 0.06);
@@ -117,13 +112,12 @@ class Player extends Component {
     onPause,
     onPlay,
     onLoadStart,
-    online,
     repeat,
     muted,
     volume
   }) {
     return (
-      <Wrapper online={online} visible={audioUrl !== null}>
+      <Wrapper visible={audioUrl !== null}>
         <PlayerControls toggle={this.togglePlay} />
 
         {audioUrl && <Slider onChange={this.changeTime} />}
@@ -148,15 +142,13 @@ class Player extends Component {
 }
 
 const state = ({
-  playlist: { currentSong, audioUrl, repeat, volume, muted },
-  root: { online }
+  playlist: { currentSong, audioUrl, repeat, volume, muted }
 }) => ({
   song: currentSong,
   audioUrl,
   repeat,
   muted,
-  volume,
-  online
+  volume
 })
 
 const actions = {

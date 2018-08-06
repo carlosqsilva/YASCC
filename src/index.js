@@ -2,7 +2,7 @@ import { h, render } from "preact"
 import { Provider } from "preact-redux"
 
 import store from "./store"
-import { init, online, offline } from "./store/actions"
+import { init, online, offline } from "@/actions"
 import registerServiceWorker from "./registerServiceWorker"
 import App from "./App"
 
@@ -25,6 +25,10 @@ window.addEventListener("load", () => {
   store.dispatch(init()).then(() => registerServiceWorker())
   console.log("%c hello there...", "font-size: 30px; color: red")
 })
+
+if (process.env.NODE_ENV === "development") {
+  require("preact/devtools")
+}
 
 // const PageVisibility = {
 //   originalTitle: document.title,

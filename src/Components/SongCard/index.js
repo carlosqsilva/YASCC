@@ -1,6 +1,8 @@
 import { h } from "preact"
-import styled, { css } from "styled-components"
+import styled from "styled-components"
+
 import { Icon } from "../Utils/Icon"
+
 import Play from "./play.svg"
 import Like from "./like.svg"
 import Playing from "./playing.svg"
@@ -13,24 +15,14 @@ const PlayIcon = Icon.extend`
   display: block;
 `
 
-const PlaylistAction = Icon.extend`
-  display: none;
+const PlaylistAction = styled.img`
   position: absolute;
   top: 2px;
   right: 2px;
-  z-index: 5;
+  z-index: 10;
+  will-change: transform;
+  transform: translateX(115%);
   transition: transform 200ms;
-  transform: translateX(100%);
-`
-
-const Active = css`
-  ${PlayIcon} {
-    opacity: 1;
-  }
-  ${PlaylistAction} {
-    display: initial;
-    transform: translateX(0);
-  }
 `
 
 const Card = styled.div`
@@ -39,27 +31,34 @@ const Card = styled.div`
   cursor: pointer;
   padding: 6px;
   display: flex;
-  background: ${props => props.theme.primary};
-
-  ${props => props.active && Active};
-
-  @media screen and (max-width: 499px) {
-    ${PlaylistAction} {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
+  background: var(--primary);
 
   @media screen and (min-width: 500px) {
     border-radius: 4px;
-    &:hover {
-      ${Active};
+  }
+
+  &:hover {
+    #action {
+      transform: translateX(0);
+    }
+    #play {
+      opacity: 1;
     }
   }
+
+  ${props =>
+    props.active &&
+    `
+    #action {
+      transform: translateX(0);
+    }
+    #play {
+      opacity: 1;
+    }
+  `};
 `
 
 const Artwork = styled.div`
-  background: url(${props => props.image});
   background-size: cover;
   background-position: center;
   display: flex;
@@ -76,18 +75,16 @@ const Container = styled.div`
 `
 
 const Artist = styled.p`
-  color: ${props => props.theme.textGray};
+  color: var(--textGray);
   font-size: 0.8rem;
 `
 
 const Music = styled.p`
-  color: ${props => props.theme.secondary};
+  color: var(--secondary);
   font-size: 0.9rem;
-  @media screen and (min-width: 500px) {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `
 
 const Wrapper = styled.div`
@@ -98,15 +95,21 @@ const Wrapper = styled.div`
 
 const Info = styled.span`
   flex: ${props => (props.flex ? 1 : 0)};
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
-  color: ${props => props.theme.textGray};
+  color: var(--textGray);
+
+  &:not(:first-child) {
+    font-size: 0.8rem;
+    margin-left: 0.2rem;
+  }
 `
 
 export const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 1.5rem;
 
   @media screen and (min-width: 500px) {
     display: grid;
@@ -118,17 +121,18 @@ export const CardContainer = styled.div`
 export const SongCard = fromPlaylist => {
   const option = fromPlaylist ? Remove : Add
   const message = fromPlaylist ? "Remove from Playlist" : "Add to Playlist"
-  return ({ song, index, play, playlistAction, active }) => (
-    <Card onClick={() => play(index)} active={active}>
+  return ({ song, play, playlistAction, active }) => (
+    <Card onClick={play} active={active}>
       <PlaylistAction
-        onClick={e => playlistAction(e)(song)}
+        onClick={playlistAction}
         title={message}
         src={option}
+        id="action"
         size={24}
       />
 
-      <Artwork image={song.artwork}>
-        <PlayIcon src={active ? Playing : Play} size={40} />
+      <Artwork style={{ background: `url(${song.artwork})` }}>
+        <PlayIcon src={active ? Playing : Play} id="play" size={40} />
       </Artwork>
 
       <Container>
@@ -136,7 +140,7 @@ export const SongCard = fromPlaylist => {
         <Music title={song.title}>{song.title}</Music>
         <Wrapper>
           <Info flex>{song.duration}</Info>
-          <Icon src={Like} size={11} />
+          <Icon src={Like} size={12} />
           <Info title={`${song.likesCount} likes`}>{song.likesCountMin}</Info>
         </Wrapper>
       </Container>

@@ -1,14 +1,18 @@
 import { h, Component } from "preact"
 import styled from "styled-components"
-import Loading from "../Components/Loading/Loading"
-import { SongCard, CardContainer } from "../Components/SongCard/SongCard"
+import Loading from "../Components/Loading"
+import { SongCard, CardContainer } from "../Components/SongCard"
 
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  position: relative;
-  padding-bottom: 65px;
-  margin-bottom: 60px;
+  padding: 10px;
+  overflow-y: scroll;
+  transform: translateZ(0);
+
+  @media screen and (min-width: 500px) {
+    padding: 15px;
+  }
 `
 
 export const WithActions = (
@@ -18,11 +22,11 @@ export const WithActions = (
 ) => {
   const Card = SongCard(fromPlaylist)
   return class OuterComponent extends Component {
-    playSong = index => {
+    playSong = index => () => {
       this.props.playSong(index, this.props.location.pathname)
     }
 
-    playlistAction = e => song => {
+    playlistAction = song => e => {
       if (!e) e = window.event
       if (e.stopPropagation) e.stopPropagation()
       this.props.playlistAction(song)
@@ -36,10 +40,9 @@ export const WithActions = (
             {playlist.map((song, index) => (
               <Card
                 song={song}
-                index={index}
                 active={active === song.id}
-                playlistAction={this.playlistAction}
-                play={this.playSong}
+                playlistAction={this.playlistAction(song)}
+                play={this.playSong(index)}
                 key={song.id}
               />
             ))}

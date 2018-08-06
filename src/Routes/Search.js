@@ -5,7 +5,7 @@ import {
   load_next_results,
   add_to_playlist,
   play_song_from_btn
-} from "../store/actions"
+} from "@/actions"
 
 const Search = WithActions(null, true)
 
@@ -29,4 +29,7 @@ const actions = {
   playlistAction: add_to_playlist
 }
 
-export default connect(state, actions)(Search)
+export default connect(
+  state,
+  actions
+)(Search)

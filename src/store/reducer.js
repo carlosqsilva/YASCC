@@ -1,5 +1,5 @@
 import { combineReducers } from "redux"
-import * as type from "./constants"
+import * as type from "../actions/constants"
 
 const rootInitialState = {
   sidebarVisible: false,

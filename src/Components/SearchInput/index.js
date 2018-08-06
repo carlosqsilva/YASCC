@@ -2,7 +2,8 @@ import { h, Component } from "preact"
 import { connect } from "preact-redux"
 import styled from "styled-components"
 import withRouter from "react-router-dom/es/withRouter"
-import { search_songs } from "@/store/actions"
+
+import { search_songs } from "@/actions"
 
 const Form = styled.form`
   position: relative;
@@ -14,8 +15,8 @@ const Form = styled.form`
 `
 
 const Input = styled.input`
-  background: ${props => props.theme.light};
-  color: ${props => props.theme.secondary};
+  background: var(--light);
+  color: var(--secondary);
   border-radius: 4px;
   border: none;
   outline: 0;

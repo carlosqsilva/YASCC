@@ -3,7 +3,7 @@ import {
   load_playlist_next,
   add_to_playlist,
   play_song_from_btn
-} from "../store/actions"
+} from "@/actions"
 
 import { WithActions } from "./Container"
 
@@ -29,4 +29,7 @@ const actions = {
   playlistAction: add_to_playlist
 }
 
-export default connect(state, actions)(Home)
+export default connect(
+  state,
+  actions
+)(Home)

@@ -10,7 +10,7 @@ import {
   play_prev,
   toggle_repeat,
   change_volume
-} from "@/store/actions"
+} from "@/actions"
 
 import spinIcon from "./loading.svg"
 import playIcon from "./play.svg"
@@ -23,18 +23,18 @@ import volumeIcon from "./volume.svg"
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  background: ${props => props.theme.primary};
+  background: var(--primary);
 `
 
 const Volume = styled.div`
+  background: var(--light);
+  transition: all 200ms;
   position: absolute;
   top: 0;
   left: 0px;
   right: 0px;
   height: 120px;
-  background: ${props => props.theme.light};
   opacity: 0;
-  transition: all 200ms;
 `
 
 const InputRange = styled.input.attrs({
@@ -49,38 +49,37 @@ const InputRange = styled.input.attrs({
   width: 100px;
   height: 10px;
   border-radius: 5px;
-  background: ${props => props.theme.rangerTrack};
+  background: var(--rangerTrack);
   transform: rotate(270deg) translateX(-50%) translateY(-20px);
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
+    background: var(--info);
+    border-radius: 50%;
     appearance: none;
     width: 14px;
     height: 14px;
-    border-radius: 50%;
-    background: ${props => props.theme.info};
     cursor: pointer;
   }
 
   &::-moz-range-thumb {
-    width: 14px;
-    height: 14px;
+    background: var(--info);
     border-radius: 50%;
-    background: ${props => props.theme.info};
+    height: 14px;
+    width: 14px;
     cursor: pointer;
   }
 `
 
 const Container = styled.div`
   display: flex;
-  /* align-items: center; */
   justify-content: center;
   position: relative;
 
   &:hover {
     ${Volume} {
       opacity: 1;
-      transform: translateY(-99.5%);
+      transform: translateY(-100%);
     }
   }
 `

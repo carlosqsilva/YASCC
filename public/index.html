@@ -37,10 +37,6 @@
       font-family: inherit;
     }
 
-    body {
-      font-family: 'Roboto Mono', sans-serif;
-    }
-
     ::-webkit-scrollbar {
       -webkit-appearance: none;
       width: 6px;
@@ -48,12 +44,51 @@
 
     ::-webkit-scrollbar-thumb {
       cursor: pointer;
-      border-radius: 2px;
       background: #999;
     }
 
     ::-webkit-scrollbar-track {
       background: transparent;
+    }
+
+    body {
+      font-family: 'Roboto Mono', sans-serif;
+    }
+
+    html {
+      --primary: #fff;
+      --secondary: #444;
+      --info: #21d4fd;
+      --light: #eee;
+      --light2: #e0e0e0;
+      --lightDark: #242424;
+      --textGray: #555;
+      --danger: #ef5350;
+      --rangerTrack: #b7b7b7;
+
+      --sidebarSpace: 0;
+      --sidebarWidth: 250px;
+      --sidebarFontSize: 1.2rem
+    }
+
+    @media screen and (min-width: 500px) {
+      html {
+        --sidebarSpace: 220px;
+        --sidebarWidth: 220px;
+        --sidebarFontSize: 1rem;
+      }
+    }
+
+    html[data-theme='dark'] {
+      --primary: #151515;
+      --secondary: #fff;
+      --info: #21d4fd;
+      --light: #eee;
+      --light2: #e0e0e0;
+      --lightDark: #242424;
+      --textGray: #c1c1c1;
+      --danger: #ef5350;
+      --rangerTrack: #b7b7b7;
     }
   </style>
 </head>

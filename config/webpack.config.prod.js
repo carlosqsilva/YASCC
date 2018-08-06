@@ -94,12 +94,9 @@ module.exports = {
     // for React Native Web.
     extensions: [".web.js", ".mjs", ".js", ".json", ".web.jsx", ".jsx"],
     alias: {
-      "@": path.resolve(__dirname, "../src"),
+      "@": path.resolve(__dirname, "../src/"),
       react: "preact-compat",
-      "react-dom": "preact-compat",
-      // Support React Native Web
-      // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-      "react-native": "react-native-web"
+      "react-dom": "preact-compat"
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).

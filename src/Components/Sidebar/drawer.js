@@ -1,24 +1,26 @@
 import { h, Component } from "preact"
 import { connect } from "preact-redux"
 import withRouter from "react-router-dom/es/withRouter"
-import { toggle_sidebar, set_genre, set_tag, set_filter } from "@/store/actions"
+import { toggle_sidebar, set_genre, set_tag, set_filter } from "@/actions"
 import styled from "styled-components"
 
-import { filter, tags, genre } from "./options"
+import { filter, tags, genres } from "./options"
 import { Icon } from "../Utils/Icon"
 import Select from "../SelectInput"
 import Playlist from "./playlist.svg"
 import Filter from "./filter.svg"
 
 const Container = styled.div`
-  background: ${props => props.theme.lightDark};
+  background: var(--lightDark);
+  overscroll-behavior-y: contain;
   transition: transform 200ms;
   will-change: transform;
   position: fixed;
   bottom: 0px;
   left: 0px;
   top: 0px;
-  width: 220px;
+  width: var(--sidebarWidth);
+  font-size: var(--sidebarFontSize);
   z-index: 100;
   overflow-y: scroll;
   transform: ${props =>
@@ -62,13 +64,14 @@ const Label = styled.strong`
   flex: 1;
   align-self: center;
   margin-left: 20px;
-  font-size: 1.1rem;
-  color: ${props => props.theme.light};
+  font-size: 1.1em;
+  color: var(--light);
 `
 
 const Header = styled.strong`
-  color: ${props => props.theme.light};
+  color: var(--light);
   margin-bottom: 3px;
+  font-size: 1em;
 `
 
 const Tag = styled.span`
@@ -76,7 +79,7 @@ const Tag = styled.span`
   color: #111;
   border-radius: 5px;
   margin-right: 20px;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   padding: 0 0.5rem;
   align-self: center;
 `
@@ -85,7 +88,7 @@ const Option = styled.a`
   flex: 1;
   display: flex;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1em;
   text-decoration: none;
   padding: 4px 0;
   color: ${props => (props.active ? "#fff" : "#999")};
@@ -97,7 +100,7 @@ const Option = styled.a`
 
 class Sidebar extends Component {
   state = {
-    activeItem: ""
+    active: ""
   }
 
   changeRoute = route => {
@@ -107,27 +110,26 @@ class Sidebar extends Component {
   }
 
   active = name => {
-    this.setState({ activeItem: name })
-    this.changeRoute("/")
+    this.setState({ active: name }, () => {
+      this.changeRoute("/")
+    })
   }
 
   onChange = e => {
     this.props.setFilter(e.target.value)
   }
 
-  onTag = e => {
-    const { name } = e.target
+  onTag = ({ target: { name } }) => {
     this.props.setTag(name)
     this.active(name)
   }
 
-  onGenre = e => {
-    const { name } = e.target
+  onGenre = ({ target: { name } }) => {
     this.props.setGenre(name)
     this.active(name)
   }
 
-  render({ sidebarVisible, qtd }, { activeItem }) {
+  render({ sidebarVisible, qtd }, { active }) {
     return (
       <aside>
         <Container visible={sidebarVisible}>
@@ -144,28 +146,28 @@ class Sidebar extends Component {
 
           <Segment>
             <Header>Popular Tags</Header>
-            {tags.map((_, i) => (
+            {tags.map((tag, i) => (
               <Option
                 key={i}
-                name={_.value}
-                active={activeItem === _.value}
+                name={tag.value}
+                active={active === tag.value}
                 onClick={this.onTag}
               >
-                {_.label}
+                {tag.label}
               </Option>
             ))}
           </Segment>
 
           <Segment>
             <Header>Music Genres</Header>
-            {genre.map((_, i) => (
+            {genres.map((genre, i) => (
               <Option
                 key={i}
-                name={_.value}
-                active={activeItem === _.value}
+                name={genre.value}
+                active={active === genre.value}
                 onClick={this.onGenre}
               >
-                {_.label}
+                {genre.label}
               </Option>
             ))}
           </Segment>

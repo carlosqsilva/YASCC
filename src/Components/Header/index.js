@@ -1,17 +1,16 @@
 import { h } from "preact"
 import { connect } from "preact-redux"
-
-import { toggle_sidebar, toggle_dark_mode } from "@/store/actions"
 import styled from "styled-components"
-import SearchInput from "../SearchInput/searchInput"
+
+import { toggle_sidebar, toggle_dark_mode } from "@/actions"
+import SearchInput from "../SearchInput"
 import { Icon, SVGIcon } from "../Utils/Icon"
 import Item from "../Utils/Item"
 import Menu from "./menu.svg"
 import Github from "./github.svg"
 
 const Wrapper = styled.div`
-  background: ${props =>
-    props.online ? props.theme.primary : props.theme.danger};
+  background: ${props => (props.online ? "var(--primary)" : "var(--danger)")};
   backface-visibility: hidden;
   position: fixed;
   top: 0px;
@@ -20,10 +19,7 @@ const Wrapper = styled.div`
   height: 50px;
   display: flex;
   z-index: 10;
-
-  @media screen and (min-width: 500px) {
-    padding-left: 220px;
-  }
+  padding-left: var(--sidebarSpace);
 
   &::after {
     box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, 0.06);
