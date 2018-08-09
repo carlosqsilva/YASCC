@@ -8,13 +8,13 @@ export default class Storage {
   }
 
   init = () => {
-    return new Promise((Resolve, Reject) => {
+    return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.DB_NAME, this.VERSION)
-      request.onerror = () => Reject(request.error)
+      request.onerror = () => reject(request.error)
 
       request.onsuccess = event => {
         this.DB = request.result
-        Resolve(event)
+        resolve(event)
       }
 
       request.onupgradeneeded = event => {
@@ -42,12 +42,12 @@ export default class Storage {
   }
 
   save = (store, item) => {
-    return new Promise((Resolve, Reject) => {
+    return new Promise((resolve, reject) => {
       const tx = this.DB.transaction(store, "readwrite"),
         objectStore = tx.objectStore(store)
 
-      tx.oncomplete = event => Resolve(event)
-      tx.onabort = event => Reject(event)
+      tx.oncomplete = event => resolve(event)
+      tx.onabort = event => reject(event)
 
       if (Array.isArray(item)) {
         item.forEach(item => {
@@ -57,39 +57,52 @@ export default class Storage {
     })
   }
 
-  delete = (store, key) => {
-    return new Promise((Resolve, Reject) => {
+  delete = (store, keys) => {
+    return new Promise((resolve, reject) => {
       const tx = this.DB.transaction(store, "readwrite"),
         objectStore = tx.objectStore(store)
 
-      tx.oncomplete = event => Resolve(event)
-      tx.onabort = event => Reject(event)
+      tx.oncomplete = event => resolve(event)
+      tx.onabort = event => reject(event)
 
-      key.forEach(id => {
-        objectStore.delete(id)
-      })
+      if (Array.isArray(keys)) {
+        keys.forEach(id => {
+          objectStore.delete(id)
+        })
+      } else objectStore.delete(keys)
     })
   }
 
   update = (store, obj) => {
-    return new Promise((Resolve, Reject) => {
+    return new Promise((resolve, reject) => {
       const request = this.DB.transaction(store, "readwrite")
         .objectStore(store)
         .put(obj)
 
-      request.onsuccess = event => Resolve(event)
-      request.onerror = event => Reject(event)
+      request.onsuccess = event => resolve(event)
+      request.onerror = event => reject(event)
     })
   }
 
-  getAll = store => {
-    return new Promise((Resolve, Reject) => {
+  getStore = store => {
+    return new Promise((resolve, reject) => {
       const request = this.DB.transaction(store)
         .objectStore(store)
         .getAll()
 
-      request.onsuccess = ({ target }) => Resolve(target.result)
-      request.onerror = event => Reject(event)
+      request.onsuccess = ({ target }) => resolve(target.result)
+      request.onerror = event => reject(event)
+    })
+  }
+
+  get = (store, key) => {
+    return new Promise((resolve, reject) => {
+      const request = this.DB.transaction(store)
+        .objectStore(store)
+        .get(key)
+
+      request.onsuccess = ({ target }) => resolve(target.result)
+      request.onerror = event => reject(event)
     })
   }
 }

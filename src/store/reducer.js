@@ -4,14 +4,17 @@ import * as type from "../actions/constants"
 const rootInitialState = {
   sidebarVisible: false,
   darkMode: false,
-  loadingPlaylist: true,
-  isPlaying: false,
-  playlist: [],
-  online: true
+  online: true,
+  ready: false
 }
 
 const rootReducer = (state = rootInitialState, action) => {
   switch (action.type) {
+    case type.INITIAL_LOAD:
+      return {
+        ...state,
+        ready: true
+      }
     case type.TOGGLE_SIDEBAR:
       return {
         ...state,
@@ -21,23 +24,6 @@ const rootReducer = (state = rootInitialState, action) => {
       return {
         ...state,
         darkMode: !state.darkMode
-      }
-    case type.PLAYLIST_LOADING:
-      return {
-        ...state,
-        loadingPlaylist: true,
-        playlist: []
-      }
-    case type.PLAYLIST_LOADING_NEXT:
-      return {
-        ...state,
-        loadingPlaylist: true
-      }
-    case type.PLAYLIST_LOADED:
-      return {
-        ...state,
-        loadingPlaylist: false,
-        playlist: [...state.playlist, ...action.playlist]
       }
     case type.ONLINE:
       return {
@@ -54,35 +40,35 @@ const rootReducer = (state = rootInitialState, action) => {
   }
 }
 
-const playlistInitialState = {
+const playerInitialState = {
   playlist: [],
-  songIndex: null,
-  audioUrl: null,
-  currentSong: null,
   isPlaying: false,
-  repeat: false,
-  volume: 1,
   loading: false,
-  location: "",
+  audioUrl: null,
+  active: null,
+  index: null,
+  song: null,
+  volume: 1,
+  repeat: false,
   duration: 0,
   muted: false,
   time: 0
 }
 
-const playlistReducer = (state = playlistInitialState, action) => {
+const playerReducer = (state = playerInitialState, action) => {
   switch (action.type) {
     case type.ACTIVE_PLAYLIST:
       return {
         ...state,
-        playlist: action.currentPlaylist,
-        location: action.location
+        playlist: action.playlist
       }
     case type.PLAY_SONG:
       return {
         ...state,
-        songIndex: action.songIndex,
+        index: action.index,
         audioUrl: action.audioUrl,
-        currentSong: action.song
+        song: action.song,
+        active: action.song.id
       }
     case type.ON_LOAD_START:
       return {
@@ -131,38 +117,16 @@ const playlistReducer = (state = playlistInitialState, action) => {
   }
 }
 
-const searchInitialState = {
-  loadingSearch: false,
-  results: []
-}
-
-const searchReducer = (state = searchInitialState, action) => {
-  switch (action.type) {
-    case type.LOADING_SEARCH:
-      return {
-        ...state,
-        loadingSearch: true,
-        results: []
-      }
-    case type.LOADING_SEARCH_NEXT:
-      return {
-        ...state,
-        loadingSearch: true
-      }
-    case type.LOADED_SEARCH:
-      return {
-        ...state,
-        loadingSearch: false,
-        results: [...state.results, ...action.playlist]
-      }
-    default:
-      return state
-  }
-}
-
-export const userPlaylistReducer = (
+export const playlistReducer = (
   state = {
-    playlist: []
+    loading: true,
+    nextSearch: "",
+    nextPlaylist: "",
+    playlist: [],
+    search: [],
+    recent: [],
+    user: [],
+    qtd: 0
   },
   action
 ) => {
@@ -170,16 +134,60 @@ export const userPlaylistReducer = (
     case type.INITIAL_LOAD:
       if (action.playlist) {
         return {
-          playlist: action.playlist
+          ...state,
+          user: action.playlist,
+          qtd: action.playlist.length
         }
       } else return state
-    case type.ADD_TO_PLAYLIST:
+    case type.LOAD_RECENT_PLAYED:
       return {
-        playlist: [...state.playlist, action.song]
+        ...state,
+        recent: action.recent
+      }
+    case type.ADD_TO_PLAYLIST:
+      const user = [...state.user, action.song]
+      return {
+        ...state,
+        qtd: user.length,
+        user
       }
     case type.REMOVE_FROM_PLAYLIST:
       return {
-        playlist: action.playlist
+        ...state,
+        user: action.playlist,
+        qtd: action.playlist.length
+      }
+    case type.PLAYLIST_LOADING:
+      return {
+        ...state,
+        loading: true,
+        playlist: []
+      }
+    case type.PLAYLIST_LOADING_NEXT:
+    case type.SEARCH_LOADING_NEXT:
+      return {
+        ...state,
+        loading: true
+      }
+    case type.PLAYLIST_LOADED:
+      return {
+        ...state,
+        loading: false,
+        playlist: [...state.playlist, ...action.playlist],
+        nextPlaylist: action.next
+      }
+    case type.SEARCH_LOADING:
+      return {
+        ...state,
+        loading: true,
+        search: []
+      }
+    case type.SEARCH_LOADED:
+      return {
+        ...state,
+        loading: false,
+        search: [...state.search, ...action.playlist],
+        nextSearch: action.next
       }
     default:
       return state
@@ -188,7 +196,6 @@ export const userPlaylistReducer = (
 
 export default combineReducers({
   root: rootReducer,
-  search: searchReducer,
   playlist: playlistReducer,
-  userPlaylist: userPlaylistReducer
+  player: playerReducer
 })

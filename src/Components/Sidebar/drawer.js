@@ -1,6 +1,8 @@
 import { h, Component } from "preact"
 import { connect } from "preact-redux"
+import Link from "react-router-dom/es/Link"
 import withRouter from "react-router-dom/es/withRouter"
+
 import { set_genre, set_tag, set_filter } from "@/actions"
 import styled from "styled-components"
 
@@ -8,6 +10,7 @@ import { filter, tags, genres } from "./options"
 import { Icon } from "../Utils/Icon"
 import Select from "../SelectInput"
 import Playlist from "./playlist.svg"
+import Recent from "./recent.svg"
 import Filter from "./filter.svg"
 
 const Container = styled.div`
@@ -41,8 +44,12 @@ const Segment = styled.div`
   }
 `
 
-const LinkSegment = Segment.extend`
+const LinkSegment = styled(Link)`
+  display: flex;
+  text-decoration: none;
+  padding: 0.7rem 0 0.7rem 1rem;
   cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 `
 
 const Label = styled.strong`
@@ -89,9 +96,7 @@ class Sidebar extends Component {
   }
 
   changeRoute = route => {
-    if (this.props.location.pathname !== route) {
-      this.props.history.push(route)
-    }
+    this.props.history.push(route)
   }
 
   active = name => {
@@ -117,7 +122,12 @@ class Sidebar extends Component {
   render({ sidebarVisible, qtd, InnerProps }, { active }) {
     return (
       <Container visible={sidebarVisible} {...InnerProps}>
-        <LinkSegment horizontal onClick={() => this.changeRoute("/playlist")}>
+        <LinkSegment to="/recent">
+          <Icon size={20} src={Recent} />
+          <Label>Recent Played</Label>
+        </LinkSegment>
+
+        <LinkSegment to="/playlist">
           <Icon size={20} src={Playlist} />
           <Label>Playlist</Label>
           <Tag>{qtd}</Tag>
@@ -160,9 +170,9 @@ class Sidebar extends Component {
   }
 }
 
-const state = ({ root, userPlaylist }) => ({
-  sidebarVisible: root.sidebarVisible,
-  qtd: userPlaylist.playlist.length
+const state = ({ root: { sidebarVisible }, playlist: { qtd } }) => ({
+  sidebarVisible,
+  qtd
 })
 
 const actions = {

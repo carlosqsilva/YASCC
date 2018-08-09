@@ -81,8 +81,9 @@ class Player extends Component {
   keyboardKey = ({ code }) => {
     const { playPrev, playNext } = this.props
     if (code === "MediaPlayPause") this.togglePlay()
-    if (code === "MediaTrackNext") playNext()
-    if (code === "MediaTrackPrevious") playPrev()
+    else if (code === "MediaTrackNext") playNext()
+    else if (code === "MediaTrackPrevious") playPrev()
+    else return
   }
 
   onLoadedMetadata = () => {
@@ -145,10 +146,8 @@ class Player extends Component {
   }
 }
 
-const state = ({
-  playlist: { currentSong, audioUrl, repeat, volume, muted }
-}) => ({
-  song: currentSong,
+const state = ({ player: { song, audioUrl, repeat, volume, muted } }) => ({
+  song,
   audioUrl,
   repeat,
   muted,

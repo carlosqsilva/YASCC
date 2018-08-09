@@ -85,7 +85,7 @@ const Container = styled.div`
 `
 
 const PlayerControls = ({
-  playing,
+  isPlaying,
   playNext,
   playPrev,
   toggleMute,
@@ -105,7 +105,7 @@ const PlayerControls = ({
       {loading ? (
         <Icon src={spinIcon} size={30} />
       ) : (
-        <Icon src={playing ? pauseIcon : playIcon} size={30} />
+        <Icon src={isPlaying ? pauseIcon : playIcon} size={30} />
       )}
     </Item>
 
@@ -130,8 +130,8 @@ const PlayerControls = ({
   </Wrapper>
 )
 
-const state = ({ playlist: { isPlaying, loading, repeat, muted } }) => ({
-  playing: isPlaying,
+const state = ({ player: { isPlaying, loading, repeat, muted } }) => ({
+  isPlaying,
   loading,
   repeat,
   muted

@@ -37,9 +37,8 @@ export class api {
       this.key
     }`
     this.created_at = null
-    this.genre = ""
+    this.genre = null
     this.tag = null
-    this.next = ""
   }
 
   setGenre(genre) {
@@ -59,8 +58,8 @@ export class api {
     return this._load()
   }
 
-  loadNext() {
-    return this._getSongs(this.next)
+  loadUrl(url) {
+    return this._getSongs(url)
   }
 
   async audioStream(url) {
@@ -86,7 +85,7 @@ export class api {
   async _getSongs(url) {
     try {
       const response = await fetch(url).then(res => res.json())
-      this.next = response.next_href
+      const next = response.next_href
 
       const playlist = response.collection
         .filter(track => track.artwork_url !== null && track.duration !== 30000)
@@ -103,10 +102,10 @@ export class api {
           likesCountMin: formatNumber(track.likes_count)
         }))
 
-      return playlist
+      return { playlist, next }
     } catch (err) {
       console.log(err)
-      return []
+      return {}
     }
   }
 }

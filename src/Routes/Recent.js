@@ -1,28 +1,31 @@
 import { connect } from "preact-redux"
 import { WithActions } from "./Container"
 
-import { play_song_from_btn, remove_from_playlist } from "@/actions"
+import {
+  play_song_from_btn,
+  add_to_playlist,
+  load_recent_played
+} from "@/actions"
 
-const Playlist = WithActions({
-  fromPlaylist: true
-})
+const Recent = WithActions({})
 
 const state = ({
-  playlist: { user },
+  playlist: { recent },
   player: { active },
   root: { ready }
 }) => ({
-  playlist: user,
+  playlist: recent,
   active,
   ready
 })
 
 const actions = {
   playSong: play_song_from_btn,
-  playlistAction: remove_from_playlist
+  playlistAction: add_to_playlist,
+  onMounted: load_recent_played
 }
 
 export default connect(
   state,
   actions
-)(Playlist)
+)(Recent)

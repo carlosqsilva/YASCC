@@ -109,7 +109,7 @@ const Info = styled.span`
 export const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 
   @media screen and (min-width: 500px) {
     display: grid;

@@ -3,11 +3,16 @@ import { api } from "./api"
 import Storage from "./storage"
 
 const API = new api(35)
+
 const DB = new Storage({
   name: "yascc",
   store: [
     {
       name: "playlist",
+      key: "id"
+    },
+    {
+      name: "recent",
       key: "id"
     }
   ]
@@ -74,124 +79,128 @@ export const toggle_dark_mode = () => (dispatch, getState) => {
   })
 }
 
-export const play_song = (songIndex, song) => async dispatch => {
+export const play_song = (index, song) => async dispatch => {
   const audioUrl = await API.audioStream(song.stream)
-  dispatch({ type: type.PLAY_SONG, songIndex, song, audioUrl })
+
+  dispatch({ type: type.PLAY_SONG, index, song, audioUrl })
+
+  const result = await DB.get("recent", song.id)
+
+  if (!result) {
+    DB.save("recent", song)
+  }
 }
 
 export const play_song_from_btn = (index, route) => (dispatch, getState) => {
   let newPlaylist
 
-  if (route === "/") newPlaylist = getState().root.playlist
-  else if (route === "/search") newPlaylist = getState().search.results
-  else if (route === "/playlist") newPlaylist = getState().userPlaylist.playlist
+  if (route === "/") newPlaylist = getState().playlist.playlist
+  else if (route === "/search") newPlaylist = getState().playlist.search
+  else if (route === "/playlist") newPlaylist = getState().playlist.user
+  else if (route === "/recent") newPlaylist = getState().playlist.recent
 
   dispatch(play_song(index, newPlaylist[index]))
   dispatch({
     type: type.ACTIVE_PLAYLIST,
-    currentPlaylist: newPlaylist,
-    location: route
+    playlist: newPlaylist
   })
 }
 
 export const play_next = () => (dispatch, getState) => {
-  const { playlist, songIndex } = getState().playlist
-  const nextSong = songIndex !== playlist.length - 1 ? songIndex + 1 : 0
+  const { playlist, index } = getState().player
+  const nextSong = index !== playlist.length - 1 ? index + 1 : 0
   dispatch(play_song(nextSong, playlist[nextSong]))
 }
 
 export const play_prev = () => (dispatch, getState) => {
-  const { playlist, songIndex } = getState().playlist
-  const prevSong = songIndex !== 0 ? songIndex - 1 : playlist.length - 1
+  const { playlist, index } = getState().player
+  const prevSong = index !== 0 ? index - 1 : playlist.length - 1
   dispatch(play_song(prevSong, playlist[prevSong]))
 }
-
-// export const load_playlist = genre => async dispatch => {
-//   dispatch({ type: type.PLAYLIST_LOADING })
-
-//   const playlist = await API.load(genre)
-//   dispatch({ type: type.PLAYLIST_LOADED, playlist })
-// }
 
 export const set_genre = genre => async dispatch => {
   dispatch({ type: type.PLAYLIST_LOADING })
 
-  const playlist = await API.setGenre(genre)
-  dispatch({ type: type.PLAYLIST_LOADED, playlist })
+  const { playlist, next } = await API.setGenre(genre)
+  dispatch({ type: type.PLAYLIST_LOADED, playlist, next })
 }
 
 export const set_tag = tag => async dispatch => {
   dispatch({ type: type.PLAYLIST_LOADING })
 
-  const playlist = await API.setTag(tag)
-  dispatch({ type: type.PLAYLIST_LOADED, playlist })
+  const { playlist, next } = await API.setTag(tag)
+  dispatch({ type: type.PLAYLIST_LOADED, playlist, next })
 }
 
 export const set_filter = filter => async dispatch => {
   dispatch({ type: type.PLAYLIST_LOADING })
 
-  const playlist = await API.setFilter(filter)
-  dispatch({ type: type.PLAYLIST_LOADED, playlist })
+  const { playlist, next } = await API.setFilter(filter)
+  dispatch({ type: type.PLAYLIST_LOADED, playlist, next })
 }
 
 export const load_playlist_next = () => async (dispatch, getState) => {
-  const { loadingPlaylist } = getState().root
+  const { loading, nextPlaylist } = getState().playlist
 
-  if (!loadingPlaylist) {
+  if (!loading) {
     dispatch({ type: type.PLAYLIST_LOADING_NEXT })
 
-    const playlist = await API.loadNext()
-    dispatch({ type: type.PLAYLIST_LOADED, playlist })
+    const { playlist, next } = await API.loadUrl(nextPlaylist)
+    dispatch({ type: type.PLAYLIST_LOADED, playlist, next })
   }
 }
 
 export const search_songs = q => async dispatch => {
-  dispatch({ type: type.LOADING_SEARCH })
+  dispatch({ type: type.SEARCH_LOADING })
 
-  const playlist = await API.search(q)
-  dispatch({ type: type.LOADED_SEARCH, playlist })
+  const { playlist, next } = await API.search(q)
+  dispatch({ type: type.SEARCH_LOADED, playlist, next })
 }
 
 export const load_next_results = () => async (dispatch, getState) => {
-  const { loadingSearch } = getState().search
+  const { loading, nextSearch } = getState().playlist
 
-  if (!loadingSearch) {
-    dispatch({ type: type.LOADING_SEARCH_NEXT })
+  if (!loading) {
+    dispatch({ type: type.SEARCH_LOADING_NEXT })
 
-    const playlist = await API.loadNext()
-    dispatch({ type: type.LOADED_SEARCH, playlist })
+    const { playlist, next } = await API.loadUrl(nextSearch)
+    dispatch({ type: type.SEARCH_LOADED, playlist, next })
   }
 }
 
-export const add_to_playlist = song => (dispatch, getState) => {
-  const playlist = getState().userPlaylist.playlist
-  const repeated = playlist.some(track => track.id === song.id)
+export const add_to_playlist = song => async dispatch => {
+  const repeated = await DB.get("recent", song.id)
+
   if (!repeated) {
-    Promise.resolve(dispatch({ type: type.ADD_TO_PLAYLIST, song })).then(() =>
-      DB.save("playlist", song)
-    )
+    dispatch({ type: type.ADD_TO_PLAYLIST, song })
+    DB.save("playlist", song)
   }
 }
 
 export const remove_from_playlist = song => (dispatch, getState) => {
-  let playlist = getState().userPlaylist.playlist.filter(
-    track => track.id !== song.id
-  )
-  Promise.resolve(dispatch({ type: type.REMOVE_FROM_PLAYLIST, playlist })).then(
-    () => DB.delete("playlist", [song.id])
-  )
+  let playlist = getState().playlist.user.filter(track => track.id !== song.id)
+  dispatch({ type: type.REMOVE_FROM_PLAYLIST, playlist })
+  DB.delete("playlist", song.id)
+}
+
+export const load_recent_played = () => async dispatch => {
+  const recent = await DB.getStore("recent")
+
+  dispatch({
+    type: type.LOAD_RECENT_PLAYED,
+    recent
+  })
 }
 
 export const init = () => async dispatch => {
   await DB.init()
 
-  const playlist = await DB.getAll("playlist")
+  const playlist = await DB.getStore("playlist")
 
-  Promise.all([
-    dispatch({
-      type: type.INITIAL_LOAD,
-      playlist
-    }),
-    dispatch(set_genre("house"))
-  ])
+  dispatch(set_genre("house"))
+
+  dispatch({
+    type: type.INITIAL_LOAD,
+    playlist
+  })
 }

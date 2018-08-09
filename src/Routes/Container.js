@@ -1,4 +1,5 @@
 import { h, Component } from "preact"
+import Redirect from "react-router-dom/es/Redirect"
 import styled from "styled-components"
 import Loading from "../Components/Loading"
 import { SongCard, CardContainer } from "../Components/SongCard"
@@ -15,13 +16,16 @@ const Wrapper = styled.div`
   }
 `
 
-export const WithActions = (
-  InnerComponent,
-  infinite = false,
-  fromPlaylist = false
-) => {
+export const WithActions = ({ InnerComponent, infinite, fromPlaylist }) => {
   const Card = SongCard(fromPlaylist)
   return class OuterComponent extends Component {
+    componentDidMount() {
+      const { onMounted, ready } = this.props
+      if (onMounted && ready) {
+        onMounted()
+      }
+    }
+
     playSong = index => () => {
       this.props.playSong(index, this.props.location.pathname)
     }
@@ -32,7 +36,11 @@ export const WithActions = (
       this.props.playlistAction(song)
     }
 
-    render({ loadMore, playlist, loading, active }) {
+    render({ loadMore, playlist, loading, active, ready, location }) {
+      if (location.pathname !== "/" && !ready) {
+        return <Redirect to="/" />
+      }
+
       return (
         <Wrapper>
           {InnerComponent && <InnerComponent />}

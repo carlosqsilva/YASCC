@@ -7,21 +7,20 @@ import {
   play_song_from_btn
 } from "@/actions"
 
-const Search = WithActions(null, true)
+const Search = WithActions({
+  infinite: true
+})
 
-const state = ({ search, playlist }, ownProps) => {
-  let active = null
-  if (playlist.location === ownProps.location.pathname) {
-    if (playlist.currentSong !== null) {
-      active = playlist.currentSong.id
-    }
-  }
-  return {
-    playlist: search.results,
-    loading: search.loadingSearch,
-    active
-  }
-}
+const state = ({
+  playlist: { search, loading },
+  player: { active },
+  root: { ready }
+}) => ({
+  active: active,
+  playlist: search,
+  loading,
+  ready
+})
 
 const actions = {
   loadMore: load_next_results,

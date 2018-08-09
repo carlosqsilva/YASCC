@@ -6,6 +6,7 @@ import BrowserRouter from "react-router-dom/es/BrowserRouter"
 import { Header, Sidebar, Player } from "./Components"
 
 import Home from "./Routes/Home"
+import Recent from "./Routes/Recent"
 import Search from "./Routes/Search"
 import Playlist from "./Routes/Playlist"
 
@@ -28,6 +29,7 @@ const app = () => {
         <Player />
         <Route exact path="/" component={Home} />
         <Route path="/search" component={Search} />
+        <Route path="/recent" component={Recent} />
         <Route path="/playlist" component={Playlist} />
       </Container>
     </BrowserRouter>

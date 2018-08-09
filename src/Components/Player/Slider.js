@@ -59,7 +59,7 @@ class Slider extends Component {
     onChange(percent * duration)
   }
 
-  render({ time, duration, song, children }) {
+  render({ time, duration, song }) {
     const transform = `translateX(-${100 - (time / duration) * 100}%)`
     return (
       <Container onClick={this.onClick} image={song.waveform}>
@@ -71,10 +71,10 @@ class Slider extends Component {
   }
 }
 
-const state = ({ playlist }) => ({
-  song: playlist.currentSong,
-  time: playlist.time,
-  duration: playlist.duration
+const state = ({ player: { song, time, duration } }) => ({
+  song,
+  time,
+  duration
 })
 
 export default connect(state)(Slider)
