@@ -42,17 +42,16 @@ const rootReducer = (state = rootInitialState, action) => {
 
 const playerInitialState = {
   playlist: [],
+  repeated: [],
   isPlaying: false,
   loading: false,
   audioUrl: null,
   active: null,
   index: null,
   song: null,
-  volume: 1,
-  repeat: false,
-  duration: 0,
+  loop: false,
   muted: false,
-  time: 0
+  shuffle: false
 }
 
 const playerReducer = (state = playerInitialState, action) => {
@@ -85,20 +84,27 @@ const playerReducer = (state = playerInitialState, action) => {
         ...state,
         isPlaying: false
       }
+    case type.NEXT_SHUFFLE:
+      return {
+        ...state,
+        repeated: [...state.repeated, action.index]
+      }
+    case type.TOGGLE_SHUFFLE:
+      const shuffle = !state.shuffle
+      return {
+        ...state,
+        shuffle,
+        repeated: shuffle ? [state.index] : []
+      }
     case type.TOGGLE_MUTE:
       return {
         ...state,
-        muted: !state.muted
+        muted: action.mute
       }
-    case type.TOGGLE_REPEAT:
+    case type.TOGGLE_LOOP:
       return {
         ...state,
-        repeat: !state.repeat
-      }
-    case type.ON_TIME_UPDATE:
-      return {
-        ...state,
-        time: action.time
+        loop: action.loop
       }
     case type.ON_VOLUME_CHANGE:
       return {
@@ -109,8 +115,7 @@ const playerReducer = (state = playerInitialState, action) => {
     case type.ON_LOADED_METADATA:
       return {
         ...state,
-        loading: false,
-        duration: action.duration
+        loading: false
       }
     default:
       return state

@@ -1,20 +1,22 @@
 import { h, Component } from "preact"
 import { connect } from "preact-redux"
 import styled from "styled-components"
-import throttle from "lodash.throttle"
+// import throttle from "lodash.throttle"
 
 import PlayerControls from "./PlayerControls"
-import Slider from "./Slider"
+import VolumeControl from "./VolumeControl"
 
 import {
   play_prev,
   play_next,
   on_play,
   on_pause,
-  change_time,
-  change_duration,
+  loaded_metadata,
+  toggle_mute,
+  toggle_loop,
   on_load_start
 } from "@/actions"
+import TimerRange from "./TimerRange"
 
 const Wrapper = styled.div`
   padding-left: var(--sidebarSpace);
@@ -24,7 +26,7 @@ const Wrapper = styled.div`
   bottom: 0px;
   left: 0px;
   width: 100%;
-  height: 45px;
+  height: 60px;
   display: flex;
   transform: ${props => (props.visible ? "translateY(0)" : "translateY(100%)")};
   transition: transform 500ms ease-in-out;
@@ -87,16 +89,14 @@ class Player extends Component {
   }
 
   onLoadedMetadata = () => {
-    this.props.changeDuration(this.audio.duration)
+    this.props.loadedMetadata()
     this.audio.play()
   }
 
   onTimeUpdate = () => {
-    this.props.changeTime(this.audio.currentTime)
-  }
-
-  changeTime = newTime => {
-    this.audio.currentTime = newTime
+    const value = (100 / this.audio.duration) * this.audio.currentTime
+    this.timer.style.backgroundSize = `${value}% 100%`
+    this.timer.value = value || 0
   }
 
   togglePlay = () => {
@@ -107,51 +107,96 @@ class Player extends Component {
     }
   }
 
-  handleRef = node => {
+  toggleMute = () => {
+    const mute = !this.audio.muted
+    this.props.toggleMute(mute)
+    this.audio.muted = mute
+  }
+
+  toggleLoop = () => {
+    const loop = !this.audio.loop
+    this.props.toggleLoop(loop)
+    this.audio.loop = loop
+  }
+
+  timerChange = () => {
+    if (this.props.audioUrl) {
+      const time = this.audio.duration * (this.timer.value / 100)
+      this.audio.currentTime = time
+    }
+  }
+
+  volumeChange = () => {
+    const volume = this.volume.value
+    this.volume.style.backgroundSize = `${volume * 100}% 100%`
+    this.audio.volume = volume
+  }
+
+  onMouseDown = () => {
+    this.audio.pause()
+  }
+
+  onMouseUP = () => {
+    if (this.props.audioUrl) {
+      this.audio.play()
+    }
+  }
+
+  audioRef = node => {
     this.audio = node
   }
 
-  render({
-    audioUrl,
-    playNext,
-    onPause,
-    onPlay,
-    onLoadStart,
-    repeat,
-    muted,
-    volume
-  }) {
+  timerRef = node => {
+    this.timer = node
+  }
+
+  volumeRef = node => {
+    this.volume = node
+  }
+
+  render({ audioUrl, playNext, onPause, onPlay, onLoadStart, song }) {
     return (
       <Wrapper visible={audioUrl !== null}>
-        <PlayerControls toggle={this.togglePlay} />
+        <PlayerControls toggle={this.togglePlay} toggleLoop={this.toggleLoop} />
 
-        {audioUrl && <Slider onChange={this.changeTime} />}
+        <TimerRange
+          title={song ? song.title : "Title"}
+          duration={song ? song.duration : "00:00"}
+          innerRef={this.timerRef}
+          onChange={this.timerChange}
+          onTouchStart={this.onMouseDown}
+          onTouchEnd={this.onMouseUP}
+          onMouseDown={this.onMouseDown}
+          onMouseUp={this.onMouseUP}
+          step="0.1"
+        />
+
+        <VolumeControl
+          innerRef={this.volumeRef}
+          onChange={this.volumeChange}
+          toggleMute={this.toggleMute}
+        />
 
         <audio
           crossOrigin="anonymous"
-          onTimeUpdate={throttle(this.onTimeUpdate, 1000, { leading: false })}
+          onTimeUpdate={this.onTimeUpdate}
           onLoadedMetadata={this.onLoadedMetadata}
           onLoadStart={onLoadStart}
           onEnded={playNext}
           onPause={onPause}
           onPlay={onPlay}
-          volume={volume}
-          muted={muted}
           src={audioUrl}
-          loop={repeat}
-          ref={this.handleRef}
+          ref={this.audioRef}
         />
       </Wrapper>
     )
   }
 }
 
-const state = ({ player: { song, audioUrl, repeat, volume, muted } }) => ({
-  song,
+const state = ({ player: { song, audioUrl, volume } }) => ({
   audioUrl,
-  repeat,
-  muted,
-  volume
+  volume,
+  song
 })
 
 const actions = {
@@ -159,9 +204,10 @@ const actions = {
   onPause: on_pause,
   playPrev: play_prev,
   playNext: play_next,
-  changeTime: change_time,
   onLoadStart: on_load_start,
-  changeDuration: change_duration
+  loadedMetadata: loaded_metadata,
+  toggleMute: toggle_mute,
+  toggleLoop: toggle_loop
 }
 
 export default connect(

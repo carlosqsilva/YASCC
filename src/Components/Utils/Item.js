@@ -10,8 +10,7 @@ const Item = styled.a`
   text-decoration: none;
   font-size: 0.9rem;
 
-  min-width: 60px;
-  padding: 0 10px;
+  min-width: 50px;
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.03);

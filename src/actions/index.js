@@ -5,6 +5,7 @@ import Storage from "./storage"
 const API = new api(35)
 
 const DB = new Storage({
+  version: 3,
   name: "yascc",
   store: [
     {
@@ -42,27 +43,27 @@ export const on_pause = () => ({
   type: type.ON_PAUSE
 })
 
-export const toggle_repeat = () => ({
-  type: type.TOGGLE_REPEAT
+export const toggle_loop = loop => ({
+  type: type.TOGGLE_LOOP,
+  loop
 })
 
-export const change_time = time => ({
-  type: type.ON_TIME_UPDATE,
-  time
+export const toggle_shuffle = () => ({
+  type: type.TOGGLE_SHUFFLE
 })
 
-export const toggle_mute = () => ({
-  type: type.TOGGLE_MUTE
+export const loaded_metadata = () => ({
+  type: type.ON_LOADED_METADATA
+})
+
+export const toggle_mute = mute => ({
+  type: type.TOGGLE_MUTE,
+  mute
 })
 
 export const change_volume = event => ({
   type: type.ON_VOLUME_CHANGE,
   volume: event.target.value
-})
-
-export const change_duration = duration => ({
-  type: type.ON_LOADED_METADATA,
-  duration
 })
 
 export const toggle_dark_mode = () => (dispatch, getState) => {
@@ -106,9 +107,28 @@ export const play_song_from_btn = (index, route) => (dispatch, getState) => {
   })
 }
 
+function getRandom(playlist, repeated) {
+  const random = Math.floor(playlist.length * Math.random())
+  if (repeated.includes(random)) {
+    return getRandom()
+  }
+  return random
+}
+
 export const play_next = () => (dispatch, getState) => {
-  const { playlist, index } = getState().player
-  const nextSong = index !== playlist.length - 1 ? index + 1 : 0
+  const { playlist, index, shuffle, repeated } = getState().player
+  let nextSong
+
+  if (shuffle) {
+    nextSong = getRandom(playlist, repeated)
+    dispatch({
+      type: type.NEXT_SHUFFLE,
+      index: nextSong
+    })
+  } else {
+    nextSong = index !== playlist.length - 1 ? index + 1 : 0
+  }
+
   dispatch(play_song(nextSong, playlist[nextSong]))
 }
 
