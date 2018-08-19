@@ -25,8 +25,12 @@ const Container = styled.div`
   font-size: var(--sidebarFontSize);
   z-index: 100;
   overflow-y: scroll;
-  transform: ${props =>
-    props.visible ? "translateX(0)" : "translateX(-100%)"};
+  transform: translateX(-100%);
+  transition: transform 200ms ease-in-out;
+
+  &.active {
+    transform: translateX(0);
+  }
 
   @media screen and (min-width: 640px) {
     transform: translateX(0);
@@ -119,9 +123,9 @@ class Sidebar extends Component {
     this.active(name)
   }
 
-  render({ sidebarVisible, qtd, InnerProps }, { active }) {
+  render({ sidebarVisible, qtd, innerRef, config }, { active }) {
     return (
-      <Container visible={sidebarVisible} {...InnerProps}>
+      <Container visible={sidebarVisible} innerRef={innerRef} {...config}>
         <LinkSegment to="/recent">
           <Icon size={20} src={Recent} />
           <Label>Recent Played</Label>

@@ -5,7 +5,7 @@ import Storage from "./storage"
 const API = new api(35)
 
 const DB = new Storage({
-  version: 3,
+  version: 4,
   name: "yascc",
   store: [
     {

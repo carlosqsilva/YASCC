@@ -20,27 +20,12 @@ export default class Storage {
       request.onupgradeneeded = event => {
         const db = event.target.result
         const storeNames = db.objectStoreNames
-        let objStore
 
         for (const store of this.DB_STORE) {
-          if (storeNames.contains(store.name)) {
-            objStore = event.target.transaction.objectStore(store.name)
-          } else {
-            objStore = db.createObjectStore(store.name, {
+          if (!storeNames.contains(store.name)) {
+            db.createObjectStore(store.name, {
               keyPath: store.key
             })
-          }
-
-          if (store.default) {
-            objStore.transaction.oncomplete = event => {
-              const refStore = db
-                .transaction(store.name, "readwrite")
-                .objectStore(store.name)
-
-              store.default.forEach(data => {
-                refStore.add(data)
-              })
-            }
           }
         }
       }

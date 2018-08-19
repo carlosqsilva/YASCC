@@ -16,27 +16,24 @@ const PlayIcon = Icon.extend`
 `
 
 const PlaylistAction = styled.img`
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  z-index: 10;
-  will-change: transform;
   transform: translateX(115%);
   transition: transform 200ms;
+  will-change: transform;
+  position: absolute;
+  z-index: 10;
+  right: 2px;
+  top: 2px;
 `
 
 const Card = styled.div`
+  background: var(--primary);
   position: relative;
   overflow: hidden;
   cursor: pointer;
   padding: 6px;
   display: flex;
-  background: var(--primary);
 
-  @media screen and (min-width: 500px) {
-    border-radius: 4px;
-  }
-
+  &.active,
   &:hover {
     #action {
       transform: translateX(0);
@@ -46,16 +43,9 @@ const Card = styled.div`
     }
   }
 
-  ${props =>
-    props.active &&
-    `
-    #action {
-      transform: translateX(0);
-    }
-    #play {
-      opacity: 1;
-    }
-  `};
+  @media screen and (min-width: 500px) {
+    border-radius: 4px;
+  }
 `
 
 const Artwork = styled.div`
@@ -122,7 +112,7 @@ export const SongCard = fromPlaylist => {
   const option = fromPlaylist ? Remove : Add
   const message = fromPlaylist ? "Remove from Playlist" : "Add to Playlist"
   return ({ song, play, playlistAction, active }) => (
-    <Card onClick={play} active={active}>
+    <Card onClick={play} className={active ? "active" : ""}>
       <PlaylistAction
         onClick={playlistAction}
         title={message}

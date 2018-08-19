@@ -16,8 +16,8 @@ const state = ({
   player: { active },
   root: { ready }
 }) => ({
-  active: active,
   playlist: search,
+  active,
   loading,
   ready
 })

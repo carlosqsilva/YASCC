@@ -5,11 +5,12 @@ import styled from "styled-components"
 import Drawer from "./drawer"
 
 class Aside extends Component {
-  open = false
   startX = 0
-  startY = 0
-  backdrop = 0
-  translation = 0
+  diffX = 0
+
+  state = {
+    open: false
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.sidebarVisible !== this.props.sidebarVisible) {
@@ -18,93 +19,58 @@ class Aside extends Component {
   }
 
   handleTouchEnd = () => {
-    this.translation = this.translation < -50 ? -100 : 0
-    this.drawer.style.transition = "transform 100ms ease-in-out"
-    this.drawer.style.transform = `translate(${this.translation}%, 0)`
-    if (this.translation === -100) {
-      this.overlay.style.backgroundColor = `rgba(0,0,0,0)`
-      this.overlay.style.width = "20px"
-      this.open = false
-      return
+    if (this.diffX > window.innerWidth * 0.3) {
+      this.toggleDrawer()
+      this.diffX = 0
     }
-    this.open = true
   }
 
   handleTouchStart = event => {
-    const { clientX, clientY } = event.targetTouches[0]
-    this.startX = clientX
-    this.startY = clientY
-    this.drawer.style.transition = ""
+    this.startX = event.targetTouches[0].clientX
   }
 
   handleTouchMove = event => {
-    const { clientX, clientY } = event.targetTouches[0]
-    const diffX = Math.abs(clientX - this.startX)
-    const diffY = Math.abs(clientY - this.startY)
-
-    if (diffX > diffY) {
-      const proportion = clientX / window.innerWidth
-      this.translation = Math.min(-(1 - proportion) * 100, 0)
-      this.backdrop = Math.min(proportion, 0.5)
-
-      this.overlay.style.width = "100%"
-      this.drawer.style.transform = `translateX(${this.translation}%)`
-      this.overlay.style.backgroundColor = `rgba(0,0,0,${this.backdrop})`
-    }
+    this.diffX = Math.abs(event.targetTouches[0].clientX - this.startX)
   }
 
-  handleDrawer = node => {
-    this.drawer = node
-  }
-
-  handleOverlay = node => {
-    this.overlay = node
-  }
-
-  toggleDrawer = e => {
-    this.drawer.style.transition = "transform 200ms"
-
-    if (this.open) {
-      this.drawer.style.transform = "translateX(-100%)"
-      this.overlay.style.backgroundColor = "rgba(0,0,0,0)"
-      this.overlay.style.width = "20px"
-      this.open = false
-    } else {
-      this.drawer.style.transform = "translateX(0)"
-      this.overlay.style.backgroundColor = "rgba(0,0,0,0.5)"
-      this.overlay.style.width = "100%"
-      this.open = true
-    }
+  toggleDrawer = () => {
+    this.setState(prevState => ({
+      open: !prevState.open
+    }))
   }
 
   render() {
     const config = {
       onTouchStart: this.handleTouchStart,
       onTouchMove: this.handleTouchMove,
-      onTouchEnd: this.handleTouchEnd
+      onTouchEnd: this.handleTouchEnd,
+      className: this.state.open ? "active" : ""
     }
 
     return (
       <aside>
-        <Drawer InnerProps={{ innerRef: this.handleDrawer, ...config }} />
-        <Overlay
-          onClick={this.toggleDrawer}
-          innerRef={this.handleOverlay}
-          {...config}
-        />
+        <Drawer config={config} />
+        <Overlay onClick={this.toggleDrawer} {...config} />
       </aside>
     )
   }
 }
 
 const Overlay = styled.div`
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 20px;
-  height: 100%;
-  z-index: 50;
+  transition: background-color 300ms ease;
   display: var(--overlay);
+  position: fixed;
+  height: 100%;
+  width: 20px;
+  z-index: 5;
+  left: 0px;
+  top: 0px;
+
+  &.active {
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 50;
+    width: 100%;
+  }
 `
 
 const state = ({ root: { sidebarVisible } }) => ({
