@@ -44,6 +44,8 @@ const Wrapper = styled.div`
 `
 
 class Player extends Component {
+  buffer = 0
+
   componentDidMount() {
     const { playNext, playPrev } = this.props
     if ("mediaSession" in navigator) {
@@ -95,8 +97,14 @@ class Player extends Component {
 
   onTimeUpdate = () => {
     const value = (100 / this.audio.duration) * this.audio.currentTime
-    this.timer.style.backgroundSize = `${value}% 100%`
+    this.timer.style.backgroundSize = `${value}%, ${this.buffer}%`
     this.timer.value = value || 0
+  }
+
+  onProgress = ({ target: { buffered, duration } }) => {
+    if (duration > 0 && buffered.length) {
+      this.buffer = (buffered.end(buffered.length - 1) / duration) * 100
+    }
   }
 
   togglePlay = () => {
@@ -128,7 +136,7 @@ class Player extends Component {
 
   volumeChange = () => {
     const volume = this.volume.value
-    this.volume.style.backgroundSize = `${volume * 100}% 100%`
+    this.volume.style.backgroundSize = `${volume * 100}%`
     this.audio.volume = volume
   }
 
@@ -168,7 +176,6 @@ class Player extends Component {
           onTouchEnd={this.onMouseUP}
           onMouseDown={this.onMouseDown}
           onMouseUp={this.onMouseUP}
-          step="0.1"
         />
 
         <VolumeControl
@@ -179,6 +186,7 @@ class Player extends Component {
 
         <audio
           crossOrigin="anonymous"
+          onProgress={this.onProgress}
           onTimeUpdate={this.onTimeUpdate}
           onLoadedMetadata={this.onLoadedMetadata}
           onLoadStart={onLoadStart}
@@ -193,9 +201,8 @@ class Player extends Component {
   }
 }
 
-const state = ({ player: { song, audioUrl, volume } }) => ({
+const state = ({ player: { song, audioUrl } }) => ({
   audioUrl,
-  volume,
   song
 })
 

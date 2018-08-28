@@ -61,9 +61,9 @@ export const toggle_mute = mute => ({
   mute
 })
 
-export const change_volume = event => ({
+export const change_volume = volume => ({
   type: type.ON_VOLUME_CHANGE,
-  volume: event.target.value
+  volume
 })
 
 export const toggle_dark_mode = () => (dispatch, getState) => {

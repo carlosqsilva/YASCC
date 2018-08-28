@@ -23,6 +23,6 @@ export default ({ title, duration, ...props }) => (
       <span>{title}</span>
       <span>{duration}</span>
     </Container>
-    <InputRange {...props} />
+    <InputRange step="0.1" {...props} />
   </Wrapper>
 )

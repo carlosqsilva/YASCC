@@ -11,8 +11,9 @@ const TimeBar = styled.input.attrs({
   height: 6px;
   align-self: center;
   background-color: var(--rangerTrack);
-  background-image: linear-gradient(var(--info), var(--info));
-  background-size: ${props => (props.full ? "100% 100%" : "0% 100%")};
+  background-image: linear-gradient(var(--info), var(--info)),
+    linear-gradient(var(--textGray), var(--textGray));
+  background-size: ${props => (props.full ? "100%" : "0%")};
   background-repeat: no-repeat;
   border-radius: 10px;
   cursor: pointer;
