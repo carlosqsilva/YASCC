@@ -5,7 +5,6 @@ import { Icon } from "../Utils/Icon"
 
 import Play from "./play.svg"
 import Like from "./like.svg"
-import Playing from "./playing.svg"
 import Remove from "./remove.svg"
 import Add from "./add.svg"
 
@@ -122,7 +121,7 @@ export const SongCard = fromPlaylist => {
       />
 
       <Artwork style={{ background: `url(${song.artwork})` }}>
-        <PlayIcon src={active ? Playing : Play} id="play" size={40} />
+        <PlayIcon src={Play} id="play" size={40} />
       </Artwork>
 
       <Container>
