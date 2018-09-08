@@ -9,7 +9,7 @@ import Playing from "./playing.svg"
 import Remove from "./remove.svg"
 import Add from "./add.svg"
 
-const PlayIcon = Icon.extend`
+const PlayIcon = styled(Icon)`
   opacity: 0;
   margin: auto;
   display: block;
