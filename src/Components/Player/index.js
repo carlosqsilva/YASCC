@@ -1,7 +1,6 @@
 import { h, Component } from "preact"
 import { connect } from "preact-redux"
 import styled from "styled-components"
-// import throttle from "lodash.throttle"
 
 import PlayerControls from "./PlayerControls"
 import VolumeControl from "./VolumeControl"
@@ -95,15 +94,32 @@ class Player extends Component {
     this.audio.play()
   }
 
-  onTimeUpdate = () => {
-    const value = (100 / this.audio.duration) * this.audio.currentTime
-    this.timer.style.backgroundSize = `${value}%, ${this.buffer}%`
-    this.timer.value = value || 0
+  toPercentage = (current, total) => (current / total) * 100
+
+  onTimeUpdate = () =>
+    window.requestAnimationFrame(() => {
+      const value = this.toPercentage(
+        this.audio.currentTime,
+        this.audio.duration
+      )
+
+      if (!this.buffer) this.onProgress()
+
+      this.timer.style.backgroundSize = `${value}%, ${this.buffer}%`
+      this.timer.value = value || 0
+    })
+
+  onLoadStart = () => {
+    this.buffer = 0
+    this.props.onLoadStart()
   }
 
-  onProgress = ({ target: { buffered, duration } }) => {
-    if (duration > 0 && buffered.length) {
-      this.buffer = (buffered.end(buffered.length - 1) / duration) * 100
+  onProgress = () => {
+    if (this.audio.duration > 0 && this.audio.buffered.length) {
+      this.buffer = this.toPercentage(
+        this.audio.buffered.end(this.audio.buffered.length - 1),
+        this.audio.duration
+      )
     }
   }
 
@@ -162,7 +178,7 @@ class Player extends Component {
     this.volume = node
   }
 
-  render({ audioUrl, playNext, onPause, onPlay, onLoadStart, song }) {
+  render({ audioUrl, playNext, onPause, onPlay, song }) {
     return (
       <Wrapper visible={audioUrl !== null}>
         <PlayerControls toggle={this.togglePlay} toggleLoop={this.toggleLoop} />
@@ -189,7 +205,7 @@ class Player extends Component {
           onProgress={this.onProgress}
           onTimeUpdate={this.onTimeUpdate}
           onLoadedMetadata={this.onLoadedMetadata}
-          onLoadStart={onLoadStart}
+          onLoadStart={this.onLoadStart}
           onEnded={playNext}
           onPause={onPause}
           onPlay={onPlay}
