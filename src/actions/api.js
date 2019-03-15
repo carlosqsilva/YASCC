@@ -1,11 +1,3 @@
-// const key = [
-//   "client_id=a7Ucuq0KY8Ksn8WzBG6wj4x6pcId6BpU",
-//   "client_id=JAgPhXap7XK0g8dUOtklbE7UnF05W8AH",
-//   "client_id=x3d1i5dxXwTtUNJAy8djMDh7yYdxSZX0"
-// ]
-/*
-  https://api.soundcloud.com/tracks?linked_partitioning=1&limit=10&client_id=a7Ucuq0KY8Ksn8WzBG6wj4x6pcId6BpU&genres=house
-*/
 const secToTime = duration => {
   const num = parseInt(duration / 1000, 10)
   const minutes = String(Math.floor(num / 60)).padStart(2, "0")
@@ -32,7 +24,7 @@ const formatNumber = number => {
 
 export class api {
   constructor(limit) {
-    this.key = "client_id=JAgPhXap7XK0g8dUOtklbE7UnF05W8AH"
+    this.key = "client_id=wQF3qEmVErE295tmLg8c1xxt5Y5kLda2"
     this.tracks = `https://api.soundcloud.com/tracks?linked_partitioning=1&limit=${limit}&${
       this.key
     }`
