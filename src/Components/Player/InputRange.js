@@ -1,9 +1,9 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
-const TimeBar = styled.input.attrs({
+const TimeBar = styled.input.attrs(props => ({
   type: "range",
   value: "0"
-})`
+}))`
   appearance: none;
   margin: 0.5rem 0;
   outline: none;
@@ -53,6 +53,6 @@ const TimeBar = styled.input.attrs({
     border-radius: 100%;
     box-shadow: 0 0 1px 0px rgba(0, 0, 0, 0.1);
   }
-`
+`;
 
-export default TimeBar
+export default TimeBar;

@@ -1,9 +1,9 @@
-import { h, Component } from "preact"
-import { connect } from "preact-redux"
-import styled from "styled-components"
-import withRouter from "react-router-dom/es/withRouter"
+import { h, Component } from "preact";
+import { connect } from "react-redux";
+import styled from "styled-components";
+import withRouter from "react-router-dom/es/withRouter";
 
-import { search_songs } from "@/actions"
+import { search_songs } from "@/actions";
 
 const Form = styled.form`
   position: relative;
@@ -12,7 +12,7 @@ const Form = styled.form`
   align-items: center;
   padding: 0 10px;
   flex: 1;
-`
+`;
 
 const Input = styled.input`
   background: var(--light);
@@ -24,22 +24,22 @@ const Input = styled.input`
   line-height: 2;
   padding: 0 1em;
   width: 100%;
-`
+`;
 
 class SearchInput extends Component {
   state = {
     value: ""
-  }
+  };
 
   handleChange = e => {
-    this.setState({ value: e.target.value })
-  }
+    this.setState({ value: e.target.value });
+  };
 
   handleSubmit = e => {
-    e.preventDefault()
-    this.props.searchSongs(this.state.value)
-    this.props.history.push("/search")
-  }
+    e.preventDefault();
+    this.props.searchSongs(this.state.value);
+    this.props.history.push("/search");
+  };
 
   render(_, { value }) {
     return (
@@ -50,15 +50,12 @@ class SearchInput extends Component {
           onChange={this.handleChange}
         />
       </Form>
-    )
+    );
   }
 }
 
 const actions = {
   searchSongs: search_songs
-}
+};
 
-export default connect(
-  null,
-  actions
-)(withRouter(SearchInput))
+export default connect(null, actions)(withRouter(SearchInput));

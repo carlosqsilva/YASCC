@@ -1,7 +1,8 @@
-import { h } from "preact"
-import styled from "styled-components"
+import { h } from "preact";
+import { forwardRef } from "preact/compat";
+import styled from "styled-components";
 
-import InputRange from "./InputRange"
+import InputRange from "./InputRange";
 
 const Wrapper = styled.div`
   flex: 1;
@@ -10,19 +11,19 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
-`
+`;
 
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
-`
+`;
 
-export default ({ title, duration, ...props }) => (
+export default forwardRef(({ title, duration, ...props }, ref) => (
   <Wrapper>
     <Container>
       <span>{title}</span>
       <span>{duration}</span>
     </Container>
-    <InputRange step="0.1" {...props} />
+    <InputRange step="0.1" {...props} ref={ref} />
   </Wrapper>
-)
+));

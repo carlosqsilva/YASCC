@@ -1,11 +1,11 @@
-import { connect } from "preact-redux"
-import { WithActions } from "./Container"
+import { connect } from "react-redux";
+import { WithActions } from "./Container";
 
-import { play_song_from_btn, remove_from_playlist } from "@/actions"
+import { play_song_from_btn, remove_from_playlist } from "@/actions";
 
 const Playlist = WithActions({
   fromPlaylist: true
-})
+});
 
 const state = ({
   playlist: { user },
@@ -15,14 +15,11 @@ const state = ({
   playlist: user,
   active,
   ready
-})
+});
 
 const actions = {
   playSong: play_song_from_btn,
   playlistAction: remove_from_playlist
-}
+};
 
-export default connect(
-  state,
-  actions
-)(Playlist)
+export default connect(state, actions)(Playlist);

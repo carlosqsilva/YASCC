@@ -1,43 +1,43 @@
-import { h, Component } from "preact"
-import { connect } from "preact-redux"
-import styled from "styled-components"
+import { h, Component } from "preact";
+import { connect } from "react-redux";
+import styled from "styled-components";
 
-import Drawer from "./drawer"
+import Drawer from "./drawer";
 
 class Aside extends Component {
-  startX = 0
-  diffX = 0
+  startX = 0;
+  diffX = 0;
 
   state = {
     open: false
-  }
+  };
 
   componentDidUpdate(prevProps) {
     if (prevProps.sidebarVisible !== this.props.sidebarVisible) {
-      this.toggleDrawer()
+      this.toggleDrawer();
     }
   }
 
   handleTouchEnd = () => {
     if (this.diffX > window.innerWidth * 0.3) {
-      this.toggleDrawer()
-      this.diffX = 0
+      this.toggleDrawer();
+      this.diffX = 0;
     }
-  }
+  };
 
   handleTouchStart = event => {
-    this.startX = event.targetTouches[0].clientX
-  }
+    this.startX = event.targetTouches[0].clientX;
+  };
 
   handleTouchMove = event => {
-    this.diffX = Math.abs(event.targetTouches[0].clientX - this.startX)
-  }
+    this.diffX = Math.abs(event.targetTouches[0].clientX - this.startX);
+  };
 
   toggleDrawer = () => {
     this.setState(prevState => ({
       open: !prevState.open
-    }))
-  }
+    }));
+  };
 
   render() {
     const config = {
@@ -45,14 +45,14 @@ class Aside extends Component {
       onTouchMove: this.handleTouchMove,
       onTouchEnd: this.handleTouchEnd,
       className: this.state.open ? "active" : ""
-    }
+    };
 
     return (
       <aside>
         <Drawer config={config} />
         <Overlay onClick={this.toggleDrawer} {...config} />
       </aside>
-    )
+    );
   }
 }
 
@@ -71,10 +71,10 @@ const Overlay = styled.div`
     z-index: 50;
     width: 100%;
   }
-`
+`;
 
 const state = ({ root: { sidebarVisible } }) => ({
   sidebarVisible
-})
+});
 
-export default connect(state)(Aside)
+export default connect(state)(Aside);

@@ -1,22 +1,22 @@
-import { h } from "preact"
-import { connect } from "preact-redux"
-import styled from "styled-components"
+import { h } from "preact";
+import { connect } from "react-redux";
+import styled from "styled-components";
 
-import Item from "../Utils/Item"
-import { Icon, SVGIcon } from "../Utils/Icon"
-import { play_next, play_prev, toggle_shuffle } from "@/actions"
+import Item from "../Utils/Item";
+import { Icon, SVGIcon } from "../Utils/Icon";
+import { play_next, play_prev, toggle_shuffle } from "@/actions";
 
-import spinIcon from "./loading.svg"
-import playIcon from "./play.svg"
-import backIcon from "./back.svg"
-import nextIcon from "./next.svg"
-import pauseIcon from "./pause.svg"
+import spinIcon from "./loading.svg";
+import playIcon from "./play.svg";
+import backIcon from "./back.svg";
+import nextIcon from "./next.svg";
+import pauseIcon from "./pause.svg";
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   background: var(--primary);
-`
+`;
 
 const PlayerControls = ({
   isPlaying,
@@ -58,22 +58,19 @@ const PlayerControls = ({
       </SVGIcon>
     </Item>
   </Wrapper>
-)
+);
 
 const state = ({ player: { isPlaying, loading, loop, shuffle } }) => ({
   isPlaying,
   loading,
   loop,
   shuffle
-})
+});
 
 const actions = {
   playNext: play_next,
   playPrev: play_prev,
   toggleShuffle: toggle_shuffle
-}
+};
 
-export default connect(
-  state,
-  actions
-)(PlayerControls)
+export default connect(state, actions)(PlayerControls);

@@ -1,5 +1,5 @@
-import { h, Component } from "preact"
-import styled, { keyframes } from "styled-components"
+import { h, Component, createRef } from "preact";
+import styled, { keyframes } from "styled-components";
 
 const spin = keyframes`
   0% {
@@ -8,7 +8,7 @@ const spin = keyframes`
   100% {
     transform: rotate(360deg);
   }
-`
+`;
 
 const LoadingSpin = styled.div`
   margin: 0 auto;
@@ -18,7 +18,7 @@ const LoadingSpin = styled.div`
   border: 0.2rem solid #dedede;
   border-top-color: #444;
   animation: ${spin} 1s infinite linear;
-`
+`;
 
 const LoadMore = styled.button`
   all: unset;
@@ -35,25 +35,27 @@ const LoadMore = styled.button`
   &:hover {
     background-color: rgba(0, 0, 0, 0.4);
   }
-`
+`;
 
 class Loading extends Component {
+  elementRef = createRef();
+
   componentDidMount() {
-    this.observer = new IntersectionObserver(this.props.loadMore)
-    this.observer.observe(this.target)
+    this.observer = new IntersectionObserver(this.props.loadMore);
+    this.observer.observe(this.elementRef.current);
   }
 
   componentWillUnmount() {
-    this.observer.unobserve(this.target)
+    this.observer.unobserve(this.elementRef.current);
   }
 
   render({ loadMore, isLoading }) {
     return (
-      <LoadMore onClick={loadMore} innerRef={e => (this.target = e)}>
+      <LoadMore onClick={loadMore} ref={this.elementRef}>
         {isLoading ? <LoadingSpin /> : <strong>Load More...</strong>}
       </LoadMore>
-    )
+    );
   }
 }
 
-export default Loading
+export default Loading;

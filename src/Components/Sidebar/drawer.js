@@ -1,17 +1,17 @@
-import { h, Component } from "preact"
-import { connect } from "preact-redux"
-import Link from "react-router-dom/es/Link"
-import withRouter from "react-router-dom/es/withRouter"
+import { h, Component } from "preact";
+import { connect } from "react-redux";
+import Link from "react-router-dom/es/Link";
+import withRouter from "react-router-dom/es/withRouter";
 
-import { set_genre, set_tag, set_filter } from "@/actions"
-import styled from "styled-components"
+import { set_genre, set_tag, set_filter } from "@/actions";
+import styled from "styled-components";
 
-import { filter, tags, genres } from "./options"
-import { Icon } from "../Utils/Icon"
-import Select from "../SelectInput"
-import Playlist from "./playlist.svg"
-import Recent from "./recent.svg"
-import Filter from "./filter.svg"
+import { filter, tags, genres } from "./options";
+import { Icon } from "../Utils/Icon";
+import Select from "../SelectInput";
+import Playlist from "./playlist.svg";
+import Recent from "./recent.svg";
+import Filter from "./filter.svg";
 
 const Container = styled.div`
   background: var(--lightDark);
@@ -35,7 +35,7 @@ const Container = styled.div`
   @media screen and (min-width: 640px) {
     transform: translateX(0);
   }
-`
+`;
 
 const Segment = styled.div`
   display: flex;
@@ -46,7 +46,7 @@ const Segment = styled.div`
   &:not(:last-child) {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
-`
+`;
 
 const LinkSegment = styled(Link)`
   display: flex;
@@ -54,7 +54,7 @@ const LinkSegment = styled(Link)`
   padding: 0.7rem 0 0.7rem 1rem;
   cursor: pointer;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-`
+`;
 
 const Label = styled.strong`
   flex: 1;
@@ -62,13 +62,13 @@ const Label = styled.strong`
   margin-left: 20px;
   font-size: 1.1em;
   color: var(--light);
-`
+`;
 
 const Header = styled.strong`
   color: var(--light);
   margin-bottom: 3px;
   font-size: 1em;
-`
+`;
 
 const Tag = styled.span`
   background-color: whitesmoke;
@@ -78,7 +78,7 @@ const Tag = styled.span`
   font-size: 0.8em;
   padding: 0 0.5rem;
   align-self: center;
-`
+`;
 
 const Option = styled.a`
   flex: 1;
@@ -92,40 +92,40 @@ const Option = styled.a`
   &:hover {
     color: white;
   }
-`
+`;
 
 class Sidebar extends Component {
   state = {
     active: ""
-  }
+  };
 
   changeRoute = route => {
-    this.props.history.push(route)
-  }
+    this.props.history.push(route);
+  };
 
   active = name => {
     this.setState({ active: name }, () => {
-      this.changeRoute("/")
-    })
-  }
+      this.changeRoute("/");
+    });
+  };
 
   onChange = e => {
-    this.props.setFilter(e.target.value)
-  }
+    this.props.setFilter(e.target.value);
+  };
 
   onTag = ({ target: { name } }) => {
-    this.props.setTag(name)
-    this.active(name)
-  }
+    this.props.setTag(name);
+    this.active(name);
+  };
 
   onGenre = ({ target: { name } }) => {
-    this.props.setGenre(name)
-    this.active(name)
-  }
+    this.props.setGenre(name);
+    this.active(name);
+  };
 
-  render({ sidebarVisible, qtd, innerRef, config }, { active }) {
+  render({ sidebarVisible, qtd, config }, { active }) {
     return (
-      <Container visible={sidebarVisible} innerRef={innerRef} {...config}>
+      <Container visible={sidebarVisible} {...config}>
         <LinkSegment to="/recent">
           <Icon size={20} src={Recent} />
           <Label>Recent Played</Label>
@@ -170,24 +170,19 @@ class Sidebar extends Component {
           ))}
         </Segment>
       </Container>
-    )
+    );
   }
 }
 
 const state = ({ root: { sidebarVisible }, playlist: { qtd } }) => ({
   sidebarVisible,
   qtd
-})
+});
 
 const actions = {
   setFilter: set_filter,
   setGenre: set_genre,
   setTag: set_tag
-}
+};
 
-export default withRouter(
-  connect(
-    state,
-    actions
-  )(Sidebar)
-)
+export default withRouter(connect(state, actions)(Sidebar));

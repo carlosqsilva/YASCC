@@ -1,9 +1,9 @@
-import { h, Component } from "preact"
-import { connect } from "preact-redux"
-import styled from "styled-components"
+import { h, Component, createRef } from "preact";
+import { connect } from "react-redux";
+import styled from "styled-components";
 
-import PlayerControls from "./PlayerControls"
-import VolumeControl from "./VolumeControl"
+import PlayerControls from "./PlayerControls";
+import VolumeControl from "./VolumeControl";
 
 import {
   play_prev,
@@ -14,8 +14,8 @@ import {
   toggle_mute,
   toggle_loop,
   on_load_start
-} from "@/actions"
-import TimerRange from "./TimerRange"
+} from "@/actions";
+import TimerRange from "./TimerRange";
 
 const Wrapper = styled.div`
   padding-left: var(--sidebarSpace);
@@ -40,31 +40,34 @@ const Wrapper = styled.div`
     height: 5px;
     content: "";
   }
-`
+`;
 
 class Player extends Component {
-  buffer = 0
+  timerRef = createRef();
+  volumeRef = createRef();
+  audioRef = createRef();
+  buffer = 0;
 
   componentDidMount() {
-    const { playNext, playPrev } = this.props
+    const { playNext, playPrev } = this.props;
     if ("mediaSession" in navigator) {
-      navigator.mediaSession.playbackState = "paused"
-      navigator.mediaSession.setActionHandler("previoustrack", playPrev)
-      navigator.mediaSession.setActionHandler("play", this.togglePlay)
-      navigator.mediaSession.setActionHandler("pause", this.togglePlay)
-      navigator.mediaSession.setActionHandler("nexttrack", playNext)
+      navigator.mediaSession.playbackState = "paused";
+      navigator.mediaSession.setActionHandler("previoustrack", playPrev);
+      navigator.mediaSession.setActionHandler("play", this.togglePlay);
+      navigator.mediaSession.setActionHandler("pause", this.togglePlay);
+      navigator.mediaSession.setActionHandler("nexttrack", playNext);
     } else {
-      window.addEventListener("keyup", this.keyboardKey, false)
+      window.addEventListener("keyup", this.keyboardKey, false);
     }
   }
 
   componentWillUnmount() {
-    window.removeEventListener("keyup", this.keyboardKey, false)
+    window.removeEventListener("keyup", this.keyboardKey, false);
   }
 
   componentWillReceiveProps(nextProps) {
     if ("mediaSession" in navigator) {
-      const { title, user, artworkOriginal } = nextProps.song
+      const { title, user, artworkOriginal } = nextProps.song;
       /* eslint-disable */
       navigator.mediaSession.metadata = new MediaMetadata({
         title: title,
@@ -76,107 +79,107 @@ class Player extends Component {
             type: "image/jpg"
           }
         ]
-      })
+      });
       /* eslint-enable */
     }
   }
 
   keyboardKey = ({ code }) => {
-    const { playPrev, playNext } = this.props
-    if (code === "MediaPlayPause") this.togglePlay()
-    else if (code === "MediaTrackNext") playNext()
-    else if (code === "MediaTrackPrevious") playPrev()
-    else return
-  }
+    const { playPrev, playNext } = this.props;
+    if (code === "MediaPlayPause") this.togglePlay();
+    else if (code === "MediaTrackNext") playNext();
+    else if (code === "MediaTrackPrevious") playPrev();
+    else return;
+  };
 
   onLoadedMetadata = () => {
-    this.props.loadedMetadata()
-    this.audio.play()
-  }
+    if (this.audioRef.current !== undefined) {
+      this.props.loadedMetadata();
+      this.audio.play();
+    }
+  };
 
-  toPercentage = (current, total) => (current / total) * 100
+  toPercentage = (current, total) => (current / total) * 100;
 
   onTimeUpdate = () =>
     window.requestAnimationFrame(() => {
       const value = this.toPercentage(
-        this.audio.currentTime,
-        this.audio.duration
-      )
+        this.audioRef.current.currentTime,
+        this.audioRef.current.duration
+      );
 
-      if (!this.buffer) this.onProgress()
+      if (!this.buffer) this.onProgress();
 
-      this.timer.style.backgroundSize = `${value}%, ${this.buffer}%`
-      this.timer.value = value || 0
-    })
+      if (this.timerRef.current !== undefined) {
+        console.log(this.timerRef.current);
+        this.timerRef.current.style.backgroundSize = `${value}%, ${this.buffer}%`;
+        this.timerRef.current.value = value || 0;
+      }
+    });
 
   onLoadStart = () => {
-    this.buffer = 0
-    this.props.onLoadStart()
-  }
+    this.buffer = 0;
+    this.props.onLoadStart();
+  };
 
   onProgress = () => {
-    if (this.audio.duration > 0 && this.audio.buffered.length) {
+    if (
+      this.audioRef.current.duration > 0 &&
+      this.audioRef.current.buffered.length
+    ) {
       this.buffer = this.toPercentage(
-        this.audio.buffered.end(this.audio.buffered.length - 1),
-        this.audio.duration
-      )
+        this.audioRef.current.buffered.end(
+          this.audioRef.current.buffered.length - 1
+        ),
+        this.audioRef.current.duration
+      );
     }
-  }
+  };
 
   togglePlay = () => {
-    if (this.audio.paused) {
-      this.audio.play()
+    if (this.audioRef.current.paused) {
+      this.audioRef.current.play();
     } else {
-      this.audio.pause()
+      this.audioRef.current.pause();
     }
-  }
+  };
 
   toggleMute = () => {
-    const mute = !this.audio.muted
-    this.props.toggleMute(mute)
-    this.audio.muted = mute
-  }
+    const mute = !this.audioRef.current.muted;
+    this.props.toggleMute(mute);
+    this.audioRef.current.muted = mute;
+  };
 
   toggleLoop = () => {
-    const loop = !this.audio.loop
-    this.props.toggleLoop(loop)
-    this.audio.loop = loop
-  }
+    const loop = !this.audio.loop;
+    this.props.toggleLoop(loop);
+    this.audioRef.current.loop = loop;
+  };
 
   timerChange = () => {
-    if (this.props.audioUrl) {
-      const time = this.audio.duration * (this.timer.value / 100)
-      this.audio.currentTime = time
+    if (this.props.audioUrl && this.timerRef.current) {
+      const time = this.audio.duration * (this.timerRef.current.value / 100);
+      this.audioRef.current.currentTime = time;
     }
-  }
+  };
 
   volumeChange = () => {
-    const volume = this.volume.value
-    this.volume.style.backgroundSize = `${volume * 100}%`
-    this.audio.volume = volume
-  }
+    if (this.volumeRef.current) {
+      const volume = this.volumeRef.current.value;
+      this.volumeRef.current.style.backgroundSize = `${volume * 100}%`;
+      this.audioRef.current.volume = volume;
+    }
+  };
 
   onMouseDown = () => {
-    this.audio.pause()
-  }
+    if (this.audioRef.current) this.audioRef.current.pause();
+  };
 
   onMouseUP = () => {
     if (this.props.audioUrl) {
-      this.audio.play()
+      this.audioRef.current.play();
     }
-  }
-
-  audioRef = node => {
-    this.audio = node
-  }
-
-  timerRef = node => {
-    this.timer = node
-  }
-
-  volumeRef = node => {
-    this.volume = node
-  }
+  };
 
   render({ audioUrl, playNext, onPause, onPlay, song }) {
     return (
@@ -186,7 +189,7 @@ class Player extends Component {
         <TimerRange
           title={song ? song.title : "Title"}
           duration={song ? song.duration : "00:00"}
-          innerRef={this.timerRef}
+          ref={this.timerRef}
           onChange={this.timerChange}
           onTouchStart={this.onMouseDown}
           onTouchEnd={this.onMouseUP}
@@ -195,7 +198,7 @@ class Player extends Component {
         />
 
         <VolumeControl
-          innerRef={this.volumeRef}
+          ref={this.volumeRef}
           onChange={this.volumeChange}
           toggleMute={this.toggleMute}
         />
@@ -213,14 +216,14 @@ class Player extends Component {
           ref={this.audioRef}
         />
       </Wrapper>
-    )
+    );
   }
 }
 
 const state = ({ player: { song, audioUrl } }) => ({
   audioUrl,
   song
-})
+});
 
 const actions = {
   onPlay: on_play,
@@ -231,9 +234,6 @@ const actions = {
   loadedMetadata: loaded_metadata,
   toggleMute: toggle_mute,
   toggleLoop: toggle_loop
-}
+};
 
-export default connect(
-  state,
-  actions
-)(Player)
+export default connect(state, actions)(Player);

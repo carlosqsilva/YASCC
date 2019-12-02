@@ -1,13 +1,13 @@
-import { h } from "preact"
-import { connect } from "preact-redux"
-import styled from "styled-components"
+import { h } from "preact";
+import { connect } from "react-redux";
+import styled from "styled-components";
 
-import { toggle_sidebar, toggle_dark_mode } from "@/actions"
-import SearchInput from "../SearchInput"
-import { Icon, SVGIcon } from "../Utils/Icon"
-import Item from "../Utils/Item"
-import Menu from "./menu.svg"
-import Github from "./github.svg"
+import { toggle_sidebar, toggle_dark_mode } from "@/actions";
+import SearchInput from "../SearchInput";
+import { Icon, SVGIcon } from "../Utils/Icon";
+import Item from "../Utils/Item";
+import Menu from "./menu.svg";
+import Github from "./github.svg";
 
 const Wrapper = styled.div`
   background: ${props => (props.online ? "var(--primary)" : "var(--danger)")};
@@ -30,7 +30,7 @@ const Wrapper = styled.div`
     height: 5px;
     content: "";
   }
-`
+`;
 
 const Header = ({ toggleSidebar, toggleDarkMode, online, darkMode }) => (
   <Wrapper online={online}>
@@ -55,19 +55,16 @@ const Header = ({ toggleSidebar, toggleDarkMode, online, darkMode }) => (
       <Icon size={24} src={Github} />
     </Item>
   </Wrapper>
-)
+);
 
 const state = ({ root }) => ({
   online: root.online,
   darkMode: root.darkMode
-})
+});
 
 const actions = {
   toggleSidebar: toggle_sidebar,
   toggleDarkMode: toggle_dark_mode
-}
+};
 
-export default connect(
-  state,
-  actions
-)(Header)
+export default connect(state, actions)(Header);
